@@ -1,5 +1,3 @@
-from fastapi import WebSocket
-
 class Token:
     def __init__(self, websocket, username, token):
         self.websocket = websocket
@@ -10,22 +8,19 @@ class ConnectionManager:
     def __init__(self):
         self.tokens = {}
 
-    async def connect(self, websocket: WebSocket, token: str):
-        await websocket.accept()
+    def connect(self, websocket, token: str):
         self.tokens[token] = Token(websocket, "jeff (TODO)", token)
+        return self.tokens[token]
 
-    def disconnect(self, websocket: WebSocket, token: str):
+    def disconnect(self, websocket, token: str):
         token_to_remove = self.tokens.pop(token)
         del token_to_remove
 
-    async def send_user_packet(self, message: str, token):
-        await self.tokens[token].websocket.send_text(message)
+    def send_user_packet(self, message: str, token):
+        self.tokens[token].websocket.send(message)
 
-    async def broadcast_packet(self, message: str):
+    def broadcast_packet(self, message: str):
         for token in self.tokens:
-            await self.tokens[token].websocket.send_text(message)
-
-    def get_token_from_str(self, string):
-        return self.tokens[string]
+            self.tokens[token].websocket.send(message)
 
 manager = ConnectionManager()

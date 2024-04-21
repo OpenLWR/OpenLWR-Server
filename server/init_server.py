@@ -1,35 +1,23 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from server.connection_manager import manager
-from server.server_events import user_logout_event
+from server.server_events import server_user_logout_event
 from server.constants import packets
 from server.helpers import packet_helper
-from server.client_events import switch_parameters_update_event
+from server.client_events import client_switch_parameters_update_event
+import uuid
+import websockets
 
-def init_server(app):
-    @app.websocket("/ws/{token}")
-    async def websocket_endpoint(websocket: WebSocket, token: str):
-        await manager.connect(websocket, token)
-        token_object = manager.get_token_from_str(token)
-        try:
-            while True:
-                packet = await websocket.receive_text()
-                print(packet) # TODO: proper logging system
+def init_server(websocket):
+    token_str = str(uuid.uuid4())
+    token_object = manager.connect(websocket, token_str)
+    try:
+        for packet in websocket:
+            print(packet) # TODO: proper logging system
 
-                packet_id, packet_data = packet_helper.parse(packet)
-                
-                if packet_id == packets.ClientPackets.SWITCH_PARAMETERS_UPDATE:
-                    switch_parameters_update_event.handle(packet_data)
+            packet_id, packet_data = packet_helper.parse(packet)
 
-                
-        except WebSocketDisconnect:
-            manager.disconnect(websocket, token)
-            await user_logout_event.fire(token_object.username)
-
-def init_fastapi():
-    app = FastAPI()
-    
-    init_server(app)
-
-    return app
-
-app = init_fastapi()
+            if packet_id == packets.ClientPackets.SWITCH_PARAMETERS_UPDATE:
+                client_switch_parameters_update_event.handle(packet_data)
+                     
+    except:
+        manager.disconnect(websocket, token_str)
+        server_user_logout_event.fire(token_object.username)

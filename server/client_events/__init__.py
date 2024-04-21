@@ -1,1 +1,1 @@
-from . import switch_parameters_update_event
+from . import client_switch_parameters_update_event
