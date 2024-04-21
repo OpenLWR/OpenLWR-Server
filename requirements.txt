@@ -1,3 +1,1 @@
-uvicorn==0.29.0
-fastapi==0.110.2
 websockets==12.0
