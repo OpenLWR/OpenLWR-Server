@@ -6,3 +6,4 @@ class ClientPackets(IntEnum):
 class ServerPackets(IntEnum):
     METER_PARAMETERS_UPDATE = 0
     USER_LOGOUT = 1
+    SWITCH_PARAMETERS_UPDATE = 3
