@@ -1,6 +1,9 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from server.connection_manager import manager
 from server.server_events import user_logout_event
+from server.constants import packets
+from server.helpers import packet_helper
+from server.client_events import switch_parameters_update_event
 
 def init_server(app):
     @app.websocket("/ws/{token}")
@@ -9,8 +12,15 @@ def init_server(app):
         token_object = manager.get_token_from_str(token)
         try:
             while True:
-                data = await websocket.receive_text()
-                print(data)
+                packet = await websocket.receive_text()
+                print(packet) # TODO: proper logging system
+
+                packet_id, packet_data = packet_helper.parse(packet)
+                
+                if packet_id == packets.ClientPackets.SWITCH_PARAMETERS_UPDATE:
+                    switch_parameters_update_event.handle(packet_data)
+
+                
         except WebSocketDisconnect:
             manager.disconnect(websocket, token)
             await user_logout_event.fire(token_object.username)
