@@ -23,6 +23,6 @@ def init_server(websocket):
             if packet_id == packets.ClientPackets.SWITCH_PARAMETERS_UPDATE:
                 client_switch_parameters_update_event.handle(packet_data)
                      
-    except:
+    except Exception:
         manager.disconnect(token_str)
         server_user_logout_event.fire(token_object.username)
