@@ -13,7 +13,7 @@ class ConnectionManager:
         return self.tokens[token]
 
     def disconnect(self, token: str):
-        token_to_remove = self.tokens.pop(token)
+        self.tokens.pop(token)
 
     def send_user_packet(self, message: str, token: str):
         try:
