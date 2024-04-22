@@ -14,19 +14,18 @@ class ConnectionManager:
 
     def disconnect(self, token: str):
         token_to_remove = self.tokens.pop(token)
-        del token_to_remove
 
     def send_user_packet(self, message: str, token: str):
         try:
             self.tokens[token].websocket.send(message)
-        except:
+        except Exception:
             pass
 
     def broadcast_packet(self, message: str):
         for token in self.tokens:
             try: 
                 self.tokens[token].websocket.send(message)
-            except: # TODO: should we disconnect the client in this case?
+            except Exception: # TODO: should we disconnect the client in this case?
                 pass
 
 manager = ConnectionManager()
