@@ -5,6 +5,8 @@ from server.constants import packets
 from server.helpers import packet_helper
 from server.client_events import client_switch_parameters_update_event
 from server.server_events import server_switch_parameters_update_event
+from server.client_events import client_button_parameters_update_event
+from server.server_events import server_button_parameters_update_event
 
 
 def init_server(websocket):
@@ -13,6 +15,8 @@ def init_server(websocket):
 
     # inform the client of all switch positions
     server_switch_parameters_update_event.fire_initial(token_str)
+    # do the same for all button positions
+    server_button_parameters_update_event.fire_initial(token_str)
 
     try:
         for packet in websocket:
@@ -22,6 +26,8 @@ def init_server(websocket):
 
             if packet_id == packets.ClientPackets.SWITCH_PARAMETERS_UPDATE:
                 client_switch_parameters_update_event.handle(packet_data)
+            elif packet_id == packets.ClientPackets.BUTTON_PARAMETERS_UPDATE:
+                client_button_parameters_update_event.handle(packet_data)
 
     except Exception:
         manager.disconnect(token_str)

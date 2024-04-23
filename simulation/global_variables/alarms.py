@@ -1,5 +1,3 @@
 alarms = {
-    "test1": {
-        "position": 0,
-    }
+    "test_alarm": {}
 }
