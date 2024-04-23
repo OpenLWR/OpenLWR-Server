@@ -1,4 +1,5 @@
 import uuid
+import traceback
 from server.connection_manager import manager
 from server.server_events import server_user_logout_event
 from server.constants import packets
@@ -29,7 +30,7 @@ def init_server(websocket):
             elif packet_id == packets.ClientPackets.BUTTON_PARAMETERS_UPDATE:
                 client_button_parameters_update_event.handle(packet_data)
 
-    except Exception as e:
-        print("packet handler failed:",str(e))
+    except Exception:
+        print(traceback.format_exc())
         manager.disconnect(token_str)
         server_user_logout_event.fire(token_object.username)
