@@ -1,8 +1,10 @@
 import time
 from server.server_events import server_meter_parameters_update_event
+from server.server_events import server_indicator_parameters_update_event
 from simulation.global_variables.values import values
 from simulation.global_variables.switches import switches
 from simulation.global_variables.alarms import alarms
+from simulation.global_variables.indicators import indicators
 import importlib
 import config
 
@@ -17,6 +19,7 @@ class Simulation:
         while True:
             model.model_run()
             server_meter_parameters_update_event.fire(values)
+            server_indicator_parameters_update_event.fire(indicators)
             time.sleep(0.1)
 
 # import the model specified in the config

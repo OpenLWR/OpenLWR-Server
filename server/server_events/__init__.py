@@ -1,3 +1,4 @@
 from . import server_meter_parameters_update_event
 from . import server_user_logout_event
 from . import server_switch_parameters_update_event
+from . import server_indicator_parameters_update_event
