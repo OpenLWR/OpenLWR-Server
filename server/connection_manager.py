@@ -18,14 +18,14 @@ class ConnectionManager:
     def send_user_packet(self, message: str, token: str):
         try:
             self.tokens[token].websocket.send(message)
-        except Exception:
-            pass
+        except Exception as e:
+            print("send to client failed:", str(e))
 
     def broadcast_packet(self, message: str):
         for token in self.tokens:
             try: 
                 self.tokens[token].websocket.send(message)
-            except Exception: # TODO: should we disconnect the client in this case?
-                pass
+            except Exception as e: # TODO: should we disconnect the client in this case?
+                print("broadcast failed:", str(e))
 
 manager = ConnectionManager()

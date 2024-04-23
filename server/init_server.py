@@ -29,6 +29,7 @@ def init_server(websocket):
             elif packet_id == packets.ClientPackets.BUTTON_PARAMETERS_UPDATE:
                 client_button_parameters_update_event.handle(packet_data)
 
-    except Exception:
+    except Exception as e:
+        print("packet handler failed:",str(e))
         manager.disconnect(token_str)
         server_user_logout_event.fire(token_object.username)
