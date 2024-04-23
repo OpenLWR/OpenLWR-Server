@@ -19,8 +19,9 @@ def init_server(websocket):
     # do the same for all button positions
     server_button_parameters_update_event.fire_initial(token_str)
 
-    try:
-        for packet in websocket:
+    
+    for packet in websocket:
+        try:
             print(packet) # TODO: proper logging system
 
             packet_id, packet_data = packet_helper.parse(packet)
@@ -29,8 +30,7 @@ def init_server(websocket):
                 client_switch_parameters_update_event.handle(packet_data)
             elif packet_id == packets.ClientPackets.BUTTON_PARAMETERS_UPDATE:
                 client_button_parameters_update_event.handle(packet_data)
-
-    except Exception:
-        print(traceback.format_exc())
-        manager.disconnect(token_str)
-        server_user_logout_event.fire(token_object.username)
+        except Exception:
+            print(traceback.format_exc())
+            manager.disconnect(token_str)
+            server_user_logout_event.fire(token_object.username)
