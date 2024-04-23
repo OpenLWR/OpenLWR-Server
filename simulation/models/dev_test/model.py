@@ -4,6 +4,7 @@ from simulation.global_variables.alarms import alarms
 from simulation.global_variables.indicators import indicators
 from simulation.global_variables.buttons import buttons
 from simulation.constants.annunciator_states import AnnunciatorStates
+import math
 
 alarms_default = {
     "test_alarm" : AnnunciatorStates.CLEAR,
@@ -40,7 +41,7 @@ buttons_default = {
     "test_button": False
 }
 
-
+test_value = 0
 def init_sim_variables():
     alarms = alarms_default
     switches = switches_default
@@ -49,7 +50,10 @@ def init_sim_variables():
     buttons = buttons_default
 
 def model_run():
-    values["test_gauge"] += 0.001
+    global test_value
+    if buttons["test_button"]:
+        test_value += 0.1
+    values["test_gauge"] = math.sin(test_value) / 2 + 0.5
     indicators["lamp_test"] = switches["test_switch"]["position"] != 1
     alarms["test_alarm"] = AnnunciatorStates.CLEAR
     if switches["test_switch"]["position"] != 1:
