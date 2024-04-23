@@ -1,5 +1,6 @@
 import traceback
 
+import websockets
 
 class Token:
     def __init__(self, websocket, username, token):
@@ -24,13 +25,17 @@ class ConnectionManager:
     def send_user_packet(self, message: str, token: str):
         try:
             self.tokens[token].websocket.send(message)
-        except Exception:
+        except websockets.exceptions.ConnectionClosedError: # TODO: should we disconnect the client in this case?
+            pass
+        except Exception: # TODO: should we disconnect the client in this case?
             print(traceback.format_exc())
 
     def broadcast_packet(self, message: str):
         for token in self.tokens:
             try: 
                 self.tokens[token].websocket.send(message)
+            except websockets.exceptions.ConnectionClosedError: # TODO: should we disconnect the client in this case?
+                pass
             except Exception: # TODO: should we disconnect the client in this case?
                 print(traceback.format_exc())
 

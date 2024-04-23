@@ -46,6 +46,7 @@ def init_sim_variables():
     switches = switches_default
     values = values_default
     indicators = indicators_default
+    buttons = buttons_default
 
 def model_run():
     values["test_gauge"] += 0.001

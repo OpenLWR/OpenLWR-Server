@@ -4,7 +4,7 @@ from server.constants import packets
 import json
 
 def fire(buttons): #TODO only send ones that need to be updated (were changed)
-    manager.broadcast_packet(packet_helper.build(packets.ServerPackets.BUTTON_PARAMETERS_UPDATE, json.dumps(buttons)))
+    manager.broadcast_packet(packet_helper.build(packets.ServerPackets.BUTTON_PARAMETERS_UPDATE, buttons))
 
 # send initial state of indicators
 def fire_initial(token):
