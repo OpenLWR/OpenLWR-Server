@@ -1,3 +1,6 @@
+import traceback
+
+
 class Token:
     def __init__(self, websocket, username, token):
         self.websocket = websocket
@@ -13,19 +16,22 @@ class ConnectionManager:
         return self.tokens[token]
 
     def disconnect(self, token: str):
-        self.tokens.pop(token)
+        if token in self.tokens:
+            self.tokens.pop(token)
+        else:
+            print("attempted to disconnect nonexistant client:",token)
 
     def send_user_packet(self, message: str, token: str):
         try:
             self.tokens[token].websocket.send(message)
         except Exception:
-            pass
+            print(traceback.format_exc())
 
     def broadcast_packet(self, message: str):
         for token in self.tokens:
             try: 
                 self.tokens[token].websocket.send(message)
             except Exception: # TODO: should we disconnect the client in this case?
-                pass
+                print(traceback.format_exc())
 
 manager = ConnectionManager()
