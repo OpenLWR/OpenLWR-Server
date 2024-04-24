@@ -6,7 +6,7 @@ def handle(data):
     buttons_updated = json.loads(data)
 
     for button in buttons_updated:
-        buttons[button]["state"] = buttons_updated[button]
+        buttons[button] = buttons_updated[button]
     
     server_button_parameters_update_event.fire(data)
     
