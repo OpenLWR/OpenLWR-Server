@@ -4,3 +4,4 @@ from . import server_switch_parameters_update_event
 from . import server_indicator_parameters_update_event
 from . import server_alarm_parameters_update_event
 from . import server_button_parameters_update_event
+from . import server_player_position_parameters_update_event

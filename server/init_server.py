@@ -8,7 +8,8 @@ from server.client_events import client_switch_parameters_update_event
 from server.server_events import server_switch_parameters_update_event
 from server.client_events import client_button_parameters_update_event
 from server.server_events import server_button_parameters_update_event
-
+from server.server_events import server_player_position_parameters_update_event
+from server.client_events import client_player_position_parameters_update_event
 
 def init_server(websocket):
     token_str = str(uuid.uuid4())
@@ -19,6 +20,7 @@ def init_server(websocket):
     # do the same for all button positions
     server_button_parameters_update_event.fire_initial(token_str)
 
+    server_player_position_parameters_update_event.fire_initial(token_str)
     
     for packet in websocket:
         try:
@@ -30,6 +32,8 @@ def init_server(websocket):
                 client_switch_parameters_update_event.handle(packet_data)
             elif packet_id == packets.ClientPackets.BUTTON_PARAMETERS_UPDATE:
                 client_button_parameters_update_event.handle(packet_data)
+            elif packet_id == packets.ClientPackets.PLAYER_POSITION_PARAMETERS_UPDATE:
+                client_player_position_parameters_update_event.handle(packet_data)
         except Exception:
             print(traceback.format_exc())
             manager.disconnect(token_str)
