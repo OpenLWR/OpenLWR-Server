@@ -1,3 +1,1 @@
-alarms = {
-    "test_alarm": {}
-}
+alarms = {}

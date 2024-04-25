@@ -42,15 +42,17 @@ buttons_default = {
 }
 
 test_value = 0
-def init_sim_variables():
-    alarms = alarms_default
-    switches = switches_default
-    values = values_default
-    indicators = indicators_default
-    buttons = buttons_default
+
+alarms = alarms_default
+switches = switches_default
+values = values_default
+indicators = indicators_default
+buttons = buttons_default
 
 def model_run():
     global test_value
+    if alarms == {}:
+        return
     if buttons["test_button"]:
         test_value += 0.1
     values["test_gauge"] = math.sin(test_value) / 2 + 0.5
