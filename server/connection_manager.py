@@ -31,12 +31,17 @@ class ConnectionManager:
             print(traceback.format_exc())
 
     def broadcast_packet(self, message: str):
-        for token in self.tokens:
-            try: 
-                self.tokens[token].websocket.send(message)
-            except websockets.exceptions.ConnectionClosedError: # TODO: should we disconnect the client in this case?
-                pass
-            except Exception: # TODO: should we disconnect the client in this case?
-                print(traceback.format_exc())
+        try:
+            for token in self.tokens:
+                try: 
+                    self.tokens[token].websocket.send(message)
+                except websockets.exceptions.ConnectionClosedError: # TODO: should we disconnect the client in this case?
+                    pass
+                except Exception: # TODO: should we disconnect the client in this case?
+                    print(traceback.format_exc())
+        except RuntimeError:
+            print("[BUG] token array modified during loop over it")
+            print(traceback.format_exc())
+            print("[BUG] token array modified during loop over it")
 
 manager = ConnectionManager()
