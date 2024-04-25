@@ -3,7 +3,6 @@ from server.server_events import server_button_parameters_update_event
 
 def handle(data):
     from simulation.global_variables.buttons import buttons
-    print(buttons)
     try:
         buttons_updated = json.loads(data)
     except json.decoder.JSONDecodeError:
@@ -17,7 +16,7 @@ def handle(data):
     print(buttons_updated)
     if type(buttons_updated) == dict and len(buttons_updated) >= 1:
         for button in buttons_updated:
-            if buttons.get(button):
+            if button in buttons:
                 buttons[button] = buttons_updated[button]
             else:
                 print("[BUG] got a button that is invalid from client:",button,buttons_updated)

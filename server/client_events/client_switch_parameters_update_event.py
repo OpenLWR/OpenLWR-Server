@@ -9,7 +9,7 @@ def handle(data):
         print("[BUG] failed to decode json:",data)
     if type(switches_updated) == dict and len(switches_updated) >= 1:
         for switch in switches_updated:
-            if switches.get(switch):
+            if switch in switches:
                 switches[switch]["position"] = switches_updated[switch]
             else:
                 print("[BUG] got a switch that is invalid from client:",switch,switches_updated)
