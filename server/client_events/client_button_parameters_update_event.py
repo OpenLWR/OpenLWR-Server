@@ -3,7 +3,10 @@ from server.server_events import server_button_parameters_update_event
 
 def handle(data):
     from simulation.global_variables.buttons import buttons
-    buttons_updated = json.loads(data)
+    try:
+        buttons_updated = json.loads(data)
+    except json.decoder.JSONDecodeError:
+        print("[BUG] failed to decode json:",data)
 
     for button in buttons_updated:
         buttons[button] = buttons_updated[button]

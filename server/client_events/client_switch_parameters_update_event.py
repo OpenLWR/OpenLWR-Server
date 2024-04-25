@@ -3,7 +3,10 @@ from server.server_events import server_switch_parameters_update_event
 
 def handle(data):
     from simulation.global_variables.switches import switches
-    switches_updated = json.loads(data)
+    try:
+        switches_updated = json.loads(data)
+    except json.decoder.JSONDecodeError:
+        print("[BUG] failed to decode json:",data)
     if type(switches_updated) == dict and len(switches_updated) >= 1:
         for switch in switches_updated:
             if switches.get(switch):

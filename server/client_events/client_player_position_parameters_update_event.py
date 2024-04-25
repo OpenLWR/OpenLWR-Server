@@ -2,7 +2,10 @@ import json
 from server.server_events import server_player_position_parameters_update_event
 
 def handle(data, source_user):
-    players_updated = json.loads(data)
+    try:
+        players_updated = json.loads(data)
+    except json.decoder.JSONDecodeError:
+        print("[BUG] failed to decode json:",data)
     #get the players whos position updated
 
     #TODO: Store the player positions?
