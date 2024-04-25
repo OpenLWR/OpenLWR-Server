@@ -24,12 +24,11 @@ buttons_default = {
     "SCRAM_B1": False,
 }
 
-def init_sim_variables():
-    alarms = alarms_default
-    switches = switches_default
-    values = values_default
-    indicators = indicators_default
-    buttons = buttons_default
+alarms = alarms_default
+switches = switches_default
+values = values_default
+indicators = indicators_default
+buttons = buttons_default
 
 def model_run():
     #TODO: import reactor protection system and annunciator logic, and run them here
