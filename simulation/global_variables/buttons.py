@@ -1,3 +1,1 @@
-buttons = {
-    "test_button": False
-}
+buttons = {}
