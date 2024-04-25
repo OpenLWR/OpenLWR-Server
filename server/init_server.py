@@ -24,7 +24,7 @@ def init_server(websocket):
     
     for packet in websocket:
         try:
-            print(packet) # TODO: proper logging system
+            #print(packet) # TODO: proper logging system
 
             packet_id, packet_data = packet_helper.parse(packet)
 

@@ -3,6 +3,7 @@ from server.server_events import server_button_parameters_update_event
 
 def handle(data):
     from simulation.global_variables.buttons import buttons
+    print(buttons)
     try:
         buttons_updated = json.loads(data)
     except json.decoder.JSONDecodeError:
@@ -23,6 +24,6 @@ def handle(data):
     
         server_button_parameters_update_event.fire(data)
     
-        print(buttons_updated)
+        #print(buttons_updated)
     else:
         print("[BUG] got a button state packet that is invalid:",buttons_updated)

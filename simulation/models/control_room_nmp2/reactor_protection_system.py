@@ -6,8 +6,8 @@ rps_a_trip = False
 rps_b_trip = False
 
 def run(alarms,buttons):
-    global test_value
-    print(buttons)
+    global rps_a_trip
+    global rps_b_trip
     if buttons["SCRAM_A1"]:
         rps_a_trip = True
     if buttons["SCRAM_B1"]:
