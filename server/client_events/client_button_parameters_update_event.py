@@ -11,3 +11,15 @@ def handle(data):
     server_button_parameters_update_event.fire(data)
     
     print(buttons_updated)
+    if type(buttons_updated) == dict and len(buttons_updated) >= 1:
+        for button in buttons_updated:
+            if buttons.get(button):
+                buttons[button] = buttons_updated[button]
+            else:
+                print("[BUG] got a button that is invalid from client:",button,buttons_updated)
+    
+        server_button_parameters_update_event.fire(data)
+    
+        print(buttons_updated)
+    else:
+        print("[BUG] got a button state packet that is invalid:",buttons_updated)

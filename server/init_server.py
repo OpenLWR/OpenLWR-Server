@@ -33,7 +33,7 @@ def init_server(websocket):
             elif packet_id == packets.ClientPackets.BUTTON_PARAMETERS_UPDATE:
                 client_button_parameters_update_event.handle(packet_data)
             elif packet_id == packets.ClientPackets.PLAYER_POSITION_PARAMETERS_UPDATE:
-                client_player_position_parameters_update_event.handle(packet_data)
+                client_player_position_parameters_update_event.handle(packet_data,token_object.username)
         except Exception:
             print(traceback.format_exc())
             manager.disconnect(token_str)
