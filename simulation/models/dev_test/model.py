@@ -1,16 +1,11 @@
-from simulation.global_variables.values import values
-from simulation.global_variables.switches import switches
-from simulation.global_variables.alarms import alarms
-from simulation.global_variables.indicators import indicators
-from simulation.global_variables.buttons import buttons
 from simulation.constants.annunciator_states import AnnunciatorStates
 import math
 
-alarms_default = {
+alarms = {
     "test_alarm" : AnnunciatorStates.CLEAR,
 }
 
-switches_default = {
+switches = {
     "test_switch": {
         "positions": {
 			0: 45,
@@ -29,25 +24,19 @@ switches_default = {
     },
 }
 
-values_default = {
+values = {
     "test_gauge": 0.1
 }
 
-indicators_default = {
+indicators = {
     "lamp_test": True
 }
 
-buttons_default = {
+buttons = {
     "test_button": False
 }
 
 test_value = 0
-
-alarms = alarms_default
-switches = switches_default
-values = values_default
-indicators = indicators_default
-buttons = buttons_default
 
 def model_run():
     global test_value
