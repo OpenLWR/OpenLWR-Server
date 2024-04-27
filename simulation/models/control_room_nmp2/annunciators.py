@@ -6,7 +6,6 @@ def run(alarms,buttons):
    for alarm in alarms:
       annunciator = alarms[alarm]
       group = annunciator["group"]
-
       #reflash + active normally
       if annunciator["alarm"] and (annunciator["state"] == AnnunciatorStates.CLEAR or annunciator["state"] == AnnunciatorStates.ACTIVE_CLEAR):
          annunciator["state"] = AnnunciatorStates.ACTIVE

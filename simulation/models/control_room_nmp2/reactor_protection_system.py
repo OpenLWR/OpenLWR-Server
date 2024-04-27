@@ -13,13 +13,13 @@ def run(alarms,buttons,indicators):
     if buttons["SCRAM_B1"] or buttons["SCRAM_B2"]:
         rps_b_trip = True
     if rps_a_trip:
-        alarms["rps_a_auto_trip"] = AnnunciatorStates.ACTIVE
+        alarms["rps_a_auto_trip"]["alarm"] = True
         indicators["SCRAM_SOLENOID_A"] = False
         indicators["SCRAM_SOLENOID_C"] = False
         indicators["SCRAM_SOLENOID_E"] = False
         indicators["SCRAM_SOLENOID_G"] = False
     if rps_b_trip:
-        alarms["rps_b_auto_trip"] = AnnunciatorStates.ACTIVE
+        alarms["rps_b_auto_trip"]["alarm"] = True
         indicators["SCRAM_SOLENOID_B"] = False
         indicators["SCRAM_SOLENOID_D"] = False
         indicators["SCRAM_SOLENOID_F"] = False
