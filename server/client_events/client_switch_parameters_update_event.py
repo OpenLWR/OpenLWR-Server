@@ -13,7 +13,7 @@ def handle(data):
 
     if type(switches_updated) == dict and len(switches_updated) >= 1:
         for switch in switches_updated:
-            if switch in model.switches:
+            if switch in model.switches and "position" in model.switches[switch]:
                 model.switches[switch]["position"] = switches_updated[switch]
             else:
                 print("[BUG] got a switch that is invalid from client:",switch,switches_updated)
