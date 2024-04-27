@@ -5,9 +5,13 @@ import math
 rps_a_trip = False
 rps_b_trip = False
 
-def run(alarms,buttons,indicators,rods):
+def run(alarms,buttons,indicators,rods,switches):
     global rps_a_trip
     global rps_b_trip
+    if switches["reactor_mode_switch"]["position"] == 0:
+        rps_a_trip = True
+        rps_b_trip = True
+
     if buttons["SCRAM_A1"] or buttons["SCRAM_A2"]:
         rps_a_trip = True
     if buttons["SCRAM_B1"] or buttons["SCRAM_B2"]:

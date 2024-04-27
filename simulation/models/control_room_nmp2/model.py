@@ -20,7 +20,17 @@ alarms = {
     },
 }
 
-switches = {}
+switches = {
+    "reactor_mode_switch": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+            3: -90,
+		},
+        "position": 2,
+    },
+}
 
 values = {}
 
@@ -53,6 +63,6 @@ rod_generation.run(rods)
 def model_run():
     #TODO: import reactor protection system and annunciator logic, and run them here
     annunciators.run(alarms,buttons)
-    reactor_protection_system.run(alarms,buttons,indicators,rods)
+    reactor_protection_system.run(alarms,buttons,indicators,rods,switches)
     rod_drive_control_system.run(rods)
     rod_position_information_system.run(rods)
