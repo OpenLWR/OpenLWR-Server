@@ -1,6 +1,8 @@
 from simulation.constants.annunciator_states import AnnunciatorStates
 from simulation.models.control_room_nmp2 import annunciators
 from simulation.models.control_room_nmp2 import reactor_protection_system
+from simulation.models.control_room_nmp2 import rod_position_information_system
+from simulation.models.control_room_nmp2 import rod_drive_control_system
 import math
 
 alarms = {
@@ -43,7 +45,14 @@ buttons = {
     "ALARM_RESET_1": False,
 }
 
+rods = {}
+
+from simulation.models.control_room_nmp2 import rod_generation
+rod_generation.run(rods)
+
 def model_run():
     #TODO: import reactor protection system and annunciator logic, and run them here
     annunciators.run(alarms,buttons)
-    reactor_protection_system.run(alarms,buttons,indicators)
+    reactor_protection_system.run(alarms,buttons,indicators,rods)
+    rod_drive_control_system.run(rods)
+    rod_position_information_system.run(rods)

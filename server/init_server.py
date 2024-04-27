@@ -10,6 +10,7 @@ from server.client_events import client_button_parameters_update_event
 from server.server_events import server_button_parameters_update_event
 from server.server_events import server_player_position_parameters_update_event
 from server.client_events import client_player_position_parameters_update_event
+from server.server_events import server_rod_position_parameters_update_event
 
 def init_server(websocket):
     token_str = str(uuid.uuid4())
@@ -21,6 +22,8 @@ def init_server(websocket):
     server_button_parameters_update_event.fire_initial(token_str)
 
     server_player_position_parameters_update_event.fire_initial(token_str)
+
+    server_rod_position_parameters_update_event.fire_initial(token_str)
     
     for packet in websocket:
         try:
