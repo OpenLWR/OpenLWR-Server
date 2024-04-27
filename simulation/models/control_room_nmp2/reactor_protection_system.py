@@ -4,13 +4,17 @@ import math
 
 rps_a_trip = False
 rps_b_trip = False
+withdraw_block = False
 
 def run(alarms,buttons,indicators,rods,switches):
     global rps_a_trip
     global rps_b_trip
+    global withdraw_block
+    withdraw_block = False
     if switches["reactor_mode_switch"]["position"] == 0:
         rps_a_trip = True
         rps_b_trip = True
+        withdraw_block = True
 
     if buttons["SCRAM_A1"] or buttons["SCRAM_A2"]:
         rps_a_trip = True
@@ -33,3 +37,8 @@ def run(alarms,buttons,indicators,rods,switches):
         #scram the reactor if both RPS trains are tripped
         if info["scram"] != (rps_a_trip and rps_b_trip):
             info["scram"] = (rps_a_trip and rps_b_trip)
+
+    #indicators for, IE, the RMCS
+            
+    indicators["RMCS_WITHDRAW_BLOCK"] = withdraw_block
+    alarms["control_rod_out_block"]["alarm"] = withdraw_block

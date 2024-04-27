@@ -18,6 +18,24 @@ alarms = {
         "group" : "1",
         "silenced" : False,
     },
+    "rod_drive_accumulator_trouble" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "control_rod_out_block" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "control_rod_drift" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
 }
 
 switches = {
@@ -43,6 +61,9 @@ indicators = {
     "SCRAM_SOLENOID_F": True,
     "SCRAM_SOLENOID_G": True,
     "SCRAM_SOLENOID_H": True,
+
+    #RMCS Indicators
+    "RMCS_WITHDRAW_BLOCK": False,
 }
 
 buttons = {
@@ -53,6 +74,11 @@ buttons = {
     "ALARM_SILENCE_1": False,
     "ALARM_ACK_1": False,
     "ALARM_RESET_1": False,
+
+    #RMCS pushbuttons
+    "ACCUM_TROUBLE_RESET": False,
+    "ROD_DRIFT_RESET": False,
+
 }
 
 rods = {}
@@ -64,5 +90,5 @@ def model_run():
     #TODO: import reactor protection system and annunciator logic, and run them here
     annunciators.run(alarms,buttons)
     reactor_protection_system.run(alarms,buttons,indicators,rods,switches)
-    rod_drive_control_system.run(rods)
-    rod_position_information_system.run(rods)
+    rod_drive_control_system.run(rods,buttons)
+    rod_position_information_system.run(rods,alarms)
