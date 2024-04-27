@@ -90,5 +90,5 @@ def model_run():
     #TODO: import reactor protection system and annunciator logic, and run them here
     annunciators.run(alarms,buttons)
     reactor_protection_system.run(alarms,buttons,indicators,rods,switches)
-    rod_drive_control_system.run(rods,buttons)
-    rod_position_information_system.run(rods,alarms)
+    rod_drive_control_system.run(rods)
+    rod_position_information_system.run(rods,alarms,buttons)
