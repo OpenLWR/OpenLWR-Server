@@ -87,7 +87,6 @@ from simulation.models.control_room_nmp2 import rod_generation
 rod_generation.run(rods)
 
 def model_run():
-    #TODO: import reactor protection system and annunciator logic, and run them here
     annunciators.run(alarms,buttons)
     reactor_protection_system.run(alarms,buttons,indicators,rods,switches)
     rod_drive_control_system.run(rods)
