@@ -1,9 +1,11 @@
 import math
 
-def run(rods):
+def run(rods,buttons):
 	#TODO: rod motions by the operator
     for rod in rods:
         info = rods[rod]
+        
+
         if info["scram"]:
             #TODO: accumulator pressure and its affect on rod drive
             if info["insertion"] > 0:

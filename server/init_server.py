@@ -11,6 +11,7 @@ from server.server_events import server_button_parameters_update_event
 from server.server_events import server_player_position_parameters_update_event
 from server.client_events import client_player_position_parameters_update_event
 from server.server_events import server_rod_position_parameters_update_event
+from server.client_events import client_rod_select_update_event
 
 def init_server(websocket):
     token_str = str(uuid.uuid4())
@@ -37,6 +38,8 @@ def init_server(websocket):
                 client_button_parameters_update_event.handle(packet_data)
             elif packet_id == packets.ClientPackets.PLAYER_POSITION_PARAMETERS_UPDATE:
                 client_player_position_parameters_update_event.handle(packet_data,token_object.username)
+            elif packet_id == packets.ClientPackets.ROD_SELECT_UPDATE:
+                client_rod_select_update_event.handle(packet_data)
         except Exception:
             print(traceback.format_exc())
             manager.disconnect(token_str)
