@@ -15,13 +15,13 @@ class Simulation:
         self.default_timestep = 0.1 # what is 1x speed
         self.minimum_speedup_drop = 2 # skip sending packets if we exceed this many times 1x speed
         self.timesteps = 0 # how many timesteps did we take
+        self.prev_delta = 0
         self.timer()
 
     def timer(self):
-        # TODO: proper timer
         while True:
             start = time.perf_counter()
-            model.model_run()
+            model.model_run(self.prev_delta)
             drop = 0
             if (self.default_timestep/self.timestep) >= self.minimum_speedup_drop:
                 drop = self.timesteps % math.floor((self.default_timestep/self.timestep)/self.minimum_speedup_drop)
@@ -36,5 +36,6 @@ class Simulation:
             else:
                 time.sleep(self.timestep - delta)
             self.timesteps += 1
+            self.prev_delta = delta
 
 simulation = Simulation()
