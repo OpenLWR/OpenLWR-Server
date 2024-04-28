@@ -13,7 +13,7 @@ class ConnectionManager:
         self.tokens = {}
 
     def connect(self, websocket, token: str):
-        self.tokens[token] = Token(websocket, "jeff (TODO)", token)
+        self.tokens[token] = Token(websocket, "No Username", token)
         return self.tokens[token]
 
     def disconnect(self, token: str):
@@ -43,5 +43,8 @@ class ConnectionManager:
             print("[BUG] token array modified during loop over it")
             print(traceback.format_exc())
             print("[BUG] token array modified during loop over it")
+
+    def set_username(self, token: str, username: str):
+        self.tokens[token].username = username
 
 manager = ConnectionManager()

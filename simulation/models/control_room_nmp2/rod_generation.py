@@ -1,6 +1,6 @@
 import math
 
-def run(rods):
+def run(rods,buttons):
 	x = 18
 	y = 59
 	rods_to_generate = 0
@@ -53,6 +53,8 @@ def run(rods):
 						"driving": False,
 						"select": False,
 				}
+				#Generate the rod select pushbutton index for this rod
+				buttons["select_%s" % rod_number] = False
 				# increment y by 4 because we only have a control rod per every four fuel assemblies
 				x += 4
 
