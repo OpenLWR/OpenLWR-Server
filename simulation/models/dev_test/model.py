@@ -38,7 +38,7 @@ buttons = {
 
 test_value = 0
 
-def model_run():
+def model_run(delta):
     global test_value
     if alarms == {}:
         return
