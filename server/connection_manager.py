@@ -25,24 +25,42 @@ class ConnectionManager:
     def send_user_packet(self, message: str, token: str):
         try:
             self.tokens[token].websocket.send(message)
-        except websockets.exceptions.ConnectionClosedError: # TODO: should we disconnect the client in this case?
-            pass
+        #TODO: this makes me fucking sad : ( fix
+        #except websockets.exceptions.ConnectionClosedError:
+        #    from server.server_events import server_user_logout_event
+        #    username = self.username
+        #    self.disconnect(self.token)
+        #    print("client disconnected%s" % username)
+        #    server_user_logout_event.fire(username)
         except Exception: # TODO: should we disconnect the client in this case?
             print(traceback.format_exc())
 
     def broadcast_packet(self, message: str):
+        #TODO: this makes me fucking sad : ( fix
+        #logout_tokens = []
         try:
             for token in self.tokens:
                 try: 
                     self.tokens[token].websocket.send(message)
-                except websockets.exceptions.ConnectionClosedError: # TODO: should we disconnect the client in this case?
-                    pass
+                except websockets.exceptions.ConnectionClosedError:
+                    from server.server_events import server_user_logout_event
+                    #queue the user to be logged out 
+                    #TODO: this makes me fucking sad : ( fix
+                    #username = self.tokens[token].username
+                    #logout_tokens.append({"token" : token,"username" : username})
                 except Exception: # TODO: should we disconnect the client in this case?
                     print(traceback.format_exc())
         except RuntimeError:
             print("[BUG] token array modified during loop over it")
             print(traceback.format_exc())
-            print("[BUG] token array modified during loop over it")
+        #TODO: this makes me fucking sad : ( fix
+        #for token in logout_tokens:
+        #    self.disconnect(self.tokens[token]["token"])
+        #for token in logout_tokens:
+        #    print("client disconnected%s" % logout_tokens[token]["username"])
+        #    server_user_logout_event.fire(username)
+
+        
 
     def set_username(self, token: str, username: str):
         self.tokens[token].username = username

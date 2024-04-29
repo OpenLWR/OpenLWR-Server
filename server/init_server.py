@@ -1,5 +1,6 @@
 import uuid
 import traceback
+import websockets
 from server.connection_manager import manager
 from server.server_events import server_user_logout_event
 from server.constants import packets
@@ -56,6 +57,10 @@ def init_server(websocket):
                 client_player_position_parameters_update_event.handle(packet_data,token_object.username)
             elif packet_id == packets.ClientPackets.ROD_SELECT_UPDATE:
                 client_rod_select_update_event.handle(packet_data)
+        except websockets.exceptions.ConnectionClosed:
+            print("client disconnected%s" % token_object.username)
+            manager.disconnect(token_str)
+            server_user_logout_event.fire(token_object.username)
         except Exception:
             print(traceback.format_exc())
             manager.disconnect(token_str)
