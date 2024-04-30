@@ -3,6 +3,7 @@ from simulation.models.control_room_nmp2 import annunciators
 from simulation.models.control_room_nmp2 import reactor_protection_system
 from simulation.models.control_room_nmp2 import rod_position_information_system
 from simulation.models.control_room_nmp2 import rod_drive_control_system
+from simulation.models.control_room_nmp2.reactor_physics import reactor_physics
 import math
 
 alarms = {
@@ -91,3 +92,4 @@ def model_run(delta):
     reactor_protection_system.run(alarms,buttons,indicators,rods,switches)
     rod_drive_control_system.run(rods,buttons)
     rod_position_information_system.run(rods,alarms,buttons)
+    reactor_physics.run(rods)

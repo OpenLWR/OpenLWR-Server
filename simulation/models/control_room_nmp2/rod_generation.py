@@ -52,6 +52,12 @@ def run(rods,buttons):
 						"drift_alarm": False,
 						"driving": False,
 						"select": False,
+						"x" : x,
+						"y" : y,
+
+						#physics stuff
+	  					"neutrons" : 1,
+						"neutrons_last" : 1,
 				}
 				#Generate the rod select pushbutton index for this rod
 				buttons["select_%s" % rod_number] = False
