@@ -15,6 +15,7 @@ steps = 0
 
 def run(rods):
     #TODO: Improve code quality, add comments, etc
+    #NOTE: this is all very delicate, please do not mess with any of this. if you PR a commit to this, i will review it
     reactivityRate = 0
 
     CoreFlow = 100
@@ -35,9 +36,14 @@ def run(rods):
         info["neutrons"] = max(info["neutrons"],100)
         #print(info["neutrons"])
         if steps == 10:
-            period = 1/math.log(info["neutrons"]/info["neutrons_last"])
+            try:
+                period = 1/math.log(info["neutrons"]/max(info["neutrons_last"],1))
+            except:
+                 period = math.inf
             #info["neutrons_last"] = info["neutrons"]
             #print(period)
+            #NOTE: due to all parts of the rods being sent to the client, the client cannot join with a high neutron count (or if "neutrons_last" is updated ever)
+            #i will wait until this is fixed to go further
         reactionRate = neutrons.getReactionRate(
 			neutrons.getNeutronFlux(info["neutrons"], neutrons.getNeutronVelocity(neutrons.getNeutronEnergy(22))), 
 			mykEffArgs["MacroU235"]
@@ -51,8 +57,8 @@ def run(rods):
 			{"x" : 0,"y" : -4}
 		]
         #TODO: fix this
-        #there is something weird wrong with this, and its preventing any of the code from working. Just dont use this for now.
-        #NOTE: (we kind of need this part, as it spread the neutrons around the core. I'll look into it more later.)
+        #there is something weird with this, and its preventing any of the code from working. Just dont use this for now.
+        #NOTE: (we kind of need this part, as it spreads the neutrons around the core. I'll look into it more later.)
         """for direction in directions:
 
             dirX =direction["x"]
