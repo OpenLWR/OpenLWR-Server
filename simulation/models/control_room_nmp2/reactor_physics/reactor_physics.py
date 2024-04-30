@@ -6,10 +6,6 @@ from simulation.models.control_room_nmp2.reactor_physics import neutrons
 
 #local Heat = require(script.Parent.Heat)
 
-def round(num, numDecimalPlaces):
-	mult = 10^(numDecimalPlaces or 0)
-	return math.floor(num * mult + 0.5) / mult
-
 waterMass = 479345
 steps = 0
 
@@ -38,14 +34,14 @@ def run(rods):
         if steps == 10:
             try:
                 period = 1/math.log(info["neutrons"]/max(info["neutrons_last"],1))
-            except:
+            except Exception:
                  period = math.inf
-            #info["neutrons_last"] = info["neutrons"]
+            info["neutrons_last"] = info["neutrons"]
             #print(period)
             #NOTE: due to all parts of the rods being sent to the client, the client cannot join with a high neutron count (or if "neutrons_last" is updated ever)
             #i will wait until this is fixed to go further
         reactionRate = neutrons.getReactionRate(
-			neutrons.getNeutronFlux(info["neutrons"], neutrons.getNeutronVelocity(neutrons.getNeutronEnergy(22))), 
+			neutrons.getNeutronFlux(info["neutrons"], neutrons.getNeutronVelocity(neutrons.getNeutronEnergy(22))),
 			mykEffArgs["MacroU235"]
 		)
         reactivityRate += reactionRate
