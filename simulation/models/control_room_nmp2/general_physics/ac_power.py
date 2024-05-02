@@ -1,11 +1,7 @@
-import math
-
 from simulation.constants.electrical_types import ElectricalType
 
-def clamp(val, min, max):
-	if val < min: return min
-	if val > max: return max
-	return val
+def clamp(val, clamp_min, clamp_max):
+    return min(max(val,clamp_min),clamp_max)
 
 breakers = {
 	"cb_test_test2" : {
@@ -82,14 +78,14 @@ def run(switches,alarms,indicators):
 		#handling for breaker interactions with the bus
         for feeder in bus["feeders"]:
             #remove the feeder if its not supplying anything
-            object = breakers[feeder]
+            component = breakers[feeder]
             #TODO: check what type the feeder is (IE Transformer v Breaker) and take action based on that
-            if not object["closed"]:
+            if not component["closed"]:
                 bus["feeders"].remove(feeder)
             
             #TODO: interactions between multiple feeders
 
-            source = trace_source(object)
+            source = trace_source(component)
 
             bus["voltage"] = source["voltage"]
             bus["frequency"] = source["frequency"]
@@ -104,18 +100,18 @@ def run(switches,alarms,indicators):
 
 
 def trace_source(breaker:dict):
-    input = ""
+    source = ""
     while True:
-        if input == "":
-            input = breaker["incoming"]
+        if source == "":
+            source = breaker["incoming"]
 
-        if get_type(input) == ElectricalType.BUS:
+        if get_type(source) == ElectricalType.BUS:
             break
         else:
             #this is a bit messy
-            input == type_check(get_type(input))[input]["incoming"]
+            source = type_check(get_type(source))[source]["incoming"]
 
-    return busses[input]
+    return busses[source]
         
 
 def get_type(name):
@@ -126,33 +122,33 @@ def get_type(name):
     if "tr" in name:
         return ElectricalType.TRANSFORMER
     else:
-         return ElectricalType.BUS
+        return ElectricalType.BUS
         
 
-def type_check(type:int):
+def type_check(component_type:int):
 	
-    if type > len(ElectricalType) or type < 0: print("Invalid type : "+str(type))
+    if type > len(ElectricalType) or type < 0: print(f"Invalid type : {component_type}")
 
     match type: #TODO: is there a better way to do this?
         case ElectricalType.BREAKER: return breakers
         case ElectricalType.TRANSFORMER: return transformers
         case ElectricalType.BUS: return busses
         case ElectricalType.SOURCE: return sources
-	
+
     print("Could not match given type with any defined type : "+str(type))
     return 
 		
 def open_breaker(breaker):
-	object = breakers[breaker]
-	#TODO: breakers failing to trip
-	object["closed"] = False
+    component = breakers[breaker]
+    #TODO: breakers failing to trip
+    component["closed"] = False
 	
 def close_breaker(breaker):
-    object = breakers[breaker]
+    component = breakers[breaker]
     #TODO: breakers failing to close
-    object["closed"] = True and not object["lockout"]
+    component["closed"] = True and not component["lockout"]
 	
-def set_lockout(type:int,name:str,state:bool):
-	type_table = type_check(type)
-	object = type_table[name]
-	object["lockout"] = state
+def set_lockout(component_type:int,name:str,state:bool):
+    type_table = type_check(component_type)
+    component = type_table[name]
+    component["lockout"] = state
