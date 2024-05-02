@@ -13,7 +13,7 @@ def fire(rods): #TODO only send ones that need to be updated (were changed)
             del new_rods[rod_name]
         else:
             old_rods[rod_name] = json.loads(json.dumps(rod)) # hack to copy this properly
-            print("sent:",rod_name)
+            #print("sent:",rod_name)
 
     if new_rods != {}:
         manager.broadcast_packet(packet_helper.build(packets.ServerPackets.ROD_POSITION_PARAMETERS_UPDATE, json.dumps(new_rods)))

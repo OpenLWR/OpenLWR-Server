@@ -4,6 +4,7 @@ from simulation.models.control_room_nmp2 import reactor_protection_system
 from simulation.models.control_room_nmp2 import rod_position_information_system
 from simulation.models.control_room_nmp2 import rod_drive_control_system
 from simulation.models.control_room_nmp2.reactor_physics import reactor_physics
+from simulation.models.control_room_nmp2.general_physics import ac_power
 import math
 
 alarms = {
@@ -37,6 +38,19 @@ alarms = {
         "group" : "1",
         "silenced" : False,
     },
+
+    "bus_test_undervoltage" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "bus2_test_undervoltage" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
 }
 
 switches = {
@@ -48,6 +62,14 @@ switches = {
             3: -90,
 		},
         "position": 2,
+    },
+    "cb_test_test2": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
     },
 }
 
@@ -65,6 +87,9 @@ indicators = {
 
     #RMCS Indicators
     "RMCS_WITHDRAW_BLOCK": False,
+
+    "cb_test_test2_green": True,
+    "cb_test_test2_red": False,
 }
 
 buttons = {
@@ -93,3 +118,4 @@ def model_run(delta):
     rod_drive_control_system.run(rods,buttons)
     rod_position_information_system.run(rods,alarms,buttons)
     reactor_physics.run(rods)
+    ac_power.run(switches,alarms,indicators)
