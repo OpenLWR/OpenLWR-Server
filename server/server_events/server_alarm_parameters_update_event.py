@@ -15,6 +15,7 @@ def fire(alarms): #TODO only send ones that need to be updated (were changed)
     data = {}
     silent = {
         "1" : {"F":True,"S":True}, # F - Fast S - Slow
+        "2" : {"F":True,"S":True},
     }
 
     for alarm in alarms:
@@ -32,5 +33,6 @@ def fire(alarms): #TODO only send ones that need to be updated (were changed)
 def fire_initial(token):
     silent = {
         "1" : {"F":True,"S":True}, # F - Fast S - Slow
+        "2" : {"F":True,"S":True},
     }
     #manager.send_user_packet(packet_helper.build(packets.ServerPackets.ALARM_PARAMETERS_UPDATE, f"{json.dumps(alarms)}|{json.dumps(silent)}"),token)

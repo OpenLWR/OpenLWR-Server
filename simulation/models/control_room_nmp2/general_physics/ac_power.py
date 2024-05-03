@@ -4,15 +4,119 @@ def clamp(val, clamp_min, clamp_max):
     return min(max(val,clamp_min),clamp_max)
 
 breakers = {
-	"cb_test_test2" : {
+	"cb_14-2" : {
         "type" : ElectricalType.BREAKER,
 		"closed" : True,
-		"incoming" : "test", #"incoming" can be anything, and is generally the normal flow into the breaker
+		"incoming" : "Startup", #"incoming" can be anything, and is generally the normal flow into the breaker
 		#the breaker can flow in reverse, but this will take a bit more calculations than usual
         #TODO: breaker reverse current protection
-		"running" : "test2", #"running" can be anything as well, and is generally the outgoing flow
+		"running" : "014", #"running" can be anything as well, and is generally the outgoing flow
 		"lockout" : False, #most breakers have a lockout circuit which can trip automatically to prevent closure
 		"flag_position" : False, #TODO: do we need this, or will this be included with the switch code?
+    },
+    "cb_15-3" : {
+        "type" : ElectricalType.BREAKER,
+		"closed" : True,
+		"incoming" : "Startup",
+		"running" : "015", 
+		"lockout" : False,
+		"flag_position" : False,
+    },
+
+    "cb_14-1" : {
+        "type" : ElectricalType.BREAKER,
+		"closed" : True,
+		"incoming" : "014",
+		"running" : "cb_101-14", 
+		"lockout" : False,
+		"flag_position" : False,
+    },
+    "cb_101-14" : {
+        "type" : ElectricalType.BREAKER,
+		"closed" : True,
+		"incoming" : "cb_14-1",
+		"running" : "101", 
+		"lockout" : False,
+		"flag_position" : False,
+    },
+
+    "cb_15-8" : {
+        "type" : ElectricalType.BREAKER,
+		"closed" : True,
+		"incoming" : "015",
+		"running" : "cb_103-8", 
+		"lockout" : False,
+		"flag_position" : False,
+    },
+    "cb_103-8" : {
+        "type" : ElectricalType.BREAKER,
+		"closed" : True,
+		"incoming" : "cb_15-8",
+		"running" : "103", 
+		"lockout" : False,
+		"flag_position" : False,
+    },
+}
+
+busses = {
+     "101" : {
+        "type" : ElectricalType.BUS,
+        "voltage" : 4160,
+        "frequency" : 60,
+        "current" : 0,
+        "loads" : [],
+        "feeders" : [],
+
+        "undervoltage_setpoint" : 4000,
+
+        "annunciators" : {
+             "UNDERVOLTAGE" : "bus_101_undervoltage",
+        }
+    },
+    "103" : {
+        "type" : ElectricalType.BUS,
+        "voltage" : 4160,
+        "frequency" : 60,
+        "current" : 0,
+        "loads" : [],
+        "feeders" : [],
+
+        "undervoltage_setpoint" : 4000,
+
+        "annunciators" : {
+             "UNDERVOLTAGE" : "bus_103_undervoltage",
+        }
+    },
+
+    #NNS busses
+
+    "014" : {
+        "type" : ElectricalType.BUS,
+        "voltage" : 4160,
+        "frequency" : 60,
+        "current" : 0,
+        "loads" : [],
+        "feeders" : [],
+
+        "undervoltage_setpoint" : 4000,
+
+        "annunciators" : {
+             "UNDERVOLTAGE" : "bus_014_undervoltage",
+        }
+    },
+    "015" : {
+        "type" : ElectricalType.BUS,
+        "voltage" : 4160,
+        "frequency" : 60,
+        "current" : 0,
+        "loads" : [],
+        "feeders" : [],
+
+        "undervoltage_setpoint" : 4000,
+
+        "annunciators" : {
+             "UNDERVOLTAGE" : "bus_015_undervoltage",
+        }
     },
 }
 
@@ -20,40 +124,27 @@ transformers = {
 	
 }
 
-busses = {
-     "test" : {
-        "type" : ElectricalType.BUS,
-        "voltage" : 480,
+sources = {
+    "Startup" : { #make this an actual transformer later
+        "type" : ElectricalType.SOURCE,
+        "voltage" : 4160,
         "frequency" : 60,
-        "current" : 0,
-        "loads" : [],
-        "feeders" : [],
 
-        "undervoltage_setpoint" : 400,
-
-        "annunciators" : {
-             "UNDERVOLTAGE" : "bus_test_undervoltage",
-        }
-    },
-    "test2" : {
-        "type" : ElectricalType.BUS,
-        "voltage" : 0,
-        "frequency" : 0,
-        "current" : 0,
-        "loads" : [],
-        "feeders" : [],
-
-        "undervoltage_setpoint" : 400,
-
-        "annunciators" : {
-             "UNDERVOLTAGE" : "bus2_test_undervoltage",
-        }
-    },
+        "annunciators" : {}
+    }
 }
 
-sources = {}
+def run(switches,alarms,indicators,runs):
+    if runs > 250:
+        sources["Startup"]["voltage"] = 0
+        sources["Startup"]["frequency"] = 0
+    if runs > 280:
+        from simulation.models.control_room_nmp2 import reactor_protection_system
+        reactor_protection_system.rps_a_trip = True
+        reactor_protection_system.rps_b_trip = True
 
-def run(switches,alarms,indicators):
+    indicators["cr_light_normal"] = get_bus_power("101",4000)
+    indicators["cr_light_emergency"] = not get_bus_power("101",4000)
     for breaker_name in breakers:
         if breaker_name in switches:
             if switches[breaker_name]["position"] == 0: open_breaker(breaker_name)
@@ -78,19 +169,30 @@ def run(switches,alarms,indicators):
 		#handling for breaker interactions with the bus
         for feeder in bus["feeders"]:
             #remove the feeder if its not supplying anything
-            component = breakers[feeder]
-            #TODO: check what type the feeder is (IE Transformer v Breaker) and take action based on that
-            if not component["closed"]:
-                bus["feeders"].remove(feeder)
+            match get_type(feeder):
+                case ElectricalType.BREAKER:
+                    component = breakers[feeder]
+                    if not verify_path_closed(feeder):
+                        bus["feeders"].remove(feeder)
             
-            #TODO: interactions between multiple feeders
+                    #TODO: interactions between multiple feeders
 
-            source = trace_source(component)
+                    source = trace_source(component)
 
-            bus["voltage"] = source["voltage"]
-            bus["frequency"] = source["frequency"]
+                    bus["voltage"] = source["voltage"]
+                    bus["frequency"] = source["frequency"]
+                case ElectricalType.TRANSFORMER:
+                    component = transformers[feeder]
+                    if not component["breakers_closed"]:
+                        bus["feeders"].remove(feeder)
+                    
+                    source = component
 
-        if len(bus["feeders"]) == 0 and bus_name != "test":
+                    bus["voltage"] = source["voltage"]
+                    bus["frequency"] = source["frequency"]
+           
+
+        if len(bus["feeders"]) == 0:
             bus["voltage"] = 0
             bus["frequency"] = 0
         
@@ -98,20 +200,76 @@ def run(switches,alarms,indicators):
             if "UNDERVOLTAGE" in bus["annunciators"]:
                 alarms[bus["annunciators"]["UNDERVOLTAGE"]]["alarm"] = True
 
+    for transformer_name in transformers:
+        xfmr = transformers[transformer_name]
+        input_source = trace_source(xfmr["incoming"])
+        #TODO: remove this hardcoded stuff
+        incoming_voltage = 0
+        incoming_frequency = 0
+        if get_type(xfmr["incoming"]) == ElectricalType.BREAKER:
+            input_breaker = type_check(get_type(xfmr["incoming"]))[xfmr["incoming"]]
+            xfmr["breakers_closed"] = input_breaker["closed"]
+            if input_breaker["closed"]:
+                incoming_voltage = input_source["voltage"]
+                incoming_frequency = input_source["frequency"]
+                if get_type(xfmr["running"]) == ElectricalType.BUS:
+                    busses[xfmr["running"]]["feeders"].append(transformer_name)
 
-def trace_source(breaker:dict):
+        xfmr["voltage"] = incoming_voltage
+        xfmr["frequency"] = incoming_frequency
+
+
+
+def trace_source(incoming):
+    '''Traces the source that is currently supplying voltage. Can be a bus or source.'''
     source = ""
+    if type(incoming) == str: incoming = type_check(get_type(incoming))[incoming]
+
+    if incoming["type"] == ElectricalType.BUS: return incoming #if the given trace is already a bus, just return that
+
     while True:
         if source == "":
-            source = breaker["incoming"]
+            source = incoming["incoming"]
 
         if get_type(source) == ElectricalType.BUS:
+            source = busses[source]
+            break
+        elif get_type(source) == ElectricalType.SOURCE:
+            source = sources[source]
             break
         else:
             #this is a bit messy
             source = type_check(get_type(source))[source]["incoming"]
 
-    return busses[source]
+    return source
+
+def verify_path_closed(incoming):
+    '''Traces the source that is currently supplying voltage and verifys all breakers are closed. Returns true if all are closed.'''
+    source = ""
+    if type(incoming) == str: incoming = type_check(get_type(incoming))[incoming]
+
+    if incoming["type"] == ElectricalType.BUS: return True #if the given trace is already a bus, just return true
+    available = True
+    while True:
+        if source == "":
+            if incoming["type"] == ElectricalType.BREAKER:
+                if not incoming["closed"]: 
+                    available = False
+                    break
+            source = incoming["incoming"]
+
+        if get_type(source) == ElectricalType.BUS:
+            break
+        elif get_type(source) == ElectricalType.SOURCE:
+            break
+        elif get_type(source) == ElectricalType.BREAKER:
+            if not type_check(get_type(source))[source]["closed"]: 
+                available = False
+                break
+
+        source = type_check(get_type(source))[source]["incoming"]
+
+    return available
         
 
 def get_type(name):
@@ -121,15 +279,17 @@ def get_type(name):
         return ElectricalType.BREAKER
     if "tr" in name:
         return ElectricalType.TRANSFORMER
+    if "Startup" in name:
+        return ElectricalType.SOURCE
     else:
         return ElectricalType.BUS
         
 
 def type_check(component_type:int):
-	
-    if type > len(ElectricalType) or type < 0: print(f"Invalid type : {component_type}")
+    '''Checks the type of the component given. Returns the table that the type is in.'''
+    if component_type > len(ElectricalType) or component_type < 0: print(f"Invalid type : {component_type}")
 
-    match type: #TODO: is there a better way to do this?
+    match component_type: #TODO: is there a better way to do this?
         case ElectricalType.BREAKER: return breakers
         case ElectricalType.TRANSFORMER: return transformers
         case ElectricalType.BUS: return busses
@@ -152,3 +312,10 @@ def set_lockout(component_type:int,name:str,state:bool):
     type_table = type_check(component_type)
     component = type_table[name]
     component["lockout"] = state
+
+def get_bus_power(bus_name:str,undervoltage_setpoint:int):
+    """Gets if the bus is powered, according to a undervoltage setpoint.
+
+    Returns true if powered, else false."""
+    if busses[bus_name]["voltage"] < undervoltage_setpoint: return False
+    return True

@@ -39,16 +39,29 @@ alarms = {
         "silenced" : False,
     },
 
-    "bus_test_undervoltage" : {
+    "bus_014_undervoltage" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
-        "group" : "1",
+        "group" : "2",
         "silenced" : False,
     },
-    "bus2_test_undervoltage" : {
+    "bus_015_undervoltage" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
-        "group" : "1",
+        "group" : "2",
+        "silenced" : False,
+    },
+
+    "bus_101_undervoltage" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "bus_103_undervoltage" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
         "silenced" : False,
     },
 }
@@ -63,7 +76,49 @@ switches = {
 		},
         "position": 2,
     },
-    "cb_test_test2": {
+    "cb_14-2": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+    },
+    "cb_15-3": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+    },
+
+    "cb_14-1": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+    },
+    "cb_101-14": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+    },
+
+    "cb_15-8": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+    },
+    "cb_103-8": {
         "positions": {
 			0: 45,
 			1: 0,
@@ -88,8 +143,26 @@ indicators = {
     #RMCS Indicators
     "RMCS_WITHDRAW_BLOCK": False,
 
-    "cb_test_test2_green": True,
-    "cb_test_test2_red": False,
+    "cb_15-3_green": True,
+    "cb_15-3_red": False,
+
+    "cb_14-2_green": True,
+    "cb_14-2_red": False,
+
+    "cb_14-1_green": True,
+    "cb_14-1_red": False,
+
+    "cb_101-14_green": True,
+    "cb_101-14_red": False,
+
+    "cb_15-8_green": True,
+    "cb_15-8_red": False,
+
+    "cb_103-8_green": True,
+    "cb_103-8_red": False,
+
+    "cr_light_normal": True,
+    "cr_light_emergency": False,
 }
 
 buttons = {
@@ -97,9 +170,14 @@ buttons = {
     "SCRAM_B1": False,
     "SCRAM_A2": False,
     "SCRAM_B2": False,
+    #Annunciators
     "ALARM_SILENCE_1": False,
     "ALARM_ACK_1": False,
     "ALARM_RESET_1": False,
+    #2
+    "ALARM_SILENCE_2": False,
+    "ALARM_ACK_2": False,
+    "ALARM_RESET_2": False,
 
     #RMCS pushbuttons
     "ACCUM_TROUBLE_RESET": False,
@@ -111,11 +189,13 @@ rods = {}
 
 from simulation.models.control_room_nmp2 import rod_generation
 rod_generation.run(rods,buttons)
-
+runs = 0
 def model_run(delta):
+    global runs
     annunciators.run(alarms,buttons)
     reactor_protection_system.run(alarms,buttons,indicators,rods,switches)
     rod_drive_control_system.run(rods,buttons)
     rod_position_information_system.run(rods,alarms,buttons)
     reactor_physics.run(rods)
-    ac_power.run(switches,alarms,indicators)
+    ac_power.run(switches,alarms,indicators,runs)
+    runs += 1
