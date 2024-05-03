@@ -57,6 +57,12 @@ def init_server(websocket):
                 client_player_position_parameters_update_event.handle(packet_data,token_object.username)
             elif packet_id == packets.ClientPackets.ROD_SELECT_UPDATE:
                 client_rod_select_update_event.handle(packet_data)
+            elif packet_id == packets.ClientPackets.SYNCHRONIZE: #allows the client to request all the simulation data, like how it was when they joined the server.
+                server_switch_parameters_update_event.fire_initial(token_str)
+                server_button_parameters_update_event.fire_initial(token_str)
+                server_player_position_parameters_update_event.fire_initial(token_str)
+                server_rod_position_parameters_update_event.fire_initial(token_str)
+                
         except websockets.exceptions.ConnectionClosed:
             print("client disconnected%s" % token_object.username)
             manager.disconnect(token_str)
