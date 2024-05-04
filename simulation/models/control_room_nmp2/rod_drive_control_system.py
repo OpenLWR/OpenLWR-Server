@@ -56,7 +56,7 @@ def insert_rod_motion(args):
 
     model.indicators["RMCS_INSERT"] = True
 
-    #TODO: holding down "insert" should insert the rod for however long its pressed, but still end with a settle sequence.
+    #holding down "insert" inserts the rod for however long its pressed, but still end with a settle sequence.
     #This is different from continuous insert, as that does not have a settle sequence.
     first_run = True
     while model.buttons["RMCS_INSERT_PB"] or first_run:
@@ -69,7 +69,7 @@ def insert_rod_motion(args):
             model.rods[rod]["insertion"] = insertion
             time.sleep(0.11)
             runs += 1
-        time.sleep(0.5)
+        time.sleep(0.5) #TODO: is this realistic? Is there a better way to do this instead?
 
     model.indicators["RMCS_INSERT"] = False
 
