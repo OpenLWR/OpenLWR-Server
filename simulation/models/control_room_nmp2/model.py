@@ -141,7 +141,12 @@ indicators = {
     "SCRAM_SOLENOID_H": True,
 
     #RMCS Indicators
+    "RMCS_INSERT_BLOCK": False,
     "RMCS_WITHDRAW_BLOCK": False,
+    #Rod Motion Controls
+    "RMCS_SETTLE": False,
+    "RMCS_INSERT": False,
+    "RMCS_WITHDRAW": False,
 
     "cb_15-3_green": True,
     "cb_15-3_red": False,
@@ -182,6 +187,10 @@ buttons = {
     #RMCS pushbuttons
     "ACCUM_TROUBLE_RESET": False,
     "ROD_DRIFT_RESET": False,
+
+    "RMCS_INSERT_PB": False,
+    "RMCS_WITHDRAW_PB": False,
+
 
 }
 

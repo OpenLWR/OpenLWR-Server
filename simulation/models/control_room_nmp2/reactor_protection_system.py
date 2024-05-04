@@ -5,6 +5,7 @@ import math
 rps_a_trip = False
 rps_b_trip = False
 withdraw_block = False
+insert_block = False
 
 def run(alarms,buttons,indicators,rods,switches):
     global rps_a_trip

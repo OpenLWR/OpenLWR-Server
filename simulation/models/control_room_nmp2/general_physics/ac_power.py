@@ -135,13 +135,13 @@ sources = {
 }
 
 def run(switches,alarms,indicators,runs):
-    if runs > 250:
+    """if runs > 250:
         sources["Startup"]["voltage"] = 0
         sources["Startup"]["frequency"] = 0
     if runs > 280:
         from simulation.models.control_room_nmp2 import reactor_protection_system
         reactor_protection_system.rps_a_trip = True
-        reactor_protection_system.rps_b_trip = True
+        reactor_protection_system.rps_b_trip = True"""
 
     indicators["cr_light_normal"] = get_bus_power("101",4000)
     indicators["cr_light_emergency"] = not get_bus_power("101",4000)

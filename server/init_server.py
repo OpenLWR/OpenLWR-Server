@@ -35,34 +35,38 @@ def init_server(websocket):
             manager.disconnect(token_str)
 
     # inform the client of all switch positions
-    server_switch_parameters_update_event.fire_initial(token_str)
+    #server_switch_parameters_update_event.fire_initial(token_str)
     # do the same for all button positions
-    server_button_parameters_update_event.fire_initial(token_str)
+    #server_button_parameters_update_event.fire_initial(token_str)
 
-    server_player_position_parameters_update_event.fire_initial(token_str)
+    #server_player_position_parameters_update_event.fire_initial(token_str)
 
-    server_rod_position_parameters_update_event.fire_initial(token_str)
+    #server_rod_position_parameters_update_event.fire_initial(token_str)
     
     for packet in websocket:
         try:
             #print(packet) # TODO: proper logging system
 
             packet_id, packet_data = packet_helper.parse(packet)
+            match packet_id:
+                case packets.ClientPackets.SWITCH_PARAMETERS_UPDATE:
+                    client_switch_parameters_update_event.handle(packet_data)
 
-            if packet_id == packets.ClientPackets.SWITCH_PARAMETERS_UPDATE:
-                client_switch_parameters_update_event.handle(packet_data)
-            elif packet_id == packets.ClientPackets.BUTTON_PARAMETERS_UPDATE:
-                client_button_parameters_update_event.handle(packet_data)
-            elif packet_id == packets.ClientPackets.PLAYER_POSITION_PARAMETERS_UPDATE:
-                client_player_position_parameters_update_event.handle(packet_data,token_object.username)
-            elif packet_id == packets.ClientPackets.ROD_SELECT_UPDATE:
-                client_rod_select_update_event.handle(packet_data)
-            elif packet_id == packets.ClientPackets.SYNCHRONIZE: #allows the client to request all the simulation data, like how it was when they joined the server.
-                server_switch_parameters_update_event.fire_initial(token_str)
-                server_button_parameters_update_event.fire_initial(token_str)
-                server_player_position_parameters_update_event.fire_initial(token_str)
-                server_rod_position_parameters_update_event.fire_initial(token_str)
+                case packets.ClientPackets.BUTTON_PARAMETERS_UPDATE:
+                    client_button_parameters_update_event.handle(packet_data)
                 
+                case packets.ClientPackets.PLAYER_POSITION_PARAMETERS_UPDATE:
+                    client_player_position_parameters_update_event.handle(packet_data,token_object.username)
+
+                case packets.ClientPackets.ROD_SELECT_UPDATE:
+                    client_rod_select_update_event.handle(packet_data)
+                
+                case packets.ClientPackets.SYNCHRONIZE: #allows the client to request all the simulation data, like how it was when they joined the server.
+                    server_switch_parameters_update_event.fire_initial(token_str)
+                    server_button_parameters_update_event.fire_initial(token_str)
+                    server_player_position_parameters_update_event.fire_initial(token_str)
+                    server_rod_position_parameters_update_event.fire_initial(token_str)
+
         except websockets.exceptions.ConnectionClosed:
             print("client disconnected%s" % token_object.username)
             manager.disconnect(token_str)
