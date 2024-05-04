@@ -128,7 +128,12 @@ switches = {
     },
 }
 
-values = {}
+values = {
+    "four_rod_br": 1,
+    "four_rod_bl": 60,
+    "four_rod_tr": 15,
+    "four_rod_tl": -21,
+}
 
 indicators = {
     "SCRAM_SOLENOID_A": True,

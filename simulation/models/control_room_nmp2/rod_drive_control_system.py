@@ -58,14 +58,18 @@ def insert_rod_motion(args):
 
     #TODO: holding down "insert" should insert the rod for however long its pressed, but still end with a settle sequence.
     #This is different from continuous insert, as that does not have a settle sequence.
-
-    #insert the rod for 2.9 seconds
-    runs = 0
-    while runs < 29 and not model.rods[rod]["scram"]:
-        insertion -= 0.082
-        model.rods[rod]["insertion"] = insertion
-        time.sleep(0.11)
-        runs += 1
+    first_run = True
+    while model.buttons["RMCS_INSERT_PB"] or first_run:
+        first_run = False
+        target_insertion -= 2
+        #insert the rod for 2.9 seconds
+        runs = 0
+        while runs < 29 and not model.rods[rod]["scram"]:
+            insertion -= 0.082
+            model.rods[rod]["insertion"] = insertion
+            time.sleep(0.11)
+            runs += 1
+        time.sleep(0.5)
 
     model.indicators["RMCS_INSERT"] = False
 
