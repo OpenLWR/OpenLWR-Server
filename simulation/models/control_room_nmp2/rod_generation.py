@@ -49,6 +49,7 @@ def run(rods,buttons):
 						"accum_pressure": 1400.00, #normal pressure is around 1400 psig
 						"accum_trouble": False,
 						"accum_trouble_acknowledged": False,
+						"reed_switch_fail" : False,
 						"drift_alarm": False,
 						"driving": False,
 						"select": False,
@@ -56,8 +57,8 @@ def run(rods,buttons):
 						"y" : y,
 
 						#physics stuff
-	  					"neutrons" : 1,
-						"neutrons_last" : 1,
+	  					"neutrons" : 320e15*0.7*100,
+						"neutrons_last" : 320e15*0.7*100,
 				}
 				#Generate the rod select pushbutton index for this rod
 				buttons["select_%s" % rod_number] = False

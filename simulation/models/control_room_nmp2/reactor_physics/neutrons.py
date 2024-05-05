@@ -7,7 +7,7 @@ NeutronModeratingParameters = {
 }
 
 def getNeutronVelocity(avg_Neutron_Energy):
-	return 1.386*(10^6)*math.sqrt(avg_Neutron_Energy) # km/s
+	return 1.386*(10**6)*math.sqrt(avg_Neutron_Energy) # km/s
 
 def getNeutronDensity(neutronAmount, volume):
 	return neutronAmount/volume # cm2
@@ -18,7 +18,7 @@ def getNeutronFlux(neutronDensity, neutronVelocity):
 
 
 def getNeutronEnergy(temperature):
-	return 1.386*(10^6)*(temperature+273.15) # MeV
+	return 1.386*(10**6)*(temperature+273.15) # MeV
 
 
 def getReactionRate(neutronFlux, macroscopicCrossSectionU235):

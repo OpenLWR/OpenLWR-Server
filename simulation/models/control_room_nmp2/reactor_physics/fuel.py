@@ -1,8 +1,8 @@
 import math
 
 AtomicNumberDensities = {
-	"U235" : 2.53*(10^22),
-	"U238" : 2.51*(10^22),
+	"U235" : 2.53*(10**22),
+	"U238" : 2.51*(10**22),
 }
 
 from simulation.models.control_room_nmp2.reactor_physics.cross_sections import MicroscopicCrossSections
@@ -41,9 +41,8 @@ def get(waterMass, controlDepth, neutronFlux, temperatureFuel,CoreFlow,NeutronPo
 
     U = U235SumCrossSection
     M = MacroscopicCrossSections["Moderator"]["C12"]["Capture"]
-    M = 0
     P = 0
-    CR = (MacroscopicCrossSections["Absorbers"]["B10"]["Capture"]*(CR))
+    CR = (MacroscopicCrossSections["Absorbers"]["B10"]["Capture"]*(CR*1.25))
 	
 
     ThermalUtilizationFactor = (U)/(U+M+P+CR)
@@ -85,7 +84,7 @@ def get(waterMass, controlDepth, neutronFlux, temperatureFuel,CoreFlow,NeutronPo
 
     Width = 3
     Length = 5
-    k = 0.2*(10^1) # width/length obtained from buckling graph for reactors
+    k = 0.2*(10**1) # width/length obtained from buckling graph for reactors
     GeometricBuckling = (k*math.pi/Length)
     FastNonLeakageProbability = 1/(1+(0.02*(GeometricBuckling**2)))
 
@@ -99,7 +98,7 @@ def get(waterMass, controlDepth, neutronFlux, temperatureFuel,CoreFlow,NeutronPo
 
     meanGenerationTime = kEff * 0.03
 
-    promptGenerationTime = 2*10^-1
+    promptGenerationTime = 2*(10**-1)
     delayedGenerationTime = 13.05
 
     kStep = (kEff)**0.03

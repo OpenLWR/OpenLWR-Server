@@ -404,15 +404,22 @@ def four_rod_display(selected_rod):
         rod = select_groups[selected_group][rod_num]
         if rod != "none":
             value = round(model.rods[rod]["insertion"])
+            failed = model.rods[rod]["reed_switch_fail"]
         else:
             value == "none"
         select = rod == selected_rod
-        undisplayable = value < 0 or value > 48 or value == "none"
+        undisplayable = value < 0 or value > 48 or (value % 2 != 0)
+        
+        blank = value == "none"
 
         value+=1 #we add one so the client doesnt receive a "0" as a position
 
         if undisplayable: #displays "- -"
             value = 60
+        elif failed: #displays "X X"
+            value = 70
+        elif blank: #blank
+            value = 80
 
         if select: value = value*-1
 

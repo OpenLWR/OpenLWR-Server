@@ -218,6 +218,9 @@ def run(switches,alarms,indicators,runs):
         xfmr["voltage"] = incoming_voltage
         xfmr["frequency"] = incoming_frequency
 
+    #from general_physics import diesel_generator
+    #diesel_generator.run()
+
 
 
 def trace_source(incoming):

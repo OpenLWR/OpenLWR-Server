@@ -133,6 +133,16 @@ values = {
     "four_rod_bl": 60,
     "four_rod_tr": 15,
     "four_rod_tl": -21,
+
+    "srm_a_counts" : 20,
+    "srm_b_counts" : 20,
+    "srm_c_counts" : 20,
+    "srm_d_counts" : 20,
+
+    "srm_a_period" : 0,
+    "srm_b_period" : 0,
+    "srm_c_period" : 0,
+    "srm_d_period" : 0,
 }
 
 indicators = {
