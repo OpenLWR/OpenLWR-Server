@@ -406,7 +406,7 @@ def four_rod_display(selected_rod):
             value = round(model.rods[rod]["insertion"])
             failed = model.rods[rod]["reed_switch_fail"]
         else:
-            value == "none"
+            value = "none"
         select = rod == selected_rod
         undisplayable = value < 0 or value > 48 or (value % 2 != 0)
         
