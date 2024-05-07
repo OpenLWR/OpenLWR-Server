@@ -386,7 +386,7 @@ select_groups = {
 selected_group = 1
 
 def four_rod_display(selected_rod):
-    from simulation.models.control_room_nmp2 import model
+    from simulation.models.control_room_columbia import model
     global selected_group
     global select_groups
 
@@ -407,14 +407,17 @@ def four_rod_display(selected_rod):
             failed = model.rods[rod]["reed_switch_fail"]
         else:
             value = "none"
+            failed = False
         select = rod == selected_rod
         if type(value) == int: 
             undisplayable = value < 0 or value > 48 or (value % 2 != 0)
-            value+=1 #we add one so the client doesnt receive a "0" as a position
+            value+=1
+        	#we add one so the client doesnt receive a "0" as a position
         else:
             undisplayable = False
         
         blank = value == "none"
+        
 
         if undisplayable: #displays "- -"
             value = 60
