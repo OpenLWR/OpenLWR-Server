@@ -1,5 +1,42 @@
 import math
 
+def generate_lprm(lprm):
+	from simulation.models.control_room_columbia.neutron_monitoring import local_power_range_monitors
+
+	exempt_lprms = {
+		"56-49",
+		"48-57",
+	}
+
+	if lprm in exempt_lprms: return
+
+	local_power_range_monitors[lprm] = {
+		"D": {
+				"power": 0.00,
+				
+				"upscale_setpoint": 117.00,
+				"downscale_setpoint": 25.00,
+		},
+		"C": {
+				"power": 0.00,
+				
+				"upscale_setpoint": 117.00,
+				"downscale_setpoint": 25.00,
+		},
+		"B": {
+				"power": 0.00,
+				
+				"upscale_setpoint": 117.00,
+				"downscale_setpoint": 25.00,
+		},
+		"A": {
+				"power": 0.00,
+				
+				"upscale_setpoint": 117.00,
+				"downscale_setpoint": 25.00,
+		},
+	}
+
 def run(rods,buttons):
 	x = 18
 	y = 59
@@ -60,8 +97,19 @@ def run(rods,buttons):
 	  					"neutrons" : 320e15*0.7*100,
 						"neutrons_last" : 320e15*0.7*100,
 				}
-				#Generate the rod select pushbutton index for this rod
-				buttons["select_%s" % rod_number] = False
+
+				if ((x/4) - 0.5) % 2 != 0: #generate LPRMs
+					if ((y/4) - 0.75) % 2 != 0:
+						lprm_x = str(x+2)
+						if len(lprm_x) < 2:
+							lprm_x = "0%s" % lprm_x
+
+						lprm_y = str(y+2)
+						if len(lprm_y) < 2:
+							lprm_y = "0%s" % lprm_y
+
+						generate_lprm("%s-%s" % (lprm_x, lprm_y))
+
 				# increment y by 4 because we only have a control rod per every four fuel assemblies
 				x += 4
 
@@ -73,3 +121,4 @@ def run(rods,buttons):
 			rods_generated_row = 0
 			y -= 4
 			break
+
