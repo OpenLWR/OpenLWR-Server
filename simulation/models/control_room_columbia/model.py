@@ -8,6 +8,14 @@ from simulation.models.control_room_columbia import neutron_monitoring
 from simulation.models.control_room_columbia.general_physics import ac_power
 import math
 
+from enum import IntEnum
+
+class ReactorMode(IntEnum):
+    SHUTDOWN = 0
+    REFUEL = 1
+    STARTUP = 2
+    RUN = 3
+
 alarms = {
     "rps_a_auto_trip" : {
         "alarm" : False,
@@ -75,7 +83,7 @@ switches = {
 			2: -45,
             3: -90,
 		},
-        "position": 2,
+        "position": 3,
     },
     "cb_14-2": {
         "positions": {
@@ -191,6 +199,29 @@ indicators = {
 
     "cr_light_normal": True,
     "cr_light_emergency": False,
+
+    #APRM Status
+
+    "APRM_A_UPSCALE_TRIP_OR_INOP": False,
+    "APRM_B_UPSCALE_TRIP_OR_INOP": False,
+    "APRM_C_UPSCALE_TRIP_OR_INOP": False,
+    "APRM_D_UPSCALE_TRIP_OR_INOP": False,
+    "APRM_E_UPSCALE_TRIP_OR_INOP": False,
+    "APRM_F_UPSCALE_TRIP_OR_INOP": False,
+
+    "APRM_A_UPSCALE": False,
+    "APRM_B_UPSCALE": False,
+    "APRM_C_UPSCALE": False,
+    "APRM_D_UPSCALE": False,
+    "APRM_E_UPSCALE": False,
+    "APRM_F_UPSCALE": False,
+
+    "APRM_A_DOWNSCALE": False,
+    "APRM_B_DOWNSCALE": False,
+    "APRM_C_DOWNSCALE": False,
+    "APRM_D_DOWNSCALE": False,
+    "APRM_E_DOWNSCALE": False,
+    "APRM_F_DOWNSCALE": False,
 }
 
 buttons = {
@@ -198,8 +229,10 @@ buttons = {
     "SCRAM_B1": False,
     "SCRAM_A2": False,
     "SCRAM_B2": False,
+
+    "SCRAM_RESET_A": False,
+    "SCRAM_RESET_B": False,
     #Annunciators
-    "ALARM_SILENCE_1": False,
     "ALARM_ACK_1": False,
     "ALARM_RESET_1": False,
     #2

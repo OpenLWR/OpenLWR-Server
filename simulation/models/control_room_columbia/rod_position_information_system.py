@@ -3,12 +3,14 @@ from simulation.constants.annunciator_states import AnnunciatorStates
 from server.server_events import server_rod_position_parameters_update_event
 import math
 
+selected_rod = "none"
+
 def run(rods,alarms,buttons):
     #TODO: fire to client every rod's information (or, just ones that were updated)
     rod_position_information = {}
     accumulator_alarm = False
     drift_alarm = False
-    selected_rod = "none"
+    global selected_rod
 
     for rod in rods:
         information = rods[rod]

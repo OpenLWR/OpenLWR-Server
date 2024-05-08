@@ -23,8 +23,6 @@ class ConnectionManager:
             print("attempted to disconnect nonexistant client:",token)
 
     def send_user_packet(self, message: str, token: str):
-        if len(message) > 1000:
-            print(message)
         try:
             self.tokens[token].websocket.send(message)
         #TODO: this makes me fucking sad : ( fix
@@ -40,8 +38,6 @@ class ConnectionManager:
     def broadcast_packet(self, message: str):
         #TODO: this makes me fucking sad : ( fix
         #logout_tokens = []
-        if len(message) > 1000:
-            print(message)
         try:
             for token in self.tokens:
                 try: 

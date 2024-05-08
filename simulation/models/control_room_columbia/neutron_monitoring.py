@@ -251,18 +251,18 @@ average_power_range_monitors = {
     },
 }
 
+rod_block_monitors = { #TODO
+    "A" : {
+        "power" : 0,
+        "core_flow" : 0,
+    }
+}
+
 oscillation_power_range_monitors = {}
 
 def run(alarms,buttons,indicators,rods,switches,values):
 
     from simulation.models.control_room_columbia import model
-    avg_power = 0
-    rodn = 0
-    for rod in rods:
-        avg_power += rods[rod]["neutrons"]/(320e15*0.7*100)
-        rodn += 1
-
-    print((avg_power/rodn)*100)
 
     for srm_name in source_range_monitors:
         srm = source_range_monitors[srm_name]
@@ -281,12 +281,23 @@ def run(alarms,buttons,indicators,rods,switches,values):
         irm = intermediate_range_monitors[irm_name]
         
         irm["power"] = rods[irm["rod"]]["neutrons"]/(320e15*0.7*120)
-        range_divider = (10**(irm["range"]-1))
 
-        if range_divider == 0:
-            range_divider = 1
+        irm_range = 1
+        #this makes it so the odd ranges are the same range as the last even range.
+        if irm["range"] % 2 == 0:
+            irm_range += (irm["range"]/2)
+        else:
+            irm_range += ((irm["range"]-1)/2)
 
-        irm["power"] = irm["power"]/range_divider
+        range_divider = (10**irm_range)
+
+        if irm["range"] % 2 == 0:
+            irm["power"] = min(irm["power"]/range_divider,125) #0-125 scale
+        else:
+            scale = irm["power"]/range_divider
+            scale = scale/40
+            scale = scale*125
+            irm["power"] = min(scale,125) #0-40 scale (display shows it as if it was a 0-125 scale.)
 
 
     for lprm_name in local_power_range_monitors:
@@ -329,6 +340,8 @@ def run(alarms,buttons,indicators,rods,switches,values):
 
         lprm["A"]["power"] = average_power #TODO: all detectors of the LPRM
 
+    from simulation.models.control_room_columbia import reactor_protection_system
+
     for aprm_name in average_power_range_monitors:
         aprm = average_power_range_monitors[aprm_name]
 
@@ -349,8 +362,31 @@ def run(alarms,buttons,indicators,rods,switches,values):
 
         #TODO: logic on all NMS
 
+        #TODO: Flow biased scram trips
 
+        Inop = False #TODO: inop conditions
 
+        Downscale = aprm["power"] < aprm["downscale_setpoint"]
+        Upscale = aprm["power"] > aprm["upscale_setpoint"]
+        UpscaleTripOrInop = aprm["power"] > aprm["upscale_trip_setpoint"] or Inop
+
+        if switches["reactor_mode_switch"]["position"] != model.ReactorMode.RUN:
+            if aprm["power"] > 12:
+                Upscale = True
+            if aprm["power"] > 15:
+                UpscaleTripOrInop = True
+
+        indicators["APRM_%s_DOWNSCALE" % aprm_name] = Downscale
+        indicators["APRM_%s_UPSCALE" % aprm_name] = Upscale
+        indicators["APRM_%s_UPSCALE_TRIP_OR_INOP" % aprm_name] = UpscaleTripOrInop
+
+        if Upscale:
+            reactor_protection_system.add_withdraw_block("APRM_UPSCALE_%s" % aprm_name)
+        else:
+            reactor_protection_system.remove_withdraw_block("APRM_UPSCALE_%s" % aprm_name)
+
+        if UpscaleTripOrInop:
+            reactor_protection_system.scram("APRMUpscaleTrip")
 
 
     model.values["srm_a_counts"] = math.log(source_range_monitors["A"]["counts"])
@@ -358,14 +394,9 @@ def run(alarms,buttons,indicators,rods,switches,values):
     model.values["srm_c_counts"] = math.log(source_range_monitors["C"]["counts"])
     model.values["srm_d_counts"] = math.log(source_range_monitors["D"]["counts"])
 
-    print(source_range_monitors["A"]["counts"])
-
     model.values["srm_a_period"] = source_range_monitors["A"]["counts_log"]
     model.values["srm_b_period"] = source_range_monitors["B"]["counts_log"]
     model.values["srm_c_period"] = source_range_monitors["C"]["counts_log"]
     model.values["srm_d_period"] = source_range_monitors["D"]["counts_log"]
 
-    #print(math.log(srm_power/srm_last))
-
     values["aprm_temporary"] = round(average_power_range_monitors["A"]["power"])
-    #print(average_power_range_monitors["A"]["power"])
