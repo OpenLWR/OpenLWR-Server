@@ -3,11 +3,14 @@ import math
 # Modules
 from simulation.models.control_room_columbia.reactor_physics import fuel
 from simulation.models.control_room_columbia.reactor_physics import neutrons
+from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
 
 
 
-waterMass = 479345
+waterMass = 928500.26
+kgSteam = 0
 steps = 0
+reactor_water_temperature = 60 #celcius
 
 def run(rods):
     #TODO: Improve code quality, add comments, etc
@@ -15,6 +18,7 @@ def run(rods):
 
     CoreFlow = 100
     global waterMass
+    global reactor_water_temperature
     period = 1
     global steps
 
@@ -50,6 +54,14 @@ def run(rods):
         energy = info["neutrons"]/(320e15*0.7*100)
         energy = (energy*3486) # in mwt
 
+        calories = ((energy*1000000)*0.24)/185 # divide by number of rods
+				
+        HeatC = calories/1000
+				
+        TempNow = HeatC/waterMass
+				
+        reactor_water_temperature += TempNow
+
         for direction in directions:
 
             dirX =direction["x"]
@@ -84,4 +96,5 @@ def run(rods):
                     info["neutrons"] -= transport_equation()
             except:
                 continue
+    reactor_inventory.run()
     

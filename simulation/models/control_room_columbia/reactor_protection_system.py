@@ -86,6 +86,11 @@ def run(alarms,buttons,indicators,rods,switches):
         if info["scram"] != scram_signal:
             info["scram"] = scram_signal
 
+    #Scram trips
+    from simulation.models.control_room_columbia.reactor_physics.reactor_inventory import rx_level_wr
+    if rx_level_wr < 13:
+        scram("RPV Level low")
+
     #indicators for, IE, the RMCS
 
     indicators["SCRAM_A1"] = not trip_a
