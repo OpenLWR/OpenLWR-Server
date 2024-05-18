@@ -24,10 +24,11 @@ def getBoilingPointForWater(Pressure):
 
 	boiling_point_c = boiling_point_k - 273.15
 	
-	return boiling_point_c
+	return min(max(100,boiling_point_c),350)
 
 
 def vaporize(initialMass, temperature, pressure):
+	pressure = pressure+1
 	boilingPoint = getBoilingPointForWater(pressure)
 
 	data = getRegion1Data(temperature,pressure)
@@ -37,6 +38,6 @@ def vaporize(initialMass, temperature, pressure):
 	
 	deltaSteamMass = ((temperature-boilingPoint) * specificHeatWater * initialMass) / specificVaporEnthalpy
 	vaporizedMass = deltaSteamMass
-	
+
 	return {"vm":vaporizedMass, "bp":boilingPoint}
 

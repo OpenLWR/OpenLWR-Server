@@ -7,18 +7,17 @@ from simulation.models.control_room_columbia.reactor_physics import reactor_inve
 
 
 
-waterMass = 928500.26
-kgSteam = 0
+kgSteam = 10e6
 steps = 0
-reactor_water_temperature = 60 #celcius
 
 def run(rods):
     #TODO: Improve code quality, add comments, etc
     reactivityRate = 0
 
     CoreFlow = 100
-    global waterMass
-    global reactor_water_temperature
+    waterMass = reactor_inventory.waterMass
+    from simulation.models.control_room_columbia import model
+    reactor_water_temperature = model.reactor_water_temperature
     period = 1
     global steps
 
@@ -26,6 +25,8 @@ def run(rods):
     if steps > 10: steps = 0
 
     rod_num = 0
+
+
 
     for rod in rods:
         rod_num+=1
@@ -58,7 +59,7 @@ def run(rods):
 				
         HeatC = calories/1000
 				
-        TempNow = HeatC/waterMass
+        TempNow = (HeatC/waterMass)#*0.1
 				
         reactor_water_temperature += TempNow
 
@@ -96,5 +97,7 @@ def run(rods):
                     info["neutrons"] -= transport_equation()
             except:
                 continue
+
+    model.reactor_water_temperature = reactor_water_temperature
     reactor_inventory.run()
     

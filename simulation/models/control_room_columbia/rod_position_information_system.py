@@ -51,8 +51,8 @@ def run(rods,alarms,buttons):
         rod_position_information[rod]["select"] = information["select"]
         rod_position_information[rod]["drift_alarm"] = information["drift_alarm"]
 
-    alarms["rod_drive_accumulator_trouble"]["alarm"] = accumulator_alarm
-    alarms["control_rod_drift"]["alarm"] = drift_alarm
+    alarms["rod_accumulator_trouble"]["alarm"] = accumulator_alarm
+    alarms["rod_drift"]["alarm"] = drift_alarm
 
     four_rod_display(selected_rod)
 

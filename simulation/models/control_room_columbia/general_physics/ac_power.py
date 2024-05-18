@@ -1,123 +1,15 @@
 from simulation.constants.electrical_types import ElectricalType
+import math
 
 def clamp(val, clamp_min, clamp_max):
     return min(max(val,clamp_min),clamp_max)
 
 breakers = {
-	"cb_14-2" : {
-        "type" : ElectricalType.BREAKER,
-		"closed" : True,
-		"incoming" : "Startup", #"incoming" can be anything, and is generally the normal flow into the breaker
-		#the breaker can flow in reverse, but this will take a bit more calculations than usual
-        #TODO: breaker reverse current protection
-		"running" : "014", #"running" can be anything as well, and is generally the outgoing flow
-		"lockout" : False, #most breakers have a lockout circuit which can trip automatically to prevent closure
-		"flag_position" : False, #TODO: do we need this, or will this be included with the switch code?
-    },
-    "cb_15-3" : {
-        "type" : ElectricalType.BREAKER,
-		"closed" : True,
-		"incoming" : "Startup",
-		"running" : "015", 
-		"lockout" : False,
-		"flag_position" : False,
-    },
-
-    "cb_14-1" : {
-        "type" : ElectricalType.BREAKER,
-		"closed" : True,
-		"incoming" : "014",
-		"running" : "cb_101-14", 
-		"lockout" : False,
-		"flag_position" : False,
-    },
-    "cb_101-14" : {
-        "type" : ElectricalType.BREAKER,
-		"closed" : True,
-		"incoming" : "cb_14-1",
-		"running" : "101", 
-		"lockout" : False,
-		"flag_position" : False,
-    },
-
-    "cb_15-8" : {
-        "type" : ElectricalType.BREAKER,
-		"closed" : True,
-		"incoming" : "015",
-		"running" : "cb_103-8", 
-		"lockout" : False,
-		"flag_position" : False,
-    },
-    "cb_103-8" : {
-        "type" : ElectricalType.BREAKER,
-		"closed" : True,
-		"incoming" : "cb_15-8",
-		"running" : "103", 
-		"lockout" : False,
-		"flag_position" : False,
-    },
+	
 }
 
 busses = {
-     "101" : {
-        "type" : ElectricalType.BUS,
-        "voltage" : 4160,
-        "frequency" : 60,
-        "current" : 0,
-        "loads" : [],
-        "feeders" : [],
-
-        "undervoltage_setpoint" : 4000,
-
-        "annunciators" : {
-             "UNDERVOLTAGE" : "bus_101_undervoltage",
-        }
-    },
-    "103" : {
-        "type" : ElectricalType.BUS,
-        "voltage" : 4160,
-        "frequency" : 60,
-        "current" : 0,
-        "loads" : [],
-        "feeders" : [],
-
-        "undervoltage_setpoint" : 4000,
-
-        "annunciators" : {
-             "UNDERVOLTAGE" : "bus_103_undervoltage",
-        }
-    },
-
-    #NNS busses
-
-    "014" : {
-        "type" : ElectricalType.BUS,
-        "voltage" : 4160,
-        "frequency" : 60,
-        "current" : 0,
-        "loads" : [],
-        "feeders" : [],
-
-        "undervoltage_setpoint" : 4000,
-
-        "annunciators" : {
-             "UNDERVOLTAGE" : "bus_014_undervoltage",
-        }
-    },
-    "015" : {
-        "type" : ElectricalType.BUS,
-        "voltage" : 4160,
-        "frequency" : 60,
-        "current" : 0,
-        "loads" : [],
-        "feeders" : [],
-
-        "undervoltage_setpoint" : 4000,
-
-        "annunciators" : {
-             "UNDERVOLTAGE" : "bus_015_undervoltage",
-        }
-    },
+     
 }
 
 transformers = {
@@ -135,16 +27,9 @@ sources = {
 }
 
 def run(switches,alarms,indicators,runs):
-    """if runs > 250:
-        sources["Startup"]["voltage"] = 0
-        sources["Startup"]["frequency"] = 0
-    if runs > 280:
-        from simulation.models.control_room_nmp2 import reactor_protection_system
-        reactor_protection_system.rps_a_trip = True
-        reactor_protection_system.rps_b_trip = True"""
 
-    indicators["cr_light_normal"] = get_bus_power("101",4000)
-    indicators["cr_light_emergency"] = not get_bus_power("101",4000)
+    indicators["cr_light_normal"] = True#get_bus_power("101",4000)
+    indicators["cr_light_emergency"] = False#not get_bus_power("101",4000)
     for breaker_name in breakers:
         if breaker_name in switches:
             if switches[breaker_name]["position"] == 0: open_breaker(breaker_name)
@@ -322,3 +207,31 @@ def get_bus_power(bus_name:str,undervoltage_setpoint:int):
     Returns true if powered, else false."""
     if busses[bus_name]["voltage"] < undervoltage_setpoint: return False
     return True
+
+#physics related functions
+
+def VoltAmperesAC(voltage:int,amps:int,pf:float):
+    """Gets the watts currently passing through an AC system.
+    This will get the watts for a single phase system. Use TF_VoltAmperesAC for three phase.
+    Voltage - Voltage, in volts.
+    Amps - Amperes, in amps. (duh)
+    pf - Power factor
+    
+    Returns the power, in watts."""
+
+    watts = voltage*amps*pf
+
+    return watts
+
+def TF_VoltAmperesAC(voltage:int,amps:int,pf:float):
+    """Gets the watts currently passing through an AC system.
+    This will get the watts for a three phase system. Use VoltAmperesAC for single phase.
+    Voltage - Voltage, in volts.
+    Amps - Current, in amps. (duh)
+    pf - Power factor
+    
+    Returns the power, in watts."""
+
+    watts = voltage*amps*pf*math.sqrt(3)
+
+    return watts

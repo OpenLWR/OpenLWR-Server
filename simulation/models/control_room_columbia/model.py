@@ -17,62 +17,62 @@ class ReactorMode(IntEnum):
     RUN = 3
 
 alarms = {
-    "rps_a_auto_trip" : {
+    "reactor_scram_a1_and_b1_loss" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
-    "rps_b_auto_trip" : {
+    "1/2_scram_system_a" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
-    "rod_drive_accumulator_trouble" : {
+    "rpv_level_low_trip_a" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
-    "control_rod_out_block" : {
+    "rod_accumulator_trouble" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
-    "control_rod_drift" : {
+    "rod_out_block" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "rod_drift" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
 
-    "bus_014_undervoltage" : {
+    "reactor_scram_a2_and_b2_loss" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
-        "group" : "2",
+        "group" : "1",
         "silenced" : False,
     },
-    "bus_015_undervoltage" : {
+    "1/2_scram_system_b" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
-        "group" : "2",
+        "group" : "1",
+        "silenced" : False,
+    },
+    "rpv_level_low_trip_b" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
         "silenced" : False,
     },
 
-    "bus_101_undervoltage" : {
-        "alarm" : False,
-        "state" : AnnunciatorStates.CLEAR,
-        "group" : "2",
-        "silenced" : False,
-    },
-    "bus_103_undervoltage" : {
-        "alarm" : False,
-        "state" : AnnunciatorStates.CLEAR,
-        "group" : "2",
-        "silenced" : False,
-    },
 }
 
 switches = {
@@ -84,56 +84,6 @@ switches = {
             3: -90,
 		},
         "position": 3,
-    },
-    "cb_14-2": {
-        "positions": {
-			0: 45,
-			1: 0,
-			2: -45,
-		},
-        "position": 1,
-    },
-    "cb_15-3": {
-        "positions": {
-			0: 45,
-			1: 0,
-			2: -45,
-		},
-        "position": 1,
-    },
-
-    "cb_14-1": {
-        "positions": {
-			0: 45,
-			1: 0,
-			2: -45,
-		},
-        "position": 1,
-    },
-    "cb_101-14": {
-        "positions": {
-			0: 45,
-			1: 0,
-			2: -45,
-		},
-        "position": 1,
-    },
-
-    "cb_15-8": {
-        "positions": {
-			0: 45,
-			1: 0,
-			2: -45,
-		},
-        "position": 1,
-    },
-    "cb_103-8": {
-        "positions": {
-			0: 45,
-			1: 0,
-			2: -45,
-		},
-        "position": 1,
     },
 }
 
@@ -178,24 +128,6 @@ indicators = {
     "RMCS_SETTLE": False,
     "RMCS_INSERT": False,
     "RMCS_WITHDRAW": False,
-
-    "cb_15-3_green": True,
-    "cb_15-3_red": False,
-
-    "cb_14-2_green": True,
-    "cb_14-2_red": False,
-
-    "cb_14-1_green": True,
-    "cb_14-1_red": False,
-
-    "cb_101-14_green": True,
-    "cb_101-14_red": False,
-
-    "cb_15-8_green": True,
-    "cb_15-8_red": False,
-
-    "cb_103-8_green": True,
-    "cb_103-8_red": False,
 
     "cr_light_normal": True,
     "cr_light_emergency": False,
@@ -250,7 +182,13 @@ buttons = {
 
 }
 
+pumps = {
+    
+}
+
 rods = {}
+
+reactor_water_temperature = 60
 
 from simulation.models.control_room_columbia import rod_generation
 rod_generation.run(rods,buttons)

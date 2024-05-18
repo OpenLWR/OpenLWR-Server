@@ -270,8 +270,10 @@ def run(alarms,buttons,indicators,rods,switches,values):
         srm["counts"] = rods[srm["rod"]]["neutrons"]
         srm["counts"] = srm["counts"]/((srm["withdrawal_percent"]**9)+1)
 
-
-        srm["counts_log"] = math.log(rods[srm["rod"]]["neutrons"]/rods[srm["rod"]]["neutrons_last"])
+        try:
+            srm["counts_log"] = math.log(rods[srm["rod"]]["neutrons"]/rods[srm["rod"]]["neutrons_last"])
+        except:
+            pass
         if srm["counts_log"] != 0:
             srm["period"] = 1/srm["counts_log"]
         else:
@@ -388,11 +390,13 @@ def run(alarms,buttons,indicators,rods,switches,values):
         if UpscaleTripOrInop:
             reactor_protection_system.scram("APRMUpscaleTrip")
 
-
-    model.values["srm_a_counts"] = math.log(source_range_monitors["A"]["counts"])
-    model.values["srm_b_counts"] = math.log(source_range_monitors["B"]["counts"])
-    model.values["srm_c_counts"] = math.log(source_range_monitors["C"]["counts"])
-    model.values["srm_d_counts"] = math.log(source_range_monitors["D"]["counts"])
+    try:
+        model.values["srm_a_counts"] = math.log(source_range_monitors["A"]["counts"])
+        model.values["srm_b_counts"] = math.log(source_range_monitors["B"]["counts"])
+        model.values["srm_c_counts"] = math.log(source_range_monitors["C"]["counts"])
+        model.values["srm_d_counts"] = math.log(source_range_monitors["D"]["counts"])
+    except:
+        pass
 
     model.values["srm_a_period"] = source_range_monitors["A"]["counts_log"]
     model.values["srm_b_period"] = source_range_monitors["B"]["counts_log"]

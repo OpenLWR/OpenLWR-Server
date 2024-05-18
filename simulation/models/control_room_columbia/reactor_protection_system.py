@@ -19,6 +19,15 @@ reactor_protection_systems = {
     },
 }
 
+rps_alarms = {
+    "A" : {
+        "RPV Level Low" : "rpv_level_low_trip_a",
+    },
+    "B" : {
+        "RPV Level Low" : "rpv_level_low_trip_b",
+    },
+}
+
 withdraw_blocks = []
 
 withdraw_block = False
@@ -53,15 +62,23 @@ def run(alarms,buttons,indicators,rods,switches):
     if buttons["SCRAM_RESET_B"]:
         reactor_protection_systems["B"]["channel_1_trip"] = False
         reactor_protection_systems["B"]["channel_2_trip"] = False
-    
-    if reactor_protection_systems["A"]["channel_1_trip"] or reactor_protection_systems["A"]["channel_2_trip"]:
-        alarms["rps_a_auto_trip"]["alarm"] = True
-    if reactor_protection_systems["B"]["channel_1_trip"] or reactor_protection_systems["B"]["channel_2_trip"]:
-        alarms["rps_b_auto_trip"]["alarm"] = True
 
     trip_a = (reactor_protection_systems["A"]["channel_1_trip"] or reactor_protection_systems["A"]["channel_2_trip"])
 
     trip_b = (reactor_protection_systems["B"]["channel_1_trip"] or reactor_protection_systems["B"]["channel_2_trip"])
+
+    alarms["1/2_scram_system_a"]["alarm"] = trip_a and not trip_b
+    alarms["1/2_scram_system_b"]["alarm"] = trip_b and not trip_a
+    alarms["reactor_scram_a1_and_b1_loss"]["alarm"] = reactor_protection_systems["A"]["channel_1_trip"] and reactor_protection_systems["B"]["channel_1_trip"]
+    alarms["reactor_scram_a2_and_b2_loss"]["alarm"] = reactor_protection_systems["A"]["channel_2_trip"] and reactor_protection_systems["B"]["channel_2_trip"]
+
+    for reason in rps_alarms["A"]:
+        alarms[rps_alarms["A"][reason]]["alarm"] = reason in reactor_protection_systems["A"]["reasons"]
+
+    for reason in rps_alarms["B"]:
+        alarms[rps_alarms["B"][reason]]["alarm"] = reason in reactor_protection_systems["B"]["reasons"]
+
+
 
     scram_signal = trip_a and trip_b
 
@@ -87,9 +104,9 @@ def run(alarms,buttons,indicators,rods,switches):
             info["scram"] = scram_signal
 
     #Scram trips
-    from simulation.models.control_room_columbia.reactor_physics.reactor_inventory import rx_level_wr
-    if rx_level_wr < 13:
-        scram("RPV Level low")
+    from simulation.models.control_room_columbia.reactor_physics import reactor_inventory 
+    if reactor_inventory .rx_level_wr < 13:
+        scram("RPV Level Low")
 
     #indicators for, IE, the RMCS
 
@@ -108,10 +125,16 @@ def run(alarms,buttons,indicators,rods,switches):
     indicators["SCRAM_B6"] = trip_b
             
     indicators["RMCS_WITHDRAW_BLOCK"] = withdraw_block
-    alarms["control_rod_out_block"]["alarm"] = withdraw_block
+    alarms["rod_out_block"]["alarm"] = withdraw_block
 
 def scram(reason):
     #TODO: RPS Fail to trip, RPS trip reasons
+    if reason not in reactor_protection_systems["A"]["reasons"]:
+        reactor_protection_systems["A"]["reasons"].append(reason)
+
+    if reason not in reactor_protection_systems["B"]["reasons"]:
+        reactor_protection_systems["B"]["reasons"].append(reason)
+
     reactor_protection_systems["A"]["channel_1_trip"] = True
     reactor_protection_systems["A"]["channel_2_trip"] = True
     reactor_protection_systems["B"]["channel_1_trip"] = True
