@@ -1,7 +1,7 @@
 from simulation.constants.electrical_types import ElectricalType
 from simulation.constants.equipment_states import EquipmentStates
-from general_physics import ac_power
-from control_room_nmp2 import model
+from simulation.models.control_room_columbia.general_physics import ac_power
+from simulation.models.control_room_columbia import model
 import math
 
 def clamp(val, clamp_min, clamp_max):
@@ -16,6 +16,7 @@ class PumpTypes(IntEnum):
 pump_1 = { #TODO: improve the accuracy of these calculations
     #this pump is motor driven
     "motor_breaker_closed" : False,
+    "motor_control_switch" : "",
     "bus" : "",
     "horsepower" : 0,
     "watts" : 0,
@@ -29,6 +30,7 @@ pump_1 = { #TODO: improve the accuracy of these calculations
     "flow_from_rpm" : 0,
     "rated_flow" : 0,
     "current_limit" : 0,
+    "header" : "",
 }
 
 def initialize_pumps():
@@ -48,14 +50,22 @@ def run():
     for pump_name in model.pumps:
         pump = model.pumps[pump_name]
 
+        if model.switches[pump["motor_control_switch"]]["position"] == 2:
+            pump["motor_breaker_closed"] = True
+        
+        if model.switches[pump["motor_control_switch"]]["position"] == 0:
+            pump["motor_breaker_closed"] = False
+
         if pump["motor_breaker_closed"]:
             #first, verify that this breaker is allowed to be closed
 
             #TODO: overcurrent breaker trip
 
             #undervoltage breaker trip TODO: (this has load sequencing during a LOOP? verify this)
-
-            pump_bus = ac_power.busses[pump["bus"]]
+            try:
+                pump_bus = ac_power.busses[pump["bus"]]
+            except:
+                pump_bus = {"voltage" : 4160}
 
             if pump_bus["voltage"] < 120:
                 pump["motor_breaker_closed"] = False
@@ -68,11 +78,21 @@ def run():
             pump["watts"] = pump_bus["voltage"]*pump["amperes"]*math.sqrt(3)
 
 			#remember to make the loading process for the current (v.FLA*math.clamp(v.flow_with_fullsim etc)) more realistic, and instead make it based on distance from rated rpm (as when the pump is loaded more it will draw more current)
+            #TODO: better flow calculation
+            pump["flow"] = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
+            pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
+            
+            from simulation.models.control_room_columbia.general_physics import fluid
+            fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
         else:
             Acceleration = (pump["rpm"])*0.1 #TODO: variable motor accel
             pump["rpm"] = clamp(pump["rpm"]-Acceleration,0,pump["rated_rpm"]+100)
             pump["amperes"] = 0
             pump["watts"] = 0
+
+            pump["flow"] = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
+            from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
+            reactor_inventory.add_water(pump["flow"]*0.06316666667)
     
 
 

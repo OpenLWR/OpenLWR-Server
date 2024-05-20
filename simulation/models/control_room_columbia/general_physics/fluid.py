@@ -1,77 +1,179 @@
 from simulation.constants.electrical_types import ElectricalType
 from simulation.constants.equipment_states import EquipmentStates
-from general_physics import ac_power
-from control_room_nmp2 import model
+from simulation.models.control_room_columbia.general_physics import ac_power
+from simulation.models.control_room_columbia import model
 import math
 
 def clamp(val, clamp_min, clamp_max):
     return min(max(val,clamp_min),clamp_max)
 
-from enum import IntEnum
-
-class PumpTypes(IntEnum):
-    Type1 = 0
-
 
 headers = { #most lines have a common header that they discharge into
     #this header can pressurize and etc.
     #takes a pipe diameter and length.
-    #This also allows us to simulate the header depressurizing (level is not 100% full, happens through pinpoint cracks and whatnot.)
     "hpcs_discharge_header" : {
         #This next comment will be present on ALL headers.
         #it indicates the real pipe that this header was made from.
         #16" HPCS(1)-4-1
 
         "diameter" : 406.40, #millimeters
-        "length" : 0, #TODO : determine a good length
+        "length" : 20000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0, #Initialized on start. Is not changed again.
+        "mass" : 0,
     }
 
 }
 
-def initialize_pumps():
-    for pump_name in model.pumps:
-        pump = model.pumps[pump_name]
+#TODO: improve this shit
 
-        pump_created = pump_1 #TODO: actual types
+from enum import IntEnum
 
-        for value_name in pump:
-            value = pump[value_name]
-            if value_name in pump_created:
-                pump_created[value_name] = value
+class StaticTanks(IntEnum):
+    Reactor = 1
+    Wetwell = 2,
 
-        model.pumps[pump_name] = pump_created
+valves = {
+    "hpcs_v_4" : { #The flow through a valve is not linear. Exponents?
+        "control_switch" : "hpcs_v_4",
+        "input" : "hpcs_discharge_header",
+        "output" : StaticTanks.Reactor,
+        "percent_open" : 0,
+        "diameter" : 406.40, #mm
+        #TODO: valve control power and motive power
+    }
+}
 
-def run():
-    for pump_name in model.pumps:
-        pump = model.pumps[pump_name]
+def initialize_headers():
 
-        if pump["motor_breaker_closed"]:
-            #first, verify that this breaker is allowed to be closed
+    for header_name in headers:
+        header = headers[header_name]
+        #assume the header is a cylinder
+        #so we use pi*r^2
+        volume = header["diameter"]/2
+        volume = math.pi*(volume**2)
+        #then multiply by the height
+        volume = volume*header["length"]
+        #this stuff is 8th grade math, i hope you know it
+        volume = volume/1e6 #to liters
+        header["volume"] = volume
+        header["mass"] = 0.1
 
-            #TODO: overcurrent breaker trip
+def valve_inject_to_header(mass:int,header_name):
 
-            #undervoltage breaker trip TODO: (this has load sequencing during a LOOP? verify this)
+    if type(header_name) == StaticTanks:
+        inject_to_static_tank(header_name,mass)
+    else:
+        headers[header_name]["mass"] += mass
+        calculate_header_pressure(header_name)
 
-            pump_bus = ac_power.busses[pump["bus"]]
 
-            if pump_bus["voltage"] < 120:
-                pump["motor_breaker_closed"] = False
+def inject_to_header(flow:int,press:int,header_name:str):
 
-            Acceleration = (pump["rated_rpm"]-pump["rpm"])*0.1 #TODO: variable motor accel
-            pump["rpm"] = clamp(pump["rpm"]+Acceleration,0,pump["rated_rpm"]+100)
-            #full load amperes
-            AmpsFLA = (pump["horsepower"]*746)/(math.sqrt(3)*pump_bus["voltage"]*0.876*0.95) #TODO: variable motor efficiency and power factor
-            pump["amperes"] = (AmpsFLA*clamp(pump["actual_flow"]/pump["rated_flow"],0.48,1))+(AmpsFLA*5*(Acceleration/(pump["rated_rpm"]*0.1)))
-            pump["watts"] = pump_bus["voltage"]*pump["amperes"]*math.sqrt(3)
+    #TODO: feedback to allow pump shutoff head
+    header = headers[header_name]
+    press = press*6895 # to pascals
 
-			#remember to make the loading process for the current (v.FLA*math.clamp(v.flow_with_fullsim etc)) more realistic, and instead make it based on distance from rated rpm (as when the pump is loaded more it will draw more current)
-        else:
-            Acceleration = (pump["rpm"])*0.1 #TODO: variable motor accel
-            pump["rpm"] = clamp(pump["rpm"]-Acceleration,0,pump["rated_rpm"]+100)
-            pump["amperes"] = 0
-            pump["watts"] = 0
+    if press > header["pressure"]:
+        fluid_flow = calculate_differential_pressure(press,header["pressure"],flow)
+        #keep in mind this is in gallons per minute'
+        mass = fluid_flow*3.785 #to liters per minute
+        mass = mass/60 #to per second
+        header["mass"] += mass
+
+        #TODO: change this, we are using the ideal gas law to calculate water, a *liquid* in a pipe.
+        from simulation.models.control_room_columbia.reactor_physics import pressure
+        header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],header["mass"],60,header["volume"])
+        header["pressure"] = header_press
+
+def calculate_header_pressure(header_name:str):
+
+    header = headers[header_name]
+
+    from simulation.models.control_room_columbia.reactor_physics import pressure
+    header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],header["mass"],60,header["volume"])
+    header["pressure"] = header_press
+
+def calculate_differential_pressure(pressure_1:int,pressure_2:int,flow:int):
+
+    """Calculates differential pressure vs flow in a system. Can use any units, as long as the pressures are both the same unit."""
+
+    if pressure_2 == 0: pressure_2 = 1
+
+    if pressure_1 > pressure_2:
+        pressure_differential = abs(((pressure_1/pressure_2)-1)-1)
+        fluid_flow = pressure_differential*flow
+
+        return fluid_flow
+    else:
+        return 0
+
+def get_static_tank(name:int):
+
+    match name:
+        case StaticTanks.Reactor:
+            tank = {}
+            from simulation.models.control_room_columbia.reactor_physics import pressure
+            tank["pressure"] = pressure.Pressures["Vessel"]
+            tank["mass"] = 0
+            return tank
+
+def inject_to_static_tank(name:int,amount):
+
+    match name:
+        case StaticTanks.Reactor:
+            from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
+            reactor_inventory.add_water(amount)
     
 
+def get_header(header_name):
+    "Can be passed an integer or string. If integer, it will check against the static tanks, and return a formatted table."
 
+    header = {}
+
+    if type(header_name) == StaticTanks:
+        header = get_static_tank(header_name)
+    else:
+        header = headers[header_name]
+    
+    return header
+
+def run():
+
+    for valve_name in valves:
+        valve = valves[valve_name]
+        inlet = get_header(valve["input"])
+        outlet = get_header(valve["output"])
+
+        if valve["control_switch"] != "":
+            if model.switches[valve["control_switch"]]["position"] == 2:
+                valve["percent_open"] = min(max(valve["percent_open"]+10,0),100)
+            elif model.switches[valve["control_switch"]]["position"] == 0:
+                valve["percent_open"] = min(max(valve["percent_open"]-10,0),100)
+
+        #Poiseuille's law
+        #Q = π(P₁ – P₂)r⁴ / 8μL.
+        #where,
+        #Q is the volumetric flow rate,
+        #P1 and P2 are the pressures at both ends of the pipe,
+        #r is the radius of the pipe,
+        #μ is the viscosity of the fluid,
+        #L is the length of the pipe.
+
+        #viscosity of water is 0.01 poise
+        #placeholder 20000 mm as length (so 20 cm)
+        radius = valve["diameter"]/2
+        radius = radius*0.1 #to cm
+        flow = math.pi*(inlet["pressure"]-outlet["pressure"])*(radius**4)/(8*0.001*200)
+        flow = abs(flow)
+
+        flow = flow*(valve["percent_open"]/100) #TODO: Exponents? Flow is not linear.
+        #flow is in cubic centimeters per second
+        flow = flow*0.001 #to liter/s
+        if inlet["pressure"] < outlet["pressure"]:
+            #valve_inject_to_header(flow,valve["input"])
+            #valve_inject_to_header(flow*-1,valve["output"])
+            continue
+        else:
+            valve_inject_to_header(flow*-1,valve["input"])
+            valve_inject_to_header(flow,valve["output"])

@@ -85,6 +85,30 @@ switches = {
 		},
         "position": 3,
     },
+    "hpcs_p_1": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+    },
+    "hpcs_v_4": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+    },
+    "TempFW": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+    },
 }
 
 values = {
@@ -183,7 +207,17 @@ buttons = {
 }
 
 pumps = {
-    
+    "hpcs_p_1" : {
+        "motor_breaker_closed" : False,
+        "motor_control_switch" : "hpcs_p_1",
+        "bus" : "4",
+        "horsepower" : 3000,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 1400,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 6250,
+        "header" : "hpcs_discharge_header",
+    },
 }
 
 rods = {}
@@ -192,6 +226,13 @@ reactor_water_temperature = 60
 
 from simulation.models.control_room_columbia import rod_generation
 rod_generation.run(rods,buttons)
+
+from simulation.models.control_room_columbia.general_physics import pump
+pump.initialize_pumps()
+
+from simulation.models.control_room_columbia.general_physics import fluid
+fluid.initialize_headers()
+
 runs = 0
 def model_run(delta):
     global runs
@@ -202,4 +243,8 @@ def model_run(delta):
     reactor_physics.run(rods)
     neutron_monitoring.run(alarms,buttons,indicators,rods,switches,values)
     ac_power.run(switches,alarms,indicators,runs)
+    from simulation.models.control_room_columbia.general_physics import pump
+    pump.run()
+    from simulation.models.control_room_columbia.general_physics import fluid
+    fluid.run()
     runs += 1

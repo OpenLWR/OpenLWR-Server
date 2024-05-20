@@ -67,3 +67,6 @@ def run():
 	rx_level_wr = mm_to_inches(calculate_level_cylinder(Vessel_Diameter,waterMass))-310
 	print("RX Level, WR %s" % str(rx_level_wr))
     
+def add_water(kg:int):
+	global waterMass
+	waterMass+=kg
