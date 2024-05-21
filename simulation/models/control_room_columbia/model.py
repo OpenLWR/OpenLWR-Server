@@ -84,6 +84,7 @@ switches = {
             3: -90,
 		},
         "position": 3,
+        "lights" : {},
     },
     "hpcs_p_1": {
         "positions": {
@@ -92,6 +93,10 @@ switches = {
 			2: -45,
 		},
         "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
     },
     "hpcs_v_4": {
         "positions": {
@@ -100,6 +105,10 @@ switches = {
 			2: -45,
 		},
         "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
     },
     "TempFW": {
         "positions": {
@@ -108,6 +117,7 @@ switches = {
 			2: -45,
 		},
         "position": 1,
+        "lights" : {},
     },
 }
 
@@ -128,6 +138,9 @@ values = {
     "srm_d_period" : 0,
 
     "aprm_temporary" : 0,
+
+    "hpcs_flow" : 0,
+    "hpcs_press" : 0,
 }
 
 indicators = {
@@ -208,7 +221,7 @@ buttons = {
 
 pumps = {
     "hpcs_p_1" : {
-        "motor_breaker_closed" : False,
+        "motor_breaker_closed" : True,
         "motor_control_switch" : "hpcs_p_1",
         "bus" : "4",
         "horsepower" : 3000,

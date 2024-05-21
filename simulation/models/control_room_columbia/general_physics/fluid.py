@@ -40,6 +40,9 @@ valves = {
         "output" : StaticTanks.Reactor,
         "percent_open" : 0,
         "diameter" : 406.40, #mm
+        "open_speed" : 0.333, #30 seconds to open from full closed.
+        "seal_in" : True, #Valve is seal-in, meaning it is not throttable (normally)
+        "sealed_in" : False, #current state
         #TODO: valve control power and motive power
     }
 }
@@ -57,7 +60,7 @@ def initialize_headers():
         #this stuff is 8th grade math, i hope you know it
         volume = volume/1e6 #to liters
         header["volume"] = volume
-        header["mass"] = 0.1
+        header["mass"] = 0
 
 def valve_inject_to_header(mass:int,header_name):
 
@@ -76,22 +79,26 @@ def inject_to_header(flow:int,press:int,header_name:str):
 
     if press > header["pressure"]:
         fluid_flow = calculate_differential_pressure(press,header["pressure"],flow)
-        #keep in mind this is in gallons per minute'
+        #keep in mind this is in gallons per minute
         mass = fluid_flow*3.785 #to liters per minute
         mass = mass/60 #to per second
+        mass = mass*0.1 # sim time
         header["mass"] += mass
 
         #TODO: change this, we are using the ideal gas law to calculate water, a *liquid* in a pipe.
         from simulation.models.control_room_columbia.reactor_physics import pressure
-        header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],header["mass"],60,header["volume"])
+        header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],24.8,60,header["volume"]-header["mass"])
         header["pressure"] = header_press
+        return fluid_flow
+    else:
+        return 0
 
 def calculate_header_pressure(header_name:str):
 
     header = headers[header_name]
 
     from simulation.models.control_room_columbia.reactor_physics import pressure
-    header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],header["mass"],60,header["volume"])
+    header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],24.8,60,header["volume"]-header["mass"])
     header["pressure"] = header_press
 
 def calculate_differential_pressure(pressure_1:int,pressure_2:int,flow:int):
@@ -101,7 +108,7 @@ def calculate_differential_pressure(pressure_1:int,pressure_2:int,flow:int):
     if pressure_2 == 0: pressure_2 = 1
 
     if pressure_1 > pressure_2:
-        pressure_differential = abs(((pressure_1/pressure_2)-1)-1)
+        pressure_differential = clamp(abs(((pressure_1/pressure_2)-0.3)-1),0,1)
         fluid_flow = pressure_differential*flow
 
         return fluid_flow
@@ -140,16 +147,38 @@ def get_header(header_name):
 
 def run():
 
+    #TODO: figure out a better way to do this
+    model.values["hpcs_flow"] = model.pumps["hpcs_p_1"]["actual_flow"]
+    model.values["hpcs_press"] = headers["hpcs_discharge_header"]["pressure"]/6895
+
     for valve_name in valves:
         valve = valves[valve_name]
         inlet = get_header(valve["input"])
         outlet = get_header(valve["output"])
 
         if valve["control_switch"] != "":
-            if model.switches[valve["control_switch"]]["position"] == 2:
-                valve["percent_open"] = min(max(valve["percent_open"]+10,0),100)
-            elif model.switches[valve["control_switch"]]["position"] == 0:
-                valve["percent_open"] = min(max(valve["percent_open"]-10,0),100)
+            if not valve["seal_in"]:
+                if model.switches[valve["control_switch"]]["position"] == 2:
+                    valve["percent_open"] = min(max(valve["percent_open"]+valve["open_speed"],0),100)
+                elif model.switches[valve["control_switch"]]["position"] == 0:
+                    valve["percent_open"] = min(max(valve["percent_open"]-valve["open_speed"],0),100)
+            elif valve["seal_in"]:
+                if model.switches[valve["control_switch"]]["position"] == 2:
+                    valve["sealed_in"] = True
+                elif model.switches[valve["control_switch"]]["position"] == 0:
+                    valve["sealed_in"] = False
+
+                if valve["sealed_in"]:
+                    valve["percent_open"] = min(max(valve["percent_open"]+valve["open_speed"],0),100)
+                else:
+                    valve["percent_open"] = min(max(valve["percent_open"]-valve["open_speed"],0),100)
+
+            if model.switches[valve["control_switch"]]["lights"] != {}:
+                model.switches[valve["control_switch"]]["lights"]["green"] = valve["percent_open"] < 100
+                model.switches[valve["control_switch"]]["lights"]["red"] = valve["percent_open"] > 0
+      
+
+
 
         #Poiseuille's law
         #Q = π(P₁ – P₂)r⁴ / 8μL.
@@ -164,12 +193,18 @@ def run():
         #placeholder 20000 mm as length (so 20 cm)
         radius = valve["diameter"]/2
         radius = radius*0.1 #to cm
-        flow = math.pi*(inlet["pressure"]-outlet["pressure"])*(radius**4)/(8*0.001*200)
+
+        flow_resistance = (8*33*2000)/(math.pi*(radius**4))
+
+        #flow = math.pi*((inlet["pressure"]*0.001)-(outlet["pressure"]*0.001))*(radius**4)/(8*0.01*200)
+
+        flow = (inlet["pressure"]-outlet["pressure"])/flow_resistance
         flow = abs(flow)
 
         flow = flow*(valve["percent_open"]/100) #TODO: Exponents? Flow is not linear.
         #flow is in cubic centimeters per second
-        flow = flow*0.001 #to liter/s
+        flow = flow/1000 #to liter/s
+        flow = flow*0.1 #to liter/0.1s (or the sim time)
         if inlet["pressure"] < outlet["pressure"]:
             #valve_inject_to_header(flow,valve["input"])
             #valve_inject_to_header(flow*-1,valve["output"])

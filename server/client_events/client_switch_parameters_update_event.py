@@ -18,6 +18,6 @@ def handle(data):
             else:
                 print("[BUG] got a switch that is invalid from client:",switch,switches_updated)
     
-        server_switch_parameters_update_event.fire(data)
+        server_switch_parameters_update_event.fire(switches_updated)
     else:
         print("[BUG] got a switch position packet that is invalid:",switches_updated)

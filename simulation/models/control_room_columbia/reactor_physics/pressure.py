@@ -27,6 +27,7 @@ def getPressure(steamMass, steamTemperature, volume):
 	
     gasConstant = 8.314
     molarMassOfSteam = 18.01528
+    volume = volume/1000 #Liters to m^3
     # Variables
     massOfSteam = (steamMass)*1000
     temperature = steamTemperature+273.15
@@ -48,6 +49,8 @@ def PartialPressure(GasType:int,Mass:int,Temperature:int,Volume:int):
 
     MolarMass = GasType
     GasConstant = 8.314
+
+    Volume = Volume/1000 #Liters to m^3
 	
     MassGrams = Mass*1000
     MassGas = MassGrams/MolarMass

@@ -56,6 +56,10 @@ def run():
         if model.switches[pump["motor_control_switch"]]["position"] == 0:
             pump["motor_breaker_closed"] = False
 
+        if model.switches[pump["motor_control_switch"]]["lights"] != {}:
+            model.switches[pump["motor_control_switch"]]["lights"]["green"] = not pump["motor_breaker_closed"]
+            model.switches[pump["motor_control_switch"]]["lights"]["red"] = pump["motor_breaker_closed"]
+
         if pump["motor_breaker_closed"]:
             #first, verify that this breaker is allowed to be closed
 
@@ -83,7 +87,7 @@ def run():
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
             
             from simulation.models.control_room_columbia.general_physics import fluid
-            fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
+            pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
         else:
             Acceleration = (pump["rpm"])*0.1 #TODO: variable motor accel
             pump["rpm"] = clamp(pump["rpm"]-Acceleration,0,pump["rated_rpm"]+100)
@@ -91,8 +95,10 @@ def run():
             pump["watts"] = 0
 
             pump["flow"] = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
-            from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
-            reactor_inventory.add_water(pump["flow"]*0.06316666667)
+            pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
+
+            from simulation.models.control_room_columbia.general_physics import fluid
+            pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
     
 
 
