@@ -110,6 +110,18 @@ switches = {
             "red" : False,
         },
     },
+    "hpcs_v_15": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
     "TempFW": {
         "positions": {
 			0: 45,
@@ -194,27 +206,77 @@ indicators = {
 }
 
 buttons = {
-    "SCRAM_A1": False,
-    "SCRAM_B1": False,
-    "SCRAM_A2": False,
-    "SCRAM_B2": False,
+    "SCRAM_A1": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SCRAM_A2": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SCRAM_B1": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SCRAM_B2": {
+        "state" : False,
+        "armed" : False,
+    },
 
-    "SCRAM_RESET_A": False,
-    "SCRAM_RESET_B": False,
+    "SCRAM_RESET_A": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SCRAM_RESET_B": {
+        "state" : False,
+        "armed" : False,
+    },
     #Annunciators
-    "ALARM_ACK_1": False,
-    "ALARM_RESET_1": False,
+    "ALARM_ACK_1": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ALARM_RESET_1": {
+        "state" : False,
+        "armed" : False,
+    },
     #2
-    "ALARM_SILENCE_2": False,
-    "ALARM_ACK_2": False,
-    "ALARM_RESET_2": False,
+    "ALARM_SILENCE_2": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ALARM_ACK_2": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ALARM_RESET_2": {
+        "state" : False,
+        "armed" : False,
+    },
 
     #RMCS pushbuttons
-    "ACCUM_TROUBLE_RESET": False,
-    "ROD_DRIFT_RESET": False,
+    "ACCUM_TROUBLE_RESET": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ROD_DRIFT_RESET": {
+        "state" : False,
+        "armed" : False,
+    },
 
-    "RMCS_INSERT_PB": False,
-    "RMCS_WITHDRAW_PB": False,
+    "RMCS_INSERT_PB": {
+        "state" : False,
+        "armed" : False,
+    },
+    "RMCS_WITHDRAW_PB": {
+        "state" : False,
+        "armed" : False,
+    },
+
+    "hpcs_init": {
+        "state" : False,
+        "armed" : False,
+    },
 
 
 }
@@ -230,6 +292,7 @@ pumps = {
         "flow_from_rpm" : 0,
         "rated_flow" : 6250,
         "header" : "hpcs_discharge_header",
+        "suct_header" : "hpcs_suction_header",
     },
 }
 
@@ -256,8 +319,8 @@ def model_run(delta):
     reactor_physics.run(rods)
     neutron_monitoring.run(alarms,buttons,indicators,rods,switches,values)
     ac_power.run(switches,alarms,indicators,runs)
-    from simulation.models.control_room_columbia.general_physics import pump
-    pump.run()
     from simulation.models.control_room_columbia.general_physics import fluid
     fluid.run()
+    from simulation.models.control_room_columbia.general_physics import pump
+    pump.run()
     runs += 1

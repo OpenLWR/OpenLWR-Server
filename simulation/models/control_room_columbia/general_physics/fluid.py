@@ -21,7 +21,16 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0, #Initialized on start. Is not changed again.
         "mass" : 0,
-    }
+    },
+    "hpcs_suction_header" : {
+        #24" HPCS(2)-1-1
+
+        "diameter" : 609.60, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0, #Initialized on start. Is not changed again.
+        "mass" : 0,
+    },
 
 }
 
@@ -43,6 +52,17 @@ valves = {
         "open_speed" : 0.333, #30 seconds to open from full closed.
         "seal_in" : True, #Valve is seal-in, meaning it is not throttable (normally)
         "sealed_in" : False, #current state
+        #TODO: valve control power and motive power
+    },
+    "hpcs_v_15" : { 
+        "control_switch" : "hpcs_v_15",
+        "input" : StaticTanks.Wetwell,
+        "output" : "hpcs_suction_header",
+        "percent_open" : 100,
+        "diameter" : 609.60, #mm, 24 in
+        "open_speed" : 0.333, #30 seconds to open from full closed.
+        "seal_in" : True, 
+        "sealed_in" : True,
         #TODO: valve control power and motive power
     }
 }
@@ -123,6 +143,11 @@ def get_static_tank(name:int):
             from simulation.models.control_room_columbia.reactor_physics import pressure
             tank["pressure"] = pressure.Pressures["Vessel"]
             tank["mass"] = 0
+            return tank
+        case StaticTanks.Wetwell:
+            tank = {}
+            tank["pressure"] = 2.758e+6 #200 psi
+            tank["mass"] = 10000000
             return tank
 
 def inject_to_static_tank(name:int,amount):

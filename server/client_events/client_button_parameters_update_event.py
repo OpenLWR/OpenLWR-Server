@@ -9,11 +9,6 @@ def handle(data):
         buttons_updated = json.loads(data)
     except json.decoder.JSONDecodeError:
         print("[BUG] failed to decode json:",data)
-
-    for button in buttons_updated:
-        model.buttons[button] = buttons_updated[button]
-    
-    server_button_parameters_update_event.fire(data)
     
     print(buttons_updated)
     if type(buttons_updated) == dict and len(buttons_updated) >= 1:

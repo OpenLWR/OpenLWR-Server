@@ -45,21 +45,21 @@ def run(alarms,buttons,indicators,rods,switches):
     else:
         remove_withdraw_block("Mode_Switch_Shutdown")
 
-    if buttons["SCRAM_A1"]:
+    if buttons["SCRAM_A1"]["state"]:
         reactor_protection_systems["A"]["channel_1_trip"] = True
-    if buttons["SCRAM_A2"]:
+    if buttons["SCRAM_A2"]["state"]:
         reactor_protection_systems["A"]["channel_2_trip"] = True
 
-    if buttons["SCRAM_B1"]:
+    if buttons["SCRAM_B1"]["state"]:
         reactor_protection_systems["B"]["channel_1_trip"] = True
-    if buttons["SCRAM_B2"]:
+    if buttons["SCRAM_B2"]["state"]:
         reactor_protection_systems["B"]["channel_2_trip"] = True
 
-    if buttons["SCRAM_RESET_A"]:
+    if buttons["SCRAM_RESET_A"]["state"]:
         reactor_protection_systems["A"]["channel_1_trip"] = False
         reactor_protection_systems["A"]["channel_2_trip"] = False
 
-    if buttons["SCRAM_RESET_B"]:
+    if buttons["SCRAM_RESET_B"]["state"]:
         reactor_protection_systems["B"]["channel_1_trip"] = False
         reactor_protection_systems["B"]["channel_2_trip"] = False
 

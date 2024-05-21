@@ -31,6 +31,7 @@ pump_1 = { #TODO: improve the accuracy of these calculations
     "rated_flow" : 0,
     "current_limit" : 0,
     "header" : "",
+    "suct_header" : "",
 }
 
 def initialize_pumps():
@@ -45,6 +46,29 @@ def initialize_pumps():
                 pump_created[value_name] = value
 
         model.pumps[pump_name] = pump_created
+
+def calculate_suction(pump):
+    pump = model.pumps[pump]
+    from simulation.models.control_room_columbia.general_physics import fluid
+    suct_header = fluid.headers[pump["suct_header"]]
+
+    radius = suct_header["diameter"]/2
+    radius = radius*0.1 #to cm
+
+    flow_resistance = (8*33*2000)/(math.pi*(radius**4))
+
+    flow = (suct_header["pressure"]-653210)/flow_resistance
+
+    flow = max(flow,0)
+
+    flow = flow/1000 #to liter/s
+    flow_suct = flow*0.1 #to liter/0.1s (or the sim time)
+    if suct_header["mass"] - flow_suct <= 0:
+        suct_header["mass"] = 0
+        return 0
+
+    suct_header["mass"] -= flow_suct
+    return (flow/3.785)*60
 
 def run():
     for pump_name in model.pumps:
@@ -83,7 +107,8 @@ def run():
 
 			#remember to make the loading process for the current (v.FLA*math.clamp(v.flow_with_fullsim etc)) more realistic, and instead make it based on distance from rated rpm (as when the pump is loaded more it will draw more current)
             #TODO: better flow calculation
-            pump["flow"] = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
+            flow = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
+            pump["flow"] = min(calculate_suction(pump_name),flow)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
             
             from simulation.models.control_room_columbia.general_physics import fluid
@@ -94,7 +119,8 @@ def run():
             pump["amperes"] = 0
             pump["watts"] = 0
 
-            pump["flow"] = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
+            flow = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
+            pump["flow"] = min(calculate_suction(pump_name),flow)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
 
             from simulation.models.control_room_columbia.general_physics import fluid
