@@ -7,7 +7,7 @@ from simulation.models.control_room_columbia.reactor_physics import reactor_inve
 
 
 
-kgSteam = 10e3
+kgSteam = 10e2
 steps = 0
 
 def run(rods):

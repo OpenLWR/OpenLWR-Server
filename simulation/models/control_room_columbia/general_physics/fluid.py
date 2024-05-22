@@ -26,9 +26,66 @@ headers = { #most lines have a common header that they discharge into
         #24" HPCS(2)-1-1
 
         "diameter" : 609.60, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "mass" : 0,
+    },
+
+    "rhr_b_main_header" : {
+        #18" RHR(1)-2-5
+
+        "diameter" : 457.20, #millimeters
         "length" : 20000, #TODO : determine a good length
         "pressure" : 0, #pascals
-        "volume" : 0, #Initialized on start. Is not changed again.
+        "volume" : 0,
+        "mass" : 0,
+    },
+    "rhr_b_discharge_header" : {
+        #18" RHR(1)-2-4
+
+        "diameter" : 457.20, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "mass" : 0,
+    },
+    "rhr_b_suction_header" : {
+        #24" RHR(2)-2-2
+
+        "diameter" : 609.60, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "mass" : 0,
+    },
+    #we dont have RHR C's P&ID
+    "rhr_c_discharge_header" : {
+        #18"
+
+        "diameter" : 457.20, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "mass" : 0,
+    },
+    "rhr_c_suction_header" : {
+        #24"
+
+        "diameter" : 609.60, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "mass" : 0,
+    },
+
+    "rhr_p_3_discharge_header" : {
+        #24"
+
+        "diameter" : 609.60, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
         "mass" : 0,
     },
 
@@ -64,7 +121,120 @@ valves = {
         "seal_in" : True, 
         "sealed_in" : True,
         #TODO: valve control power and motive power
-    }
+    },
+
+    "rhr_v_4b" : { 
+        "control_switch" : "rhr_v_4b",
+        "input" : StaticTanks.Wetwell,
+        "output" : "rhr_b_suction_header",
+        "percent_open" : 100,
+        "diameter" : 609.60, #mm, 24 in
+        "open_speed" : 0.0666, #2.5 minutes to open from full closed.
+        "seal_in" : True, 
+        "sealed_in" : True,
+        #TODO: valve control power and motive power
+    },
+    "rhr_v_6b" : { 
+        "control_switch" : "rhr_v_6b",
+        "input" : StaticTanks.Reactor,
+        "output" : "rhr_b_suction_header",
+        "percent_open" : 0,
+        "diameter" : 609.60, #mm, 24 in
+        "open_speed" : 0.0666, #2.5 minutes to open from full closed.
+        "seal_in" : True, 
+        "sealed_in" : False,
+        #TODO: valve control power and motive power
+    },
+    "rhr_v_48b" : { 
+        "control_switch" : "rhr_v_48b",
+        "input" : "rhr_b_discharge_header",
+        "output" : "rhr_b_main_header",
+        "percent_open" : 100,
+        "diameter" : 457.20, #mm, 18 in
+        "open_speed" : 0.0666, #2.5 minutes to open from full closed.
+        "seal_in" : False, 
+        "sealed_in" : False,
+        #TODO: valve control power and motive power
+    },
+    "rhr_v_3b" : { 
+        "control_switch" : "rhr_v_3b",
+        "input" : "rhr_b_discharge_header",
+        "output" : "rhr_b_main_header",
+        "percent_open" : 100,
+        "diameter" : 457.20, #mm, 18 in
+        "open_speed" : 0.0666, #2.5 minutes to open from full closed.
+        "seal_in" : False, 
+        "sealed_in" : False,
+        #TODO: valve control power and motive power
+    },
+    "rhr_v_42b" : { 
+        "control_switch" : "rhr_v_42b",
+        "input" : "rhr_b_main_header",
+        "output" : StaticTanks.Reactor,
+        "percent_open" : 0,
+        "diameter" : 355.60, #mm, 14 in
+        "open_speed" : 0.333, #30 seconds to open from full closed.
+        "seal_in" : True, 
+        "sealed_in" : False,
+        #TODO: valve control power and motive power
+    },
+
+    "rhr_v_4c" : { 
+        "control_switch" : "rhr_v_4c",
+        "input" : StaticTanks.Wetwell,
+        "output" : "rhr_c_suction_header",
+        "percent_open" : 100,
+        "diameter" : 609.60, #mm, 24 in
+        "open_speed" : 0.0666, #2.5 minutes to open from full closed.
+        "seal_in" : True, 
+        "sealed_in" : True,
+        #TODO: valve control power and motive power
+    },
+    "rhr_v_42c" : { 
+        "control_switch" : "rhr_v_42c",
+        "input" : "rhr_c_discharge_header",
+        "output" : StaticTanks.Reactor,
+        "percent_open" : 0,
+        "diameter" : 355.60, #mm, 14 in
+        "open_speed" : 0.333, #30 seconds to open from full closed..
+        "seal_in" : True, 
+        "sealed_in" : False,
+        #TODO: valve control power and motive power
+    },
+    "rhr_v_24c" : { 
+        "control_switch" : "rhr_v_42c",
+        "input" : "rhr_c_discharge_header",
+        "output" : StaticTanks.Wetwell,
+        "percent_open" : 0,
+        "diameter" : 355.60, #mm, 14 in
+        "open_speed" : 0.333, #30 seconds to open from full closed..
+        "seal_in" : True, 
+        "sealed_in" : False,
+        #TODO: valve control power and motive power
+    },
+
+    "rhr_v_85b" : { #locally operated
+        "control_switch" : "",
+        "input" : "rhr_p_3_discharge_header",
+        "output" : "rhr_b_discharge_header",
+        "percent_open" : 100,
+        "diameter" : 355.60, #mm, 14 in
+        "open_speed" : 0.333, #30 seconds to open from full closed..
+        "seal_in" : False, 
+        "sealed_in" : False,
+        #TODO: valve control power and motive power
+    },
+    "rhr_v_85c" : { #locally operated
+        "control_switch" : "",
+        "input" : "rhr_p_3_discharge_header",
+        "output" : "rhr_c_discharge_header",
+        "percent_open" : 100,
+        "diameter" : 355.60, #mm, 14 in
+        "open_speed" : 0.333, #30 seconds to open from full closed..
+        "seal_in" : False, 
+        "sealed_in" : False,
+        #TODO: valve control power and motive power
+    },
 }
 
 def initialize_headers():
@@ -80,7 +250,7 @@ def initialize_headers():
         #this stuff is 8th grade math, i hope you know it
         volume = volume/1e6 #to liters
         header["volume"] = volume
-        header["mass"] = 0
+        header["mass"] = volume/1.5
 
 def valve_inject_to_header(mass:int,header_name):
 
@@ -141,8 +311,9 @@ def get_static_tank(name:int):
         case StaticTanks.Reactor:
             tank = {}
             from simulation.models.control_room_columbia.reactor_physics import pressure
-            tank["pressure"] = pressure.Pressures["Vessel"]
-            tank["mass"] = 0
+            tank["pressure"] = pressure.Pressures["Vessel"]+101352.9
+            from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
+            tank["mass"] = reactor_inventory.waterMass
             return tank
         case StaticTanks.Wetwell:
             tank = {}
@@ -176,6 +347,9 @@ def run():
     model.values["hpcs_flow"] = model.pumps["hpcs_p_1"]["actual_flow"]
     model.values["hpcs_press"] = headers["hpcs_discharge_header"]["pressure"]/6895
 
+    model.values["rhr_b_flow"] = model.pumps["rhr_p_2b"]["actual_flow"]
+    model.values["rhr_b_press"] = headers["rhr_b_discharge_header"]["pressure"]/6895
+
     for valve_name in valves:
         valve = valves[valve_name]
         inlet = get_header(valve["input"])
@@ -188,10 +362,18 @@ def run():
                 elif model.switches[valve["control_switch"]]["position"] == 0:
                     valve["percent_open"] = min(max(valve["percent_open"]-valve["open_speed"],0),100)
             elif valve["seal_in"]:
-                if model.switches[valve["control_switch"]]["position"] == 2:
-                    valve["sealed_in"] = True
-                elif model.switches[valve["control_switch"]]["position"] == 0:
-                    valve["sealed_in"] = False
+                if len(model.switches[valve["control_switch"]]["positions"]) < 3:
+                    if model.switches[valve["control_switch"]]["position"] == 1:
+                        valve["sealed_in"] = True
+                    elif model.switches[valve["control_switch"]]["position"] == 0:
+                        valve["sealed_in"] = False
+                else:
+                    if model.switches[valve["control_switch"]]["position"] == 2:
+                        valve["sealed_in"] = True
+                    elif model.switches[valve["control_switch"]]["position"] == 0:
+                        valve["sealed_in"] = False
+                    
+                
 
                 if valve["sealed_in"]:
                     valve["percent_open"] = min(max(valve["percent_open"]+valve["open_speed"],0),100)
@@ -216,6 +398,10 @@ def run():
 
         #viscosity of water is 0.01 poise
         #placeholder 20000 mm as length (so 20 cm)
+
+        if valve_name == "rhr_v_6b" or valve_name == "rhr_v_6a": #override the inlets for SDC to have more pressure so there is sufficient head
+            inlet["pressure"] = 1.379e6
+
         radius = valve["diameter"]/2
         radius = radius*0.1 #to cm
 
@@ -229,6 +415,7 @@ def run():
         flow = flow*(valve["percent_open"]/100) #TODO: Exponents? Flow is not linear.
         #flow is in cubic centimeters per second
         flow = flow/1000 #to liter/s
+        valve["flow"] = flow
         flow = flow*0.1 #to liter/0.1s (or the sim time)
         if inlet["pressure"] < outlet["pressure"]:
             #valve_inject_to_header(flow,valve["input"])

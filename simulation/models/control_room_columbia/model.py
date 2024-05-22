@@ -122,14 +122,135 @@ switches = {
             "red" : False,
         },
     },
-    "TempFW": {
+
+    "rhr_p_2b": {
         "positions": {
 			0: 45,
 			1: 0,
 			2: -45,
 		},
         "position": 1,
-        "lights" : {},
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_48b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_3b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_42b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_4b": {
+        "positions": {
+			0: 45,
+			1: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_6b": {
+        "positions": {
+			0: 45,
+			1: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+
+    "rhr_p_2c": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_p_3": {
+        "positions": {
+			0: 45,
+			1: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_4c": {
+        "positions": {
+			0: 45,
+			1: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_42c": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_24c": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
     },
 }
 
@@ -153,6 +274,9 @@ values = {
 
     "hpcs_flow" : 0,
     "hpcs_press" : 0,
+
+    "rhr_b_flow" : 0,
+    "rhr_b_press" : 0,
 }
 
 indicators = {
@@ -240,20 +364,7 @@ buttons = {
         "state" : False,
         "armed" : False,
     },
-    #2
-    "ALARM_SILENCE_2": {
-        "state" : False,
-        "armed" : False,
-    },
-    "ALARM_ACK_2": {
-        "state" : False,
-        "armed" : False,
-    },
-    "ALARM_RESET_2": {
-        "state" : False,
-        "armed" : False,
-    },
-
+    
     #RMCS pushbuttons
     "ACCUM_TROUBLE_RESET": {
         "state" : False,
@@ -283,7 +394,7 @@ buttons = {
 
 pumps = {
     "hpcs_p_1" : {
-        "motor_breaker_closed" : True,
+        "motor_breaker_closed" : False,
         "motor_control_switch" : "hpcs_p_1",
         "bus" : "4",
         "horsepower" : 3000,
@@ -293,6 +404,42 @@ pumps = {
         "rated_flow" : 6250,
         "header" : "hpcs_discharge_header",
         "suct_header" : "hpcs_suction_header",
+    },
+    "rhr_p_2b" : {
+        "motor_breaker_closed" : False,
+        "motor_control_switch" : "rhr_p_2b",
+        "bus" : "8",
+        "horsepower" : 1000,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 250,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 10000,
+        "header" : "rhr_b_discharge_header",
+        "suct_header" : "rhr_b_suction_header",
+    },
+    "rhr_p_2c" : {
+        "motor_breaker_closed" : False,
+        "motor_control_switch" : "rhr_p_2c",
+        "bus" : "8",
+        "horsepower" : 1000,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 250,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 10000,
+        "header" : "rhr_c_discharge_header",
+        "suct_header" : "rhr_c_suction_header",
+    },
+    "rhr_p_3" : {
+        "motor_breaker_closed" : True,
+        "motor_control_switch" : "rhr_p_3",
+        "bus" : "8",
+        "horsepower" : 100,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 100,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 500,
+        "header" : "rhr_p_3_discharge_header",
+        "suct_header" : "rhr_c_suction_header",
     },
 }
 

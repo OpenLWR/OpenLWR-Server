@@ -37,8 +37,8 @@ pump_1 = { #TODO: improve the accuracy of these calculations
 def initialize_pumps():
     for pump_name in model.pumps:
         pump = model.pumps[pump_name]
-
-        pump_created = pump_1 #TODO: actual types
+        import copy
+        pump_created = copy.deepcopy(pump_1) #TODO: actual types
 
         for value_name in pump:
             value = pump[value_name]
@@ -73,9 +73,13 @@ def calculate_suction(pump):
 def run():
     for pump_name in model.pumps:
         pump = model.pumps[pump_name]
-
-        if model.switches[pump["motor_control_switch"]]["position"] == 2:
-            pump["motor_breaker_closed"] = True
+        
+        if len(model.switches[pump["motor_control_switch"]]["positions"]) > 2:
+            if model.switches[pump["motor_control_switch"]]["position"] == 2:
+                pump["motor_breaker_closed"] = True
+        else:
+            if model.switches[pump["motor_control_switch"]]["position"] == 1:
+                pump["motor_breaker_closed"] = True
         
         if model.switches[pump["motor_control_switch"]]["position"] == 0:
             pump["motor_breaker_closed"] = False

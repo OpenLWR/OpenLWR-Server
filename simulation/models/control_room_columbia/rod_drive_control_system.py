@@ -11,9 +11,9 @@ def run(rods,buttons):
         if info["driving"] : any_rod_driving = True
 
         if info["select"] and not any_rod_driving:
-            if buttons["RMCS_INSERT_PB"]:
+            if buttons["RMCS_INSERT_PB"]["state"]:
                 insert_rod(rod)
-            elif buttons["RMCS_WITHDRAW_PB"]:
+            elif buttons["RMCS_WITHDRAW_PB"]["state"]:
                 withdraw_rod(rod)
 
         if info["scram"]:

@@ -25,10 +25,10 @@ def run(rods,alarms,buttons):
         if information["accum_trouble"] and not information["accum_trouble_acknowledged"]:
             accumulator_alarm = True
 
-        if buttons["ROD_DRIFT_RESET"]:
+        if buttons["ROD_DRIFT_RESET"]["state"]:
             information["drift_alarm"] = False
         
-        if buttons["ACCUM_TROUBLE_RESET"]:
+        if buttons["ACCUM_TROUBLE_RESET"]["state"]:
             if information["accum_trouble"]:
                 information["accum_trouble_acknowledged"] = True
             else:
