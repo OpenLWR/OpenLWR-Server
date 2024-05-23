@@ -51,13 +51,14 @@ def calculate_suction(pump):
     pump = model.pumps[pump]
     from simulation.models.control_room_columbia.general_physics import fluid
     suct_header = fluid.headers[pump["suct_header"]]
+    disch_header = fluid.headers[pump["header"]]
 
     radius = suct_header["diameter"]/2
     radius = radius*0.1 #to cm
 
     flow_resistance = (8*33*2000)/(math.pi*(radius**4))
 
-    flow = (suct_header["pressure"]-653210)/flow_resistance
+    flow = (disch_header["pressure"]-suct_header["pressure"])/flow_resistance
 
     flow = max(flow,0)
 
@@ -66,6 +67,10 @@ def calculate_suction(pump):
     if suct_header["mass"] - flow_suct <= 0:
         suct_header["mass"] = 0
         return 0
+
+    #i'm not really sure why this doesnt work
+    #TODO: fix this
+    return pump["flow"]
 
     suct_header["mass"] -= flow_suct
     return (flow/3.785)*60
@@ -112,7 +117,7 @@ def run():
 			#remember to make the loading process for the current (v.FLA*math.clamp(v.flow_with_fullsim etc)) more realistic, and instead make it based on distance from rated rpm (as when the pump is loaded more it will draw more current)
             #TODO: better flow calculation
             flow = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
-            pump["flow"] = min(calculate_suction(pump_name),flow)
+            pump["flow"] = flow #min(calculate_suction(pump_name),flow)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
             
             from simulation.models.control_room_columbia.general_physics import fluid
@@ -124,7 +129,7 @@ def run():
             pump["watts"] = 0
 
             flow = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
-            pump["flow"] = min(calculate_suction(pump_name),flow)
+            pump["flow"] = flow #min(calculate_suction(pump_name),flow)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
 
             from simulation.models.control_room_columbia.general_physics import fluid

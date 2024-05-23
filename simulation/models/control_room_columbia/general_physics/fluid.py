@@ -83,7 +83,7 @@ headers = { #most lines have a common header that they discharge into
         #24"
 
         "diameter" : 609.60, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 20000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "mass" : 0,
@@ -109,6 +109,31 @@ valves = {
         "open_speed" : 0.333, #30 seconds to open from full closed.
         "seal_in" : True, #Valve is seal-in, meaning it is not throttable (normally)
         "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "hpcs_v_1" : {
+        "control_switch" : "hpcs_v_1",
+        "input" : "hpcs_discharge_header",
+        "output" : StaticTanks.Reactor,
+        "percent_open" : 0,
+        "diameter" : 406.40, #mm
+        "open_speed" : 0.333, #30 seconds to open from full closed.
+        "seal_in" : True, 
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
+        #TODO: valve control power and motive power
+    },
+    "hpcs_v_12" : { 
+        "control_switch" : "hpcs_v_12",
+        "input" : "hpcs_discharge_header",
+        "output" : StaticTanks.Wetwell,
+        "percent_open" : 100,
+        "diameter" : 101.60, #mm 4 in
+        "open_speed" : 0.333, #30 seconds to open from full closed.
+        "seal_in" : True, 
+        "sealed_in" : True, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
         #TODO: valve control power and motive power
     },
     "hpcs_v_15" : { 
@@ -119,7 +144,20 @@ valves = {
         "diameter" : 609.60, #mm, 24 in
         "open_speed" : 0.333, #30 seconds to open from full closed.
         "seal_in" : True, 
-        "sealed_in" : True,
+        "sealed_in" : True, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
+        #TODO: valve control power and motive power
+    },
+    "hpcs_v_23" : {
+        "control_switch" : "hpcs_v_23",
+        "input" : "hpcs_discharge_header",
+        "output" : StaticTanks.Wetwell,
+        "percent_open" : 0,
+        "diameter" : 406.40, #mm
+        "open_speed" : 0.333, #30 seconds to open from full closed.
+        "seal_in" : True,
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
         #TODO: valve control power and motive power
     },
 
@@ -131,7 +169,8 @@ valves = {
         "diameter" : 609.60, #mm, 24 in
         "open_speed" : 0.0666, #2.5 minutes to open from full closed.
         "seal_in" : True, 
-        "sealed_in" : True,
+        "sealed_in" : True, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
         #TODO: valve control power and motive power
     },
     "rhr_v_6b" : { 
@@ -142,7 +181,8 @@ valves = {
         "diameter" : 609.60, #mm, 24 in
         "open_speed" : 0.0666, #2.5 minutes to open from full closed.
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
         #TODO: valve control power and motive power
     },
     "rhr_v_48b" : { 
@@ -153,7 +193,8 @@ valves = {
         "diameter" : 457.20, #mm, 18 in
         "open_speed" : 0.0666, #2.5 minutes to open from full closed.
         "seal_in" : False, 
-        "sealed_in" : False,
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
         #TODO: valve control power and motive power
     },
     "rhr_v_3b" : { 
@@ -164,7 +205,8 @@ valves = {
         "diameter" : 457.20, #mm, 18 in
         "open_speed" : 0.0666, #2.5 minutes to open from full closed.
         "seal_in" : False, 
-        "sealed_in" : False,
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
         #TODO: valve control power and motive power
     },
     "rhr_v_42b" : { 
@@ -175,7 +217,8 @@ valves = {
         "diameter" : 355.60, #mm, 14 in
         "open_speed" : 0.333, #30 seconds to open from full closed.
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
         #TODO: valve control power and motive power
     },
 
@@ -187,7 +230,8 @@ valves = {
         "diameter" : 609.60, #mm, 24 in
         "open_speed" : 0.0666, #2.5 minutes to open from full closed.
         "seal_in" : True, 
-        "sealed_in" : True,
+        "sealed_in" : True, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
         #TODO: valve control power and motive power
     },
     "rhr_v_42c" : { 
@@ -198,11 +242,12 @@ valves = {
         "diameter" : 355.60, #mm, 14 in
         "open_speed" : 0.333, #30 seconds to open from full closed..
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
         #TODO: valve control power and motive power
     },
     "rhr_v_24c" : { 
-        "control_switch" : "rhr_v_42c",
+        "control_switch" : "rhr_v_24c",
         "input" : "rhr_c_discharge_header",
         "output" : StaticTanks.Wetwell,
         "percent_open" : 0,
@@ -210,6 +255,7 @@ valves = {
         "open_speed" : 0.333, #30 seconds to open from full closed..
         "seal_in" : True, 
         "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
 
@@ -222,6 +268,7 @@ valves = {
         "open_speed" : 0.333, #30 seconds to open from full closed..
         "seal_in" : False, 
         "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
     "rhr_v_85c" : { #locally operated
@@ -233,6 +280,7 @@ valves = {
         "open_speed" : 0.333, #30 seconds to open from full closed..
         "seal_in" : False, 
         "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
 }
@@ -250,7 +298,7 @@ def initialize_headers():
         #this stuff is 8th grade math, i hope you know it
         volume = volume/1e6 #to liters
         header["volume"] = volume
-        header["mass"] = volume/1.5
+        header["mass"] = 1
 
 def valve_inject_to_header(mass:int,header_name):
 
@@ -327,6 +375,7 @@ def inject_to_static_tank(name:int,amount):
         case StaticTanks.Reactor:
             from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
             reactor_inventory.add_water(amount)
+            
     
 
 def get_header(header_name):
@@ -341,6 +390,11 @@ def get_header(header_name):
     
     return header
 
+#TODO: move this
+
+hpcs_init = False
+hpcs_init_first = False
+
 def run():
 
     #TODO: figure out a better way to do this
@@ -349,6 +403,26 @@ def run():
 
     model.values["rhr_b_flow"] = model.pumps["rhr_p_2b"]["actual_flow"]
     model.values["rhr_b_press"] = headers["rhr_b_discharge_header"]["pressure"]/6895
+
+    model.values["rhr_c_flow"] = model.pumps["rhr_p_2c"]["actual_flow"]
+    model.values["rhr_c_press"] = headers["rhr_c_discharge_header"]["pressure"]/6895
+
+    if model.pumps["hpcs_p_1"]["motor_breaker_closed"]:
+        valves["hpcs_v_12"]["sealed_in"] = model.pumps["hpcs_p_1"]["actual_flow"] < 1200
+    global hpcs_init
+    global hpcs_init_first
+    if model.buttons["hpcs_init"]["state"]:
+        hpcs_init = True
+        hpcs_init_first = True
+
+    if hpcs_init:
+        if hpcs_init_first:
+            model.pumps["hpcs_p_1"]["motor_breaker_closed"] = True
+        
+        valves["hpcs_v_4"]["sealed_in"] = True
+
+    model.indicators["hpcs_init"] = hpcs_init
+        
 
     for valve_name in valves:
         valve = valves[valve_name]

@@ -86,11 +86,25 @@ switches = {
         "position": 3,
         "lights" : {},
     },
+
+
+
     "hpcs_p_1": {
         "positions": {
 			0: 45,
 			1: 0,
 			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "hpcs_p_3": {
+        "positions": {
+			0: 45,
+			1: -45,
 		},
         "position": 1,
         "lights" : {
@@ -108,9 +122,47 @@ switches = {
         "lights" : {
             "green" : True,
             "red" : False,
+            "override" : False,
+        },
+    },
+    "hpcs_v_1": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "hpcs_v_12": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
         },
     },
     "hpcs_v_15": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "override" : False,
+        },
+    },
+    "hpcs_v_23": {
         "positions": {
 			0: 45,
 			1: 0,
@@ -277,6 +329,9 @@ values = {
 
     "rhr_b_flow" : 0,
     "rhr_b_press" : 0,
+
+    "rhr_c_flow" : 0,
+    "rhr_c_press" : 0,
 }
 
 indicators = {
@@ -327,6 +382,8 @@ indicators = {
     "APRM_D_DOWNSCALE": False,
     "APRM_E_DOWNSCALE": False,
     "APRM_F_DOWNSCALE": False,
+
+    "hpcs_init": False,
 }
 
 buttons = {
@@ -405,6 +462,19 @@ pumps = {
         "header" : "hpcs_discharge_header",
         "suct_header" : "hpcs_suction_header",
     },
+    "hpcs_p_3" : {
+        "motor_breaker_closed" : True,
+        "motor_control_switch" : "hpcs_p_3",
+        "bus" : "4A",
+        "horsepower" : 100,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 100,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 50,
+        "header" : "hpcs_discharge_header",
+        "suct_header" : "hpcs_suction_header",
+    },
+
     "rhr_p_2b" : {
         "motor_breaker_closed" : False,
         "motor_control_switch" : "rhr_p_2b",
@@ -437,7 +507,7 @@ pumps = {
         "rated_rpm" : 1800,
         "rated_discharge_press" : 100,
         "flow_from_rpm" : 0,
-        "rated_flow" : 500,
+        "rated_flow" : 50,
         "header" : "rhr_p_3_discharge_header",
         "suct_header" : "rhr_c_suction_header",
     },
