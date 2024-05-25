@@ -263,7 +263,11 @@ rod_block_monitors = { #TODO
     "A" : {
         "power" : 0,
         "core_flow" : 0,
-    }
+    },
+    "B" : {
+        "power" : 0,
+        "core_flow" : 0,
+    },
 }
 
 oscillation_power_range_monitors = {}
@@ -445,6 +449,8 @@ def run(alarms,buttons,indicators,rods,switches,values):
     model.values["srm_c_period"] = source_range_monitors["C"]["counts_log"]
     model.values["srm_d_period"] = source_range_monitors["D"]["counts_log"]
 
+    #TODO: fix this below this is so fucking messy
+
     model.values["irm_a_recorder"] = round(intermediate_range_monitors["A"]["power"],1)
     model.values["aprm_a_recorder"] = round(average_power_range_monitors["A"]["power"],1)
     model.values["irm_c_recorder"] = round(intermediate_range_monitors["C"]["power"],1)
@@ -454,5 +460,15 @@ def run(alarms,buttons,indicators,rods,switches,values):
     model.values["aprm_e_recorder"] = round(average_power_range_monitors["E"]["power"],1)
     model.values["irm_g_recorder"] = round(intermediate_range_monitors["G"]["power"],1)
     model.values["rbm_a_recorder"] = round(rod_block_monitors["A"]["power"],1)
+
+    model.values["irm_b_recorder"] = round(intermediate_range_monitors["B"]["power"],1)
+    model.values["aprm_b_recorder"] = round(average_power_range_monitors["B"]["power"],1)
+    model.values["irm_d_recorder"] = round(intermediate_range_monitors["D"]["power"],1)
+    model.values["aprm_d_recorder"] = round(average_power_range_monitors["D"]["power"],1)
+
+    model.values["irm_f_recorder"] = round(intermediate_range_monitors["F"]["power"],1)
+    model.values["aprm_f_recorder"] = round(average_power_range_monitors["F"]["power"],1)
+    model.values["irm_h_recorder"] = round(intermediate_range_monitors["H"]["power"],1)
+    model.values["rbm_b_recorder"] = round(rod_block_monitors["B"]["power"],1)
 
     values["aprm_temporary"] = round(average_power_range_monitors["A"]["power"])

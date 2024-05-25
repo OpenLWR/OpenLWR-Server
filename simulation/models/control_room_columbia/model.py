@@ -605,6 +605,16 @@ values = {
     "aprm_e_recorder" : 0,
     "irm_g_recorder" : 0,
     "rbm_a_recorder" : 0,
+
+    "irm_b_recorder" : 0,
+    "aprm_b_recorder" : 0,
+    "irm_d_recorder" : 0,
+    "aprm_d_recorder" : 0,
+
+    "irm_f_recorder" : 0,
+    "aprm_f_recorder" : 0,
+    "irm_h_recorder" : 0,
+    "rbm_b_recorder" : 0,
 }
 
 indicators = {
