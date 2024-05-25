@@ -26,6 +26,16 @@ def run(rods):
 
     rod_num = 0
 
+    energy = 50 # in mwt
+
+    calories = ((energy*1000000)*0.24) # divide by number of rods
+				
+    HeatC = calories/1000
+				
+    TempNow = (HeatC/waterMass)*0.1
+				
+    reactor_water_temperature += TempNow
+
 
 
     for rod in rods:
@@ -55,11 +65,11 @@ def run(rods):
         energy = info["neutrons"]/(320e15*0.7*100)
         energy = (energy*3486) # in mwt
 
-        calories = ((energy*1000000)*0.24)/185 # divide by number of rods
+        calories = ((energy*1000000))/185 # divide by number of rods
 				
         HeatC = calories/1000
 				
-        TempNow = (HeatC/waterMass)#*0.1
+        TempNow = (HeatC/waterMass)*0.1
 				
         reactor_water_temperature += TempNow
 
@@ -100,4 +110,5 @@ def run(rods):
 
     model.reactor_water_temperature = reactor_water_temperature
     reactor_inventory.run()
+
     

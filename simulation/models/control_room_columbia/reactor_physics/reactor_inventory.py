@@ -25,6 +25,7 @@ def mm_to_inches(value):
 
 rx_level_wr = 35
 waterMass = 928500.26
+limit_press = True
 
 def run():
 		
@@ -45,13 +46,22 @@ def run():
 	if waterMass <= 1:
 		waterMass = 1
 
-	if water_temperature > boilingPoint and waterMass>0:
+	if waterMass>0:
 		vapMass = steam_functions.vaporize(waterMass, water_temperature, pressure.Pressures["Vessel"])
-		reactor_physics.kgSteam = reactor_physics.kgSteam+vapMass["vm"]
+		reactor_physics.kgSteam = reactor_physics.kgSteam+max(vapMass["vm"],0)
 		
+		if limit_press and pressure.Pressures["Vessel"]/6895 >= 900:
+			reactor_physics.kgSteam -= max(vapMass["vm"],0)
+
 		NewPress = pressure.getPressure(reactor_physics.kgSteam, water_temperature,pressure.Volumes["Vessel"])
 		pressure.Pressures["Vessel"]= NewPress
-		waterMass = waterMass - vapMass["vm"]
+		waterMass = waterMass - max(vapMass["vm"],0)
+
+		boilingPoint = steam_functions.getBoilingPointForWater(pressure.Pressures["Vessel"])
+
+		if water_temperature > boilingPoint:
+			water_temperature = boilingPoint
+
 	else:
 		NewPress = pressure.getPressure(reactor_physics.kgSteam, water_temperature,pressure.Volumes["Vessel"])
 		pressure.Pressures["Vessel"] = NewPress
@@ -59,14 +69,22 @@ def run():
 	if waterMass <= 1:
 		waterMass = 1
 
-	water_temperature = boilingPoint-1
 
 	model.reactor_water_temperature = water_temperature
 
 	print("RX Press %s" % str(pressure.Pressures["Vessel"]/6895)) #Print pressure in PSI
-	rx_level_wr = mm_to_inches(calculate_level_cylinder(Vessel_Diameter,waterMass))-310
+	raw_level = mm_to_inches(calculate_level_cylinder(Vessel_Diameter,waterMass))
+	rx_level_wr = raw_level-528.55
 	print("RX Level, WR %s" % str(rx_level_wr))
+	print("RX Level %s" % str(raw_level))
+
+	model.values["rpv_level_recorder_1"] = round(rx_level_wr,1)
+	model.values["rpv_pressure_recorder_1"] = round(pressure.Pressures["Vessel"]/6895,1)
     
 def add_water(kg:int):
 	global waterMass
 	waterMass+=kg
+
+def remove_steam(amount):
+	from simulation.models.control_room_columbia.reactor_physics import reactor_physics
+	reactor_physics.kgSteam -= amount

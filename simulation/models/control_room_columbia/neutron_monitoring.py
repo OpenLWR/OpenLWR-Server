@@ -84,6 +84,7 @@ intermediate_range_monitors = {
         "rod" : "18-55", #TODO: make this the average of all rods in that area
         "power" : 0,
         "range" : 1,
+        "range_switch" : "irm_a_range",
         "downscale_setpoint" : 5,
         "upscale_setpoint" : 108,
         "upscale_trip_setpoint" : 120,
@@ -100,6 +101,7 @@ intermediate_range_monitors = {
         "rod" : "46-55", #TODO: make this the average of all rods in that area
         "power" : 0,
         "range" : 1,
+        "range_switch" : "irm_b_range",
         "downscale_setpoint" : 5,
         "upscale_setpoint" : 108,
         "upscale_trip_setpoint" : 120,
@@ -116,6 +118,7 @@ intermediate_range_monitors = {
         "rod" : "26-39", #TODO: make this the average of all rods in that area
         "power" : 0,
         "range" : 1,
+        "range_switch" : "irm_c_range",
         "downscale_setpoint" : 5,
         "upscale_setpoint" : 108,
         "upscale_trip_setpoint" : 120,
@@ -132,6 +135,7 @@ intermediate_range_monitors = {
         "rod" : "34-39", #TODO: make this the average of all rods in that area
         "power" : 0,
         "range" : 1,
+        "range_switch" : "irm_d_range",
         "downscale_setpoint" : 5,
         "upscale_setpoint" : 108,
         "upscale_trip_setpoint" : 120,
@@ -148,6 +152,7 @@ intermediate_range_monitors = {
         "rod" : "34-31", #TODO: make this the average of all rods in that area
         "power" : 0,
         "range" : 1,
+        "range_switch" : "irm_e_range",
         "downscale_setpoint" : 5,
         "upscale_setpoint" : 108,
         "upscale_trip_setpoint" : 120,
@@ -164,6 +169,7 @@ intermediate_range_monitors = {
         "rod" : "26-31", #TODO: make this the average of all rods in that area
         "power" : 0,
         "range" : 1,
+        "range_switch" : "irm_f_range",
         "downscale_setpoint" : 5,
         "upscale_setpoint" : 108,
         "upscale_trip_setpoint" : 120,
@@ -180,6 +186,7 @@ intermediate_range_monitors = {
         "rod" : "50-15", #TODO: make this the average of all rods in that area
         "power" : 0,
         "range" : 1,
+        "range_switch" : "irm_g_range",
         "downscale_setpoint" : 5,
         "upscale_setpoint" : 108,
         "upscale_trip_setpoint" : 120,
@@ -196,6 +203,7 @@ intermediate_range_monitors = {
         "rod" : "18-15", #TODO: make this the average of all rods in that area
         "power" : 0,
         "range" : 1,
+        "range_switch" : "irm_h_range",
         "downscale_setpoint" : 5,
         "upscale_setpoint" : 108,
         "upscale_trip_setpoint" : 120,
@@ -260,9 +268,27 @@ rod_block_monitors = { #TODO
 
 oscillation_power_range_monitors = {}
 
+scram_reactor = False
+
 def run(alarms,buttons,indicators,rods,switches,values):
 
     from simulation.models.control_room_columbia import model
+    global scram_reactor
+    scram_reactor = False
+
+    model.alarms["irm_downscale"]["alarm"] = False
+    model.alarms["lprm_downscale"]["alarm"] = False
+    model.alarms["aprm_downscale"]["alarm"] = False
+
+    model.alarms["irm_upscale"]["alarm"] = False
+    model.alarms["lprm_upscale"]["alarm"] = False
+    model.alarms["aprm_upscale"]["alarm"] = False
+
+    model.alarms["irm_aceg_upscl_trip_or_inop"]["alarm"] = False
+    model.alarms["irm_bdfh_upscl_trip_or_inop"]["alarm"] = False
+
+    model.alarms["aprm_bdf_upscl_trip_or_inop"]["alarm"] = False
+    model.alarms["aprm_ace_upscl_trip_or_inop"]["alarm"] = False
 
     for srm_name in source_range_monitors:
         srm = source_range_monitors[srm_name]
@@ -282,7 +308,9 @@ def run(alarms,buttons,indicators,rods,switches,values):
     for irm_name in intermediate_range_monitors:
         irm = intermediate_range_monitors[irm_name]
         
-        irm["power"] = rods[irm["rod"]]["neutrons"]/(320e15*0.7*120)
+        irm["power"] = rods[irm["rod"]]["neutrons"]/(320e15*0.7)*1000000*2.5
+
+        irm["range"] = model.switches[irm["range_switch"]]["position"]+1
 
         irm_range = 1
         #this makes it so the odd ranges are the same range as the last even range.
@@ -342,6 +370,12 @@ def run(alarms,buttons,indicators,rods,switches,values):
 
         lprm["A"]["power"] = average_power #TODO: all detectors of the LPRM
 
+        if average_power < lprm["A"]["downscale_setpoint"]:
+            model.alarms["lprm_downscale"]["alarm"] = True
+
+        if average_power > lprm["A"]["upscale_setpoint"]:
+            model.alarms["lprm_upscale"]["alarm"] = True
+
     from simulation.models.control_room_columbia import reactor_protection_system
 
     for aprm_name in average_power_range_monitors:
@@ -382,13 +416,21 @@ def run(alarms,buttons,indicators,rods,switches,values):
         indicators["APRM_%s_UPSCALE" % aprm_name] = Upscale
         indicators["APRM_%s_UPSCALE_TRIP_OR_INOP" % aprm_name] = UpscaleTripOrInop
 
+        if Downscale:
+            alarms["aprm_downscale"]["alarm"] = True
+
         if Upscale:
             reactor_protection_system.add_withdraw_block("APRM_UPSCALE_%s" % aprm_name)
+            alarms["aprm_upscale"]["alarm"] = True
         else:
             reactor_protection_system.remove_withdraw_block("APRM_UPSCALE_%s" % aprm_name)
 
         if UpscaleTripOrInop:
-            reactor_protection_system.scram("APRMUpscaleTrip")
+            scram_reactor = True
+            if aprm_name in {"A","C","E"}:
+                alarms["aprm_ace_upscl_trip_or_inop"]["alarm"] = True
+            else:
+                alarms["aprm_bdf_upscl_trip_or_inop"]["alarm"] = True
 
     try:
         model.values["srm_a_counts"] = math.log(source_range_monitors["A"]["counts"])
@@ -402,5 +444,15 @@ def run(alarms,buttons,indicators,rods,switches,values):
     model.values["srm_b_period"] = source_range_monitors["B"]["counts_log"]
     model.values["srm_c_period"] = source_range_monitors["C"]["counts_log"]
     model.values["srm_d_period"] = source_range_monitors["D"]["counts_log"]
+
+    model.values["irm_a_recorder"] = round(intermediate_range_monitors["A"]["power"],1)
+    model.values["aprm_a_recorder"] = round(average_power_range_monitors["A"]["power"],1)
+    model.values["irm_c_recorder"] = round(intermediate_range_monitors["C"]["power"],1)
+    model.values["aprm_c_recorder"] = round(average_power_range_monitors["C"]["power"],1)
+
+    model.values["irm_e_recorder"] = round(intermediate_range_monitors["E"]["power"],1)
+    model.values["aprm_e_recorder"] = round(average_power_range_monitors["E"]["power"],1)
+    model.values["irm_g_recorder"] = round(intermediate_range_monitors["G"]["power"],1)
+    model.values["rbm_a_recorder"] = round(rod_block_monitors["A"]["power"],1)
 
     values["aprm_temporary"] = round(average_power_range_monitors["A"]["power"])

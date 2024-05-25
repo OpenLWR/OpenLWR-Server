@@ -26,7 +26,7 @@ def getBoilingPointForWater(Pressure):
 	
 	return min(max(100,boiling_point_c),350)
 
-
+6
 def vaporize(initialMass, temperature, pressure):
 	pressure = pressure+1
 	boilingPoint = getBoilingPointForWater(pressure)

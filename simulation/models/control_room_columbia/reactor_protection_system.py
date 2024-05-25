@@ -7,24 +7,26 @@ reactor_protection_systems = {
         "reset_timer" : -1,
         "channel_1_trip" : False,
         "channel_2_trip" : False,
-        "reasons" : [] #Trip reasons should match the annunciator name, other than "RPS_A".
-        #Ex : "NMS_TRIP"
     },
     "B" : {
         "reset_timer" : -1,
         "channel_1_trip" : False,
         "channel_2_trip" : False,
-        "reasons" : [] #Trip reasons should match the annunciator name, other than "RPS_A".
-        #Ex : "NMS_TRIP"
     },
 }
 
 rps_alarms = {
     "A" : {
         "RPV Level Low" : "rpv_level_low_trip_a",
+        "RPV Press High" : "rpv_press_high_trip_a",
+        "Mode Switch In Shutdown" : "mode_switch_in_shutdown_position_a",
+        "Neutron Monitor System" : "neutron_monitor_system_trip_a",
     },
     "B" : {
         "RPV Level Low" : "rpv_level_low_trip_b",
+        "RPV Press High" : "rpv_press_high_trip_b",
+        "Mode Switch In Shutdown" : "mode_switch_in_shutdown_position_b",
+        "Neutron Monitor System" : "neutron_monitor_system_trip_b",
     },
 }
 
@@ -40,7 +42,6 @@ def run(alarms,buttons,indicators,rods,switches):
 
 
     if switches["reactor_mode_switch"]["position"] == 0:
-        mode_switch_shutdown()
         add_withdraw_block("Mode_Switch_Shutdown")
     else:
         remove_withdraw_block("Mode_Switch_Shutdown")
@@ -56,12 +57,23 @@ def run(alarms,buttons,indicators,rods,switches):
         reactor_protection_systems["B"]["channel_2_trip"] = True
 
     if buttons["SCRAM_RESET_A"]["state"]:
-        reactor_protection_systems["A"]["channel_1_trip"] = False
-        reactor_protection_systems["A"]["channel_2_trip"] = False
+        if scram_reset_permissive("A"):
+            reactor_protection_systems["A"]["channel_1_trip"] = False
+            reactor_protection_systems["A"]["channel_2_trip"] = False
+            for scram in rps_scram_trips["A"]:
+                rps_scram_trips["A"][scram]["sealed_in"] = False
 
     if buttons["SCRAM_RESET_B"]["state"]:
-        reactor_protection_systems["B"]["channel_1_trip"] = False
-        reactor_protection_systems["B"]["channel_2_trip"] = False
+        if scram_reset_permissive("B"):
+            reactor_protection_systems["B"]["channel_1_trip"] = False
+            reactor_protection_systems["B"]["channel_2_trip"] = False
+            for scram in rps_scram_trips["B"]:
+                rps_scram_trips["B"][scram]["sealed_in"] = False
+
+    rps_scram_trips["A"]["Mode Switch In Shutdown"]["bypassed"] = reactor_protection_systems["A"]["reset_timer"] == 0
+    rps_scram_trips["B"]["Mode Switch In Shutdown"]["bypassed"] = reactor_protection_systems["B"]["reset_timer"] == 0
+
+    automatic_scram_signals()
 
     trip_a = (reactor_protection_systems["A"]["channel_1_trip"] or reactor_protection_systems["A"]["channel_2_trip"])
 
@@ -72,11 +84,11 @@ def run(alarms,buttons,indicators,rods,switches):
     alarms["reactor_scram_a1_and_b1_loss"]["alarm"] = reactor_protection_systems["A"]["channel_1_trip"] and reactor_protection_systems["B"]["channel_1_trip"]
     alarms["reactor_scram_a2_and_b2_loss"]["alarm"] = reactor_protection_systems["A"]["channel_2_trip"] and reactor_protection_systems["B"]["channel_2_trip"]
 
-    for reason in rps_alarms["A"]:
-        alarms[rps_alarms["A"][reason]]["alarm"] = reason in reactor_protection_systems["A"]["reasons"]
+    for reason in rps_scram_trips["A"]:
+        alarms[rps_alarms["A"][reason]]["alarm"] = rps_scram_trips["A"][reason]["sealed_in"]
 
-    for reason in rps_alarms["B"]:
-        alarms[rps_alarms["B"][reason]]["alarm"] = reason in reactor_protection_systems["B"]["reasons"]
+    for reason in rps_scram_trips["B"]:
+        alarms[rps_alarms["B"][reason]]["alarm"] = rps_scram_trips["A"][reason]["sealed_in"]
 
 
 
@@ -104,9 +116,6 @@ def run(alarms,buttons,indicators,rods,switches):
             info["scram"] = scram_signal
 
     #Scram trips
-    from simulation.models.control_room_columbia.reactor_physics import reactor_inventory 
-    if reactor_inventory .rx_level_wr < 13:
-        scram("RPV Level Low")
 
     #indicators for, IE, the RMCS
 
@@ -128,22 +137,16 @@ def run(alarms,buttons,indicators,rods,switches):
     alarms["rod_out_block"]["alarm"] = withdraw_block
 
 def scram(reason):
-    #TODO: RPS Fail to trip, RPS trip reasons
-    if reason not in reactor_protection_systems["A"]["reasons"]:
-        reactor_protection_systems["A"]["reasons"].append(reason)
 
-    if reason not in reactor_protection_systems["B"]["reasons"]:
-        reactor_protection_systems["B"]["reasons"].append(reason)
+    print("This system for scramming is deprecated! Please do not use it! This scram has been discarded!")
 
-    reactor_protection_systems["A"]["channel_1_trip"] = True
-    reactor_protection_systems["A"]["channel_2_trip"] = True
-    reactor_protection_systems["B"]["channel_1_trip"] = True
-    reactor_protection_systems["B"]["channel_2_trip"] = True
-
-def mode_switch_shutdown():
-    if reactor_protection_systems["A"]["reset_timer"] != 0 or reactor_protection_systems["B"]["reset_timer"] != 0:
-        scram("MANUAL")
-
+def scram_reset_permissive(system):
+    for scram in rps_scram_trips[system]:
+        if rps_scram_trips[system][scram]["active"]:
+            return False
+        
+    return True
+    
 def add_withdraw_block(reason):
     if not reason in withdraw_blocks:
         withdraw_blocks.append(reason)
@@ -151,3 +154,108 @@ def add_withdraw_block(reason):
 def remove_withdraw_block(reason):
     if reason in withdraw_blocks:
         withdraw_blocks.remove(reason)
+
+#Scram trips
+
+def automatic_scram_signals():
+    for scram in rps_scram_trips["A"]:
+
+        scram_trip = rps_scram_trips["A"][scram]
+        scram_trip["active"] = scram_trip["function"](scram_trip)
+
+        if scram_trip["active"]:
+            reactor_protection_systems["A"]["channel_1_trip"] = True
+            reactor_protection_systems["A"]["channel_2_trip"] = True
+            scram_trip["sealed_in"] = True
+
+    for scram in rps_scram_trips["B"]:
+
+        scram_trip = rps_scram_trips["B"][scram]
+        scram_trip["active"] = scram_trip["function"](scram_trip)
+
+        if scram_trip["active"]:
+            reactor_protection_systems["B"]["channel_1_trip"] = True
+            reactor_protection_systems["B"]["channel_2_trip"] = True
+            scram_trip["sealed_in"] = True
+
+def scram_trip_mode_switch_shutdown(info):
+    from simulation.models.control_room_columbia import model 
+    if (not info["bypassed"]) and model.switches["reactor_mode_switch"]["position"] == 0 :
+        return True
+
+    return False
+
+def scram_trip_rpv_press_high(info):
+    from simulation.models.control_room_columbia.reactor_physics import pressure 
+    if pressure.Pressures["Vessel"]/6895 > 1060:
+        return True
+
+    return False
+
+def scram_trip_rpv_level_low(info):
+    from simulation.models.control_room_columbia.reactor_physics import reactor_inventory 
+    if reactor_inventory.rx_level_wr < 13:
+        return True
+    
+    return False
+
+def scram_trip_neutron_monitor_system(info):
+    from simulation.models.control_room_columbia import neutron_monitoring 
+
+    return neutron_monitoring.scram_reactor
+    
+
+rps_scram_trips = {
+    "A" : {
+        "Mode Switch In Shutdown" : {
+            "bypassed" : False,
+            "sealed_in" : False,
+            "active" : False, #Condition still exists (cannot reset)
+            "function" : scram_trip_mode_switch_shutdown,
+        },
+        "RPV Level Low" : {
+            "bypassed" : False,
+            "sealed_in" : False,
+            "active" : False, 
+            "function" : scram_trip_rpv_level_low,
+        },
+        "RPV Press High" : {
+            "bypassed" : False,
+            "sealed_in" : False,
+            "active" : False, 
+            "function" : scram_trip_rpv_press_high,
+        },
+        "Neutron Monitor System" : {
+            "bypassed" : False,
+            "sealed_in" : False,
+            "active" : False, 
+            "function" : scram_trip_neutron_monitor_system,
+        },
+    },
+    "B" : {
+        "Mode Switch In Shutdown" : {
+            "bypassed" : False,
+            "sealed_in" : False,
+            "active" : False, 
+            "function" : scram_trip_mode_switch_shutdown,
+        },
+        "RPV Level Low" : {
+            "bypassed" : False,
+            "sealed_in" : False,
+            "active" : False, 
+            "function" : scram_trip_rpv_level_low,
+        },
+        "RPV Press High" : {
+            "bypassed" : False,
+            "sealed_in" : False,
+            "active" : False, 
+            "function" : scram_trip_rpv_press_high,
+        },
+        "Neutron Monitor System" : {
+            "bypassed" : False,
+            "sealed_in" : False,
+            "active" : False, 
+            "function" : scram_trip_neutron_monitor_system,
+        },
+    },
+}

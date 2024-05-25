@@ -35,6 +35,24 @@ alarms = {
         "group" : "1",
         "silenced" : False,
     },
+    "rpv_press_high_trip_a" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "mode_switch_in_shutdown_position_a" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "neutron_monitor_system_trip_a" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
     "rod_accumulator_trouble" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
@@ -72,6 +90,89 @@ alarms = {
         "group" : "1",
         "silenced" : False,
     },
+    "rpv_press_high_trip_b" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "mode_switch_in_shutdown_position_b" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "neutron_monitor_system_trip_b" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+
+    "irm_downscale" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+
+    "irm_upscale" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "irm_bdfh_upscl_trip_or_inop" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "irm_aceg_upscl_trip_or_inop" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+
+
+    "lprm_downscale" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "aprm_downscale" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+
+    "lprm_upscale" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "aprm_upscale" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "aprm_ace_upscl_trip_or_inop" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "aprm_bdf_upscl_trip_or_inop" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
 
 }
 
@@ -84,6 +185,136 @@ switches = {
             3: -90,
 		},
         "position": 3,
+        "lights" : {},
+    },
+
+    "irm_a_range": {
+        "positions": {
+			0: -90,
+			1: -75,
+			2: -60,
+			3: -45,
+			4: -30,
+			5: -15,
+			6: 0,
+			7: 15,
+			8: 30,
+			9: 45,
+		},
+        "position": 0,
+        "lights" : {},
+    },
+    "irm_c_range": {
+        "positions": {
+			0: -90,
+			1: -75,
+			2: -60,
+			3: -45,
+			4: -30,
+			5: -15,
+			6: 0,
+			7: 15,
+			8: 30,
+			9: 45,
+		},
+        "position": 0,
+        "lights" : {},
+    },
+    "irm_g_range": {
+        "positions": {
+			0: -90,
+			1: -75,
+			2: -60,
+			3: -45,
+			4: -30,
+			5: -15,
+			6: 0,
+			7: 15,
+			8: 30,
+			9: 45,
+		},
+        "position": 0,
+        "lights" : {},
+    },
+    "irm_e_range": {
+        "positions": {
+			0: -90,
+			1: -75,
+			2: -60,
+			3: -45,
+			4: -30,
+			5: -15,
+			6: 0,
+			7: 15,
+			8: 30,
+			9: 45,
+		},
+        "position": 0,
+        "lights" : {},
+    },
+
+    "irm_b_range": {
+        "positions": {
+			0: -90,
+			1: -75,
+			2: -60,
+			3: -45,
+			4: -30,
+			5: -15,
+			6: 0,
+			7: 15,
+			8: 30,
+			9: 45,
+		},
+        "position": 0,
+        "lights" : {},
+    },
+    "irm_d_range": {
+        "positions": {
+			0: -90,
+			1: -75,
+			2: -60,
+			3: -45,
+			4: -30,
+			5: -15,
+			6: 0,
+			7: 15,
+			8: 30,
+			9: 45,
+		},
+        "position": 0,
+        "lights" : {},
+    },
+    "irm_h_range": {
+        "positions": {
+			0: -90,
+			1: -75,
+			2: -60,
+			3: -45,
+			4: -30,
+			5: -15,
+			6: 0,
+			7: 15,
+			8: 30,
+			9: 45,
+		},
+        "position": 0,
+        "lights" : {},
+    },
+    "irm_f_range": {
+        "positions": {
+			0: -90,
+			1: -75,
+			2: -60,
+			3: -45,
+			4: -30,
+			5: -15,
+			6: 0,
+			7: 15,
+			8: 30,
+			9: 45,
+		},
+        "position": 0,
         "lights" : {},
     },
 
@@ -304,6 +535,33 @@ switches = {
             "red" : False,
         },
     },
+
+    #safety/relief valves
+
+    "ms_rv_4a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "ms_rv_4c": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
 }
 
 values = {
@@ -332,6 +590,21 @@ values = {
 
     "rhr_c_flow" : 0,
     "rhr_c_press" : 0,
+
+    "rpv_level_recorder_1" : 0,
+    "rpv_pressure_recorder_1" : 0,
+
+    #Neutron monitoring recorders
+
+    "irm_a_recorder" : 0,
+    "aprm_a_recorder" : 0,
+    "irm_c_recorder" : 0,
+    "aprm_c_recorder" : 0,
+
+    "irm_e_recorder" : 0,
+    "aprm_e_recorder" : 0,
+    "irm_g_recorder" : 0,
+    "rbm_a_recorder" : 0,
 }
 
 indicators = {
@@ -515,7 +788,7 @@ pumps = {
 
 rods = {}
 
-reactor_water_temperature = 60
+reactor_water_temperature = 100
 
 from simulation.models.control_room_columbia import rod_generation
 rod_generation.run(rods,buttons)
@@ -540,4 +813,6 @@ def model_run(delta):
     fluid.run()
     from simulation.models.control_room_columbia.general_physics import pump
     pump.run()
+    from simulation.models.control_room_columbia.systems import safety_relief
+    safety_relief.run()
     runs += 1
