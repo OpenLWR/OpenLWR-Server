@@ -70,8 +70,16 @@ def run(alarms,buttons,indicators,rods,switches):
             for scram in rps_scram_trips["B"]:
                 rps_scram_trips["B"][scram]["sealed_in"] = False
 
-    rps_scram_trips["A"]["Mode Switch In Shutdown"]["bypassed"] = reactor_protection_systems["A"]["reset_timer"] == 0
-    rps_scram_trips["B"]["Mode Switch In Shutdown"]["bypassed"] = reactor_protection_systems["B"]["reset_timer"] == 0
+
+    if reactor_protection_systems["A"]["reset_timer"] == 0 and switches["reactor_mode_switch"]["position"] == 0:
+        rps_scram_trips["A"]["Mode Switch In Shutdown"]["bypassed"] = True
+    elif reactor_protection_systems["A"]["reset_timer"] == 0 and switches["reactor_mode_switch"]["position"] != 0 :
+        rps_scram_trips["A"]["Mode Switch In Shutdown"]["bypassed"] = False
+
+    if reactor_protection_systems["B"]["reset_timer"] == 0 and switches["reactor_mode_switch"]["position"] == 0:
+        rps_scram_trips["B"]["Mode Switch In Shutdown"]["bypassed"] = True
+    elif reactor_protection_systems["B"]["reset_timer"] == 0 and switches["reactor_mode_switch"]["position"] != 0 :
+        rps_scram_trips["B"]["Mode Switch In Shutdown"]["bypassed"] = False
 
     automatic_scram_signals()
 
