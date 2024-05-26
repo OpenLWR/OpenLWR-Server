@@ -472,5 +472,3 @@ def run(alarms,buttons,indicators,rods,switches,values):
     model.values["aprm_f_recorder"] = round(average_power_range_monitors["F"]["power"],1)
     model.values["irm_h_recorder"] = round(intermediate_range_monitors["H"]["power"],1)
     model.values["rbm_b_recorder"] = round(rod_block_monitors["B"]["power"],1)
-
-    values["aprm_temporary"] = round(average_power_range_monitors["A"]["power"])

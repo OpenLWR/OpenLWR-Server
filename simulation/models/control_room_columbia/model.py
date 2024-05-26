@@ -580,8 +580,6 @@ values = {
     "srm_c_period" : 0,
     "srm_d_period" : 0,
 
-    "aprm_temporary" : 0,
-
     "hpcs_flow" : 0,
     "hpcs_press" : 0,
 
