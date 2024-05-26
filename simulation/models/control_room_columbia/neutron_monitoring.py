@@ -312,7 +312,9 @@ def run(alarms,buttons,indicators,rods,switches,values):
     for irm_name in intermediate_range_monitors:
         irm = intermediate_range_monitors[irm_name]
         
-        irm["power"] = rods[irm["rod"]]["neutrons"]/(320e15*0.7)*1000000*2.5
+        power = rods[irm["rod"]]["neutrons"]/(320e15*0.7)*1000000*2.5
+
+        irm["power"] = power*abs((irm["withdrawal_percent"]/100)-1)
 
         irm["range"] = model.switches[irm["range_switch"]]["position"]+1
 

@@ -667,6 +667,17 @@ indicators = {
     "APRM_F_DOWNSCALE": False,
 
     "hpcs_init": False,
+
+    "APRM_A_DOWNSCALE": False,
+    "APRM_B_DOWNSCALE": False,
+    "APRM_C_DOWNSCALE": False,
+    "APRM_D_DOWNSCALE": False,
+    "APRM_E_DOWNSCALE": False,
+    "APRM_F_DOWNSCALE": False,
+
+    "SELECT_SRM_A": False,
+    "SRM_A_POS_IN": False,
+    "SRM_A_POS_OUT": False,
 }
 
 buttons = {
@@ -728,6 +739,22 @@ buttons = {
         "state" : False,
         "armed" : False,
     },
+
+    "SELECT_SRM_A": {
+        "state" : False,
+        "armed" : False,
+    },
+    "DET_DRIVE_IN": {
+        "state" : False,
+        "armed" : False,
+    },
+    "DET_DRIVE_OUT": {
+        "state" : False,
+        "armed" : False,
+    },
+
+
+
 
 
 }
@@ -825,4 +852,6 @@ def model_run(delta):
     pump.run()
     from simulation.models.control_room_columbia.systems import safety_relief
     safety_relief.run()
+    from simulation.models.control_room_columbia.systems import irm_srm_positioner
+    irm_srm_positioner.run()
     runs += 1
