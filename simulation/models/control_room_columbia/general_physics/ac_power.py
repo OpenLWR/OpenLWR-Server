@@ -28,8 +28,8 @@ sources = {
 
 def run(switches,alarms,indicators,runs):
 
-    indicators["cr_light_normal"] = True#get_bus_power("101",4000)
-    indicators["cr_light_emergency"] = False#not get_bus_power("101",4000)
+    #indicators["cr_light_normal"] = True#get_bus_power("101",4000)
+    #indicators["cr_light_emergency"] = False#not get_bus_power("101",4000)
     for breaker_name in breakers:
         if breaker_name in switches:
             if switches[breaker_name]["position"] == 0: open_breaker(breaker_name)

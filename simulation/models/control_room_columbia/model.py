@@ -676,6 +676,9 @@ indicators = {
     "SELECT_SRM_A": False,
     "SRM_A_POS_IN": False,
     "SRM_A_POS_OUT": False,
+
+    "FCD_OPERATE": True,
+    "CHART_RECORDERS_OPERATE": False,
 }
 
 buttons = {
@@ -852,4 +855,6 @@ def model_run(delta):
     safety_relief.run()
     from simulation.models.control_room_columbia.systems import irm_srm_positioner
     irm_srm_positioner.run()
+    from simulation.models.control_room_columbia.systems import fukushima
+    fukushima.run(runs)
     runs += 1
