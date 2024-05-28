@@ -174,6 +174,13 @@ alarms = {
         "silenced" : False,
     },
 
+    "setpoint_setdown_active" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+
 }
 
 switches = {
@@ -837,6 +844,11 @@ pump.initialize_pumps()
 from simulation.models.control_room_columbia.general_physics import fluid
 fluid.initialize_headers()
 
+from simulation.models.control_room_columbia.systems import safety_relief
+from simulation.models.control_room_columbia.systems import irm_srm_positioner
+from simulation.models.control_room_columbia.systems import feedwater
+feedwater.initialize()
+
 runs = 0
 def model_run(delta):
     global runs
@@ -847,14 +859,12 @@ def model_run(delta):
     reactor_physics.run(rods)
     neutron_monitoring.run(alarms,buttons,indicators,rods,switches,values)
     ac_power.run(switches,alarms,indicators,runs)
-    from simulation.models.control_room_columbia.general_physics import fluid
     fluid.run()
-    from simulation.models.control_room_columbia.general_physics import pump
     pump.run()
-    from simulation.models.control_room_columbia.systems import safety_relief
+
     safety_relief.run()
-    from simulation.models.control_room_columbia.systems import irm_srm_positioner
     irm_srm_positioner.run()
-    from simulation.models.control_room_columbia.systems import fukushima
-    fukushima.run(runs)
+    feedwater.run()
+    #from simulation.models.control_room_columbia.systems import fukushima
+    #fukushima.run(runs)
     runs += 1
