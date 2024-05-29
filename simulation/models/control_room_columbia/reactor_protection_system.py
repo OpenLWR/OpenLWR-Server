@@ -87,8 +87,8 @@ def run(alarms,buttons,indicators,rods,switches):
 
     trip_b = (reactor_protection_systems["B"]["channel_1_trip"] or reactor_protection_systems["B"]["channel_2_trip"])
 
-    alarms["1/2_scram_system_a"]["alarm"] = trip_a and not trip_b
-    alarms["1/2_scram_system_b"]["alarm"] = trip_b and not trip_a
+    alarms["1/2_scram_system_a"]["alarm"] = trip_a 
+    alarms["1/2_scram_system_b"]["alarm"] = trip_b
     alarms["reactor_scram_a1_and_b1_loss"]["alarm"] = reactor_protection_systems["A"]["channel_1_trip"] and reactor_protection_systems["B"]["channel_1_trip"]
     alarms["reactor_scram_a2_and_b2_loss"]["alarm"] = reactor_protection_systems["A"]["channel_2_trip"] and reactor_protection_systems["B"]["channel_2_trip"]
 
