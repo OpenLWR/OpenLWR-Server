@@ -569,6 +569,19 @@ switches = {
             "red" : False,
         },
     },
+
+    "rcic_v_45": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
 }
 
 values = {
@@ -620,6 +633,8 @@ values = {
     "aprm_f_recorder" : 0,
     "irm_h_recorder" : 0,
     "rbm_b_recorder" : 0,
+
+    "rcic_rpm" : 0,
 }
 
 indicators = {
@@ -831,6 +846,20 @@ pumps = {
     },
 }
 
+turbines = {
+    "rcic_turbine" : {
+        "rpm" : 0,
+        "rated_rpm" : 6250,
+        "flow_to_rpm" : 9.287931365,
+        "acceleration_value" : 0.01,
+        "trip" : False,
+        "mechanical_trip" : False,
+        "trip_valve" : "rcic_v_1",
+        "steam_flow_valve" : "rcic_v_45",
+        "governor_valve" : "rcic_v_2",
+    }
+}
+
 rods = {}
 
 reactor_water_temperature = 100
@@ -844,9 +873,15 @@ pump.initialize_pumps()
 from simulation.models.control_room_columbia.general_physics import fluid
 fluid.initialize_headers()
 
+from simulation.models.control_room_columbia.general_physics import gas
+from simulation.models.control_room_columbia.general_physics import turbine
+turbine.initialize_pumps()
+
 from simulation.models.control_room_columbia.systems import safety_relief
 from simulation.models.control_room_columbia.systems import irm_srm_positioner
 from simulation.models.control_room_columbia.systems import feedwater
+from simulation.models.control_room_columbia.systems import rcic
+from simulation.models.control_room_columbia.systems import hpcs
 feedwater.initialize()
 
 runs = 0
@@ -861,10 +896,14 @@ def model_run(delta):
     ac_power.run(switches,alarms,indicators,runs)
     fluid.run()
     pump.run()
+    gas.run()
+    turbine.run()
 
     safety_relief.run()
     irm_srm_positioner.run()
     feedwater.run()
+    rcic.run()
+    hpcs.run()
     #from simulation.models.control_room_columbia.systems import fukushima
     #fukushima.run(runs)
     runs += 1

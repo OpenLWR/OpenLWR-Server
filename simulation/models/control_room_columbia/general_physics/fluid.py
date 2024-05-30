@@ -2,7 +2,14 @@ from simulation.constants.electrical_types import ElectricalType
 from simulation.constants.equipment_states import EquipmentStates
 from simulation.models.control_room_columbia.general_physics import ac_power
 from simulation.models.control_room_columbia import model
+from simulation.models.control_room_columbia.general_physics import gas
 import math
+
+from enum import IntEnum
+
+class FluidTypes(IntEnum):
+    Liquid = 1,
+    Gas = 2,
 
 def clamp(val, clamp_min, clamp_max):
     return min(max(val,clamp_min),clamp_max)
@@ -19,7 +26,8 @@ headers = { #most lines have a common header that they discharge into
         "diameter" : 406.40, #millimeters
         "length" : 20000, #TODO : determine a good length
         "pressure" : 0, #pascals
-        "volume" : 0, #Initialized on start. Is not changed again.
+        "volume" : 0,
+        "type" : FluidTypes.Liquid, #Initialized on start. Is not changed again.
         "mass" : 0,
     },
     "hpcs_suction_header" : {
@@ -29,6 +37,7 @@ headers = { #most lines have a common header that they discharge into
         "length" : 200000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
+        "type" : FluidTypes.Liquid,
         "mass" : 0,
     },
 
@@ -39,6 +48,7 @@ headers = { #most lines have a common header that they discharge into
         "length" : 20000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
+        "type" : FluidTypes.Liquid,
         "mass" : 0,
     },
     "rhr_b_discharge_header" : {
@@ -48,6 +58,7 @@ headers = { #most lines have a common header that they discharge into
         "length" : 20000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
+        "type" : FluidTypes.Liquid,
         "mass" : 0,
     },
     "rhr_b_suction_header" : {
@@ -57,6 +68,7 @@ headers = { #most lines have a common header that they discharge into
         "length" : 200000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
+        "type" : FluidTypes.Liquid,
         "mass" : 0,
     },
     #we dont have RHR C's P&ID
@@ -67,6 +79,7 @@ headers = { #most lines have a common header that they discharge into
         "length" : 20000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
+        "type" : FluidTypes.Liquid,
         "mass" : 0,
     },
     "rhr_c_suction_header" : {
@@ -76,6 +89,7 @@ headers = { #most lines have a common header that they discharge into
         "length" : 200000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
+        "type" : FluidTypes.Liquid,
         "mass" : 0,
     },
 
@@ -86,6 +100,61 @@ headers = { #most lines have a common header that they discharge into
         "length" : 20000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+
+    #Nuclear Boiler / Main Steam System
+
+    "main_steam_line_b_drywell" : {
+        #26" MS(1)-4-2 (G.E) (LINE "B")
+
+        "diameter" : 660.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "main_steam_line_b_penetration" : {
+        #26" MS(1)-4-2 (G.E) (LINE "B")
+
+        "diameter" : 660.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "main_steam_line_b_tunnel" : {
+        #26" MS(1)-4-2 (G.E) (LINE "B")
+
+        "diameter" : 660.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+
+    "rcic_turbine_steam_line" : {
+        #4"RCIC(13)-4-1
+
+        "diameter" : 101.60, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "rcic_exhaust_steam_line" : {
+        #10"RCIC(16)-1-1
+
+        "diameter" : 254, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
         "mass" : 0,
     },
 
@@ -98,6 +167,7 @@ from enum import IntEnum
 class StaticTanks(IntEnum):
     Reactor = 1
     Wetwell = 2,
+    SteamDome = 3,
 
 valves = {
     "hpcs_v_4" : { #The flow through a valve is not linear. Exponents?
@@ -283,6 +353,74 @@ valves = {
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
+
+    #Nuclear Boiler / Main Steam System
+
+    "nozzle_ms_3b" : { #Main steam line nozzle for MSL B (always 100% open)
+        "control_switch" : "",
+        "input" : StaticTanks.SteamDome,
+        "output" : "main_steam_line_b_drywell",
+        "percent_open" : 100,
+        "diameter" : 660.40, #mm, same size as main steam line
+        "open_speed" : 0, #Cant change
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    #Reactor Core Isolation Cooling System
+
+    #We ignore the isolation valves for now TODO
+    "rcic_v_45" : { 
+        "control_switch" : "rcic_v_45",
+        "input" : "main_steam_line_b_drywell",
+        "output" : "rcic_turbine_steam_line",
+        "percent_open" : 0,
+        "diameter" : 152.40, #mm, 6 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "rcic_v_2" : { 
+        "control_switch" : "",
+        "input" : None,
+        "output" : None,
+        "percent_open" : 0,
+        "diameter" : 101.60, #mm, 4 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "rcic_v_1" : { 
+        "control_switch" : "",
+        "input" : "rcic_turbine_steam_line",
+        "output" : None,
+        "percent_open" : 100,
+        "diameter" : 101.60, #mm, 4 inches
+        "open_speed" : 10, #1 second to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    "rcic_v_68" : { 
+        "control_switch" : "",
+        "input" : "rcic_exhaust_steam_line",
+        "output" : "magic",
+        "percent_open" : 100,
+        "diameter" : 170, #mm, 10 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : True,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
 }
 
 def initialize_headers():
@@ -306,7 +444,10 @@ def valve_inject_to_header(mass:int,header_name):
         inject_to_static_tank(header_name,mass)
     else:
         headers[header_name]["mass"] += mass
-        calculate_header_pressure(header_name)
+        if headers[header_name]["type"] == FluidTypes.Gas:
+            gas.calculate_header_pressure(header_name)
+        else:
+            calculate_header_pressure(header_name)
 
 
 def inject_to_header(flow:int,press:int,header_name:str):
@@ -362,11 +503,20 @@ def get_static_tank(name:int):
             tank["pressure"] = pressure.Pressures["Vessel"]+101352.9
             from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
             tank["mass"] = reactor_inventory.waterMass
+            tank["type"] = FluidTypes.Liquid,
             return tank
         case StaticTanks.Wetwell:
             tank = {}
             tank["pressure"] = 2.758e+6 #200 psi
             tank["mass"] = 10000000
+            tank["type"] = FluidTypes.Liquid,
+            return tank
+        case StaticTanks.SteamDome:
+            tank = {}
+            from simulation.models.control_room_columbia.reactor_physics import pressure
+            tank["pressure"] = pressure.Pressures["Vessel"]
+            tank["mass"] = 10000000
+            tank["type"] = FluidTypes.Gas,
             return tank
 
 def inject_to_static_tank(name:int,amount):
@@ -390,44 +540,11 @@ def get_header(header_name):
     
     return header
 
-#TODO: move this
-
-hpcs_init = False
-hpcs_init_first = False
 
 def run():
 
-    #TODO: figure out a better way to do this
-    model.values["hpcs_flow"] = model.pumps["hpcs_p_1"]["actual_flow"]
-    model.values["hpcs_press"] = headers["hpcs_discharge_header"]["pressure"]/6895
-
-    model.values["rhr_b_flow"] = model.pumps["rhr_p_2b"]["actual_flow"]
-    model.values["rhr_b_press"] = headers["rhr_b_discharge_header"]["pressure"]/6895
-
-    model.values["rhr_c_flow"] = model.pumps["rhr_p_2c"]["actual_flow"]
-    model.values["rhr_c_press"] = headers["rhr_c_discharge_header"]["pressure"]/6895
-
-    if model.pumps["hpcs_p_1"]["motor_breaker_closed"]:
-        valves["hpcs_v_12"]["sealed_in"] = model.pumps["hpcs_p_1"]["actual_flow"] < 1200
-    global hpcs_init
-    global hpcs_init_first
-    if model.buttons["hpcs_init"]["state"]:
-        hpcs_init = True
-        hpcs_init_first = True
-
-    if hpcs_init:
-        if hpcs_init_first:
-            model.pumps["hpcs_p_1"]["motor_breaker_closed"] = True
-        
-        valves["hpcs_v_4"]["sealed_in"] = True
-
-    model.indicators["hpcs_init"] = hpcs_init
-        
-
     for valve_name in valves:
         valve = valves[valve_name]
-        inlet = get_header(valve["input"])
-        outlet = get_header(valve["output"])
 
         if valve["control_switch"] != "":
             if not valve["seal_in"]:
@@ -457,8 +574,15 @@ def run():
             if model.switches[valve["control_switch"]]["lights"] != {}:
                 model.switches[valve["control_switch"]]["lights"]["green"] = valve["percent_open"] < 100
                 model.switches[valve["control_switch"]]["lights"]["red"] = valve["percent_open"] > 0
-      
 
+        if valve["input"] == None or valve["output"] == None or valve["output"] == "magic":
+            continue
+
+        inlet = get_header(valve["input"])
+        outlet = get_header(valve["output"])
+
+        if inlet["type"] == FluidTypes.Gas or outlet["type"] == FluidTypes.Gas:
+            continue #this is handled by gas.py
 
 
         #Poiseuille's law
