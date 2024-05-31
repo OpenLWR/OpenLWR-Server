@@ -110,7 +110,7 @@ headers = { #most lines have a common header that they discharge into
         #26" MS(1)-4-2 (G.E) (LINE "B")
 
         "diameter" : 660.40, #millimeters
-        "length" : 20000, #TODO : determine a good length
+        "length" : 200000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Gas,
@@ -137,11 +137,31 @@ headers = { #most lines have a common header that they discharge into
         "mass" : 0,
     },
 
+    "rcic_isolation_steam_line" : {
+        #4"RCIC(13)-4-1
+
+        "diameter" : 101.60, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "rcic_main_steam_line" : {
+        #4"RCIC(13)-4-1
+
+        "diameter" : 101.60, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
     "rcic_turbine_steam_line" : {
         #4"RCIC(13)-4-1
 
         "diameter" : 101.60, #millimeters
-        "length" : 20000, #TODO : determine a good length
+        "length" : 200000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Gas,
@@ -151,16 +171,35 @@ headers = { #most lines have a common header that they discharge into
         #10"RCIC(16)-1-1
 
         "diameter" : 254, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 2000000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Gas,
         "mass" : 0,
     },
 
-}
+    "rcic_discharge_header" : {
+        #6"RCIC(1)-4-1
 
-#TODO: improve this shit
+        "diameter" : 152.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+    "rcic_suction_header" : {
+        #8"RCIC(2)-1-1
+
+        "diameter" : 203.20, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+
+}
 
 from enum import IntEnum
 
@@ -361,7 +400,7 @@ valves = {
         "input" : StaticTanks.SteamDome,
         "output" : "main_steam_line_b_drywell",
         "percent_open" : 100,
-        "diameter" : 660.40, #mm, same size as main steam line
+        "diameter" : 300, #mm, same size as main steam line
         "open_speed" : 0, #Cant change
         "seal_in" : False, 
         "sealed_in" : False,
@@ -371,15 +410,41 @@ valves = {
 
     #Reactor Core Isolation Cooling System
 
-    #We ignore the isolation valves for now TODO
+    #RCIC PCIS Valves
+
+    "rcic_v_63" : { 
+        "control_switch" : "rcic_v_63",
+        "input" : "main_steam_line_b_drywell",
+        "output" : "rcic_isolation_steam_line",
+        "percent_open" : 0,
+        "diameter" : 152.40, #mm, 6 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "rcic_v_8" : { 
+        "control_switch" : "rcic_v_8",
+        "input" : "rcic_isolation_steam_line",
+        "output" : "rcic_main_steam_line",
+        "percent_open" : 0,
+        "diameter" : 152.40, #mm, 6 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
     "rcic_v_45" : { 
         "control_switch" : "rcic_v_45",
-        "input" : "main_steam_line_b_drywell",
+        "input" : "rcic_main_steam_line",
         "output" : "rcic_turbine_steam_line",
         "percent_open" : 0,
         "diameter" : 152.40, #mm, 6 inches
         "open_speed" : 0.333, #30 seconds to full close to open
-        "seal_in" : False, 
+        "seal_in" : True, 
         "sealed_in" : False,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
@@ -388,7 +453,7 @@ valves = {
         "control_switch" : "",
         "input" : None,
         "output" : None,
-        "percent_open" : 0,
+        "percent_open" : 100,
         "diameter" : 101.60, #mm, 4 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : False, 
@@ -397,7 +462,7 @@ valves = {
         #TODO: valve control power and motive power
     },
     "rcic_v_1" : { 
-        "control_switch" : "",
+        "control_switch" : "rcic_v_1",
         "input" : "rcic_turbine_steam_line",
         "output" : None,
         "percent_open" : 100,
@@ -409,15 +474,41 @@ valves = {
         #TODO: valve control power and motive power
     },
 
+
     "rcic_v_68" : { 
-        "control_switch" : "",
+        "control_switch" : "rcic_v_68",
         "input" : "rcic_exhaust_steam_line",
         "output" : "magic",
         "percent_open" : 100,
-        "diameter" : 170, #mm, 10 inches
+        "diameter" : 200, #mm, 10 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    "rcic_v_13" : { 
+        "control_switch" : "rcic_v_13",
+        "input" : "rcic_discharge_header",
+        "output" : StaticTanks.Reactor,
+        "percent_open" : 0,
+        "diameter" : 152.40, #mm, 6 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "rcic_v_31" : { 
+        "control_switch" : "rcic_v_31",
+        "input" : StaticTanks.Wetwell,
+        "output" : "rcic_suction_header",
+        "percent_open" : 0,
+        "diameter" : 203.20, #mm, 8 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -441,7 +532,13 @@ def initialize_headers():
 def valve_inject_to_header(mass:int,header_name):
 
     if type(header_name) == StaticTanks:
-        inject_to_static_tank(header_name,mass)
+        
+        if header_name == StaticTanks.SteamDome:
+            #TODO: more than this garbage
+            from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
+            reactor_inventory.remove_steam(mass*-1)
+        else:
+            inject_to_static_tank(header_name,mass)
     else:
         headers[header_name]["mass"] += mass
         if headers[header_name]["type"] == FluidTypes.Gas:
@@ -507,7 +604,7 @@ def get_static_tank(name:int):
             return tank
         case StaticTanks.Wetwell:
             tank = {}
-            tank["pressure"] = 2.758e+6 #200 psi
+            tank["pressure"] = 344738 #50 psi
             tank["mass"] = 10000000
             tank["type"] = FluidTypes.Liquid,
             return tank
@@ -515,7 +612,7 @@ def get_static_tank(name:int):
             tank = {}
             from simulation.models.control_room_columbia.reactor_physics import pressure
             tank["pressure"] = pressure.Pressures["Vessel"]
-            tank["mass"] = 10000000
+            tank["mass"] = 10000
             tank["type"] = FluidTypes.Gas,
             return tank
 

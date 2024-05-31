@@ -40,20 +40,21 @@ def run():
         #TODO: Un-hardcode this
 
         if turbine["trip"] or turbine["mechanical_trip"]:
-            fluid.valves[turbine["trip_valve"]]["sealed_in"] = False
+            fluid.valves[turbine["trip_valve"]]["percent_open"] = max(min(fluid.valves[turbine["trip_valve"]]["percent_open"]-10,100),0)
 
         steam_flow_permitted = fluid.headers["rcic_turbine_steam_line"]
 
         radius = 100/2
         radius = radius*0.1 #to cm
 
-        flow_resistance = (8*33*2000)/(math.pi*(radius**4))
+        flow_resistance = (8*50*2000)/(math.pi*(radius**4))
 
 
         flow = (steam_flow_permitted["pressure"]-0)/flow_resistance
         flow = abs(flow)
 
         flow *= (fluid.valves[turbine["trip_valve"]]["percent_open"]/100)
+        flow *= (fluid.valves[turbine["governor_valve"]]["percent_open"]/100)
         #steam_flow_permitted *= (fluid.valves[turbine["steam_flow_valve"]]["percent_open"]/100)
         #steam_flow_permitted *= (fluid.valves[turbine["governor_valve"]]["percent_open"]/100)
 

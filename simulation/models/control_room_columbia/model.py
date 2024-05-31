@@ -181,6 +181,30 @@ alarms = {
         "silenced" : False,
     },
 
+
+
+
+
+    #P601.A4 (RCIC)
+    "rcic_init_rpv_level_low" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "rcic_turbine_trip" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "rcic_rpv_level_high" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+
 }
 
 switches = {
@@ -582,6 +606,78 @@ switches = {
             "red" : False,
         },
     },
+    "rcic_v_1": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rcic_v_8": {
+        "positions": {
+			0: 45,
+			1: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rcic_v_63": {
+        "positions": {
+			0: 45,
+			1: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rcic_v_68": {
+        "positions": {
+			0: 45,
+			1: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+
+    #flow paths
+    "rcic_v_13": {
+        "positions": {
+			0: 45,
+			1: 0,
+            2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+
+    "rcic_v_31": {
+        "positions": {
+			0: 45,
+			1: 0,
+            2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
 }
 
 values = {
@@ -634,7 +730,15 @@ values = {
     "irm_h_recorder" : 0,
     "rbm_b_recorder" : 0,
 
+    "rcic_flow" : 0,
+
     "rcic_rpm" : 0,
+
+    "rcic_supply_press" : 0,
+    "rcic_exhaust_press" : 0,
+
+    "rcic_pump_suct_press" : 0,
+    "rcic_pump_disch_press" : 0,
 }
 
 indicators = {
@@ -701,6 +805,8 @@ indicators = {
 
     "FCD_OPERATE": True,
     "CHART_RECORDERS_OPERATE": False,
+
+    "rcic_init": False,
 }
 
 buttons = {
@@ -776,11 +882,17 @@ buttons = {
         "armed" : False,
     },
 
-
-
-
-
+    "rcic_init": {
+        "state" : False,
+        "armed" : False,
+    },
+    "rcic_init_reset": {
+        "state" : False,
+        "armed" : False,
+    },
 }
+
+from simulation.models.control_room_columbia.general_physics import pump
 
 pumps = {
     "hpcs_p_1" : {
@@ -794,6 +906,7 @@ pumps = {
         "rated_flow" : 6250,
         "header" : "hpcs_discharge_header",
         "suct_header" : "hpcs_suction_header",
+        "type" : pump.PumpTypes.Type1,
     },
     "hpcs_p_3" : {
         "motor_breaker_closed" : True,
@@ -806,6 +919,7 @@ pumps = {
         "rated_flow" : 50,
         "header" : "hpcs_discharge_header",
         "suct_header" : "hpcs_suction_header",
+        "type" : pump.PumpTypes.Type1,
     },
 
     "rhr_p_2b" : {
@@ -819,6 +933,7 @@ pumps = {
         "rated_flow" : 10000,
         "header" : "rhr_b_discharge_header",
         "suct_header" : "rhr_b_suction_header",
+        "type" : pump.PumpTypes.Type1,
     },
     "rhr_p_2c" : {
         "motor_breaker_closed" : False,
@@ -831,6 +946,7 @@ pumps = {
         "rated_flow" : 10000,
         "header" : "rhr_c_discharge_header",
         "suct_header" : "rhr_c_suction_header",
+        "type" : pump.PumpTypes.Type1,
     },
     "rhr_p_3" : {
         "motor_breaker_closed" : True,
@@ -843,15 +959,29 @@ pumps = {
         "rated_flow" : 50,
         "header" : "rhr_p_3_discharge_header",
         "suct_header" : "rhr_c_suction_header",
+        "type" : pump.PumpTypes.Type1,
     },
+
+    "rcic_p_1" : { 
+        "turbine" : "rcic_turbine",
+        "discharge_press" : 0,
+        "flow" : 0,
+        "actual_flow" : 0,
+        "rated_rpm" : 5000,
+        "rated_discharge_press" : 1400,
+        "rated_flow" : 625,
+        "header" : "rcic_discharge_header",
+        "suct_header" : "rcic_suction_header",
+        "type" : pump.PumpTypes.Type2,
+    }
 }
 
 turbines = {
     "rcic_turbine" : {
         "rpm" : 0,
         "rated_rpm" : 6250,
-        "flow_to_rpm" : 9.287931365,
-        "acceleration_value" : 0.01,
+        "flow_to_rpm" : 2.285534715,
+        "acceleration_value" : 0.1,
         "trip" : False,
         "mechanical_trip" : False,
         "trip_valve" : "rcic_v_1",
@@ -867,7 +997,6 @@ reactor_water_temperature = 100
 from simulation.models.control_room_columbia import rod_generation
 rod_generation.run(rods,buttons)
 
-from simulation.models.control_room_columbia.general_physics import pump
 pump.initialize_pumps()
 
 from simulation.models.control_room_columbia.general_physics import fluid
