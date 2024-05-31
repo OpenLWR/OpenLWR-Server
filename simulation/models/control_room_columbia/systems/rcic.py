@@ -54,7 +54,7 @@ def run():
 
     global trip_permissive_delay
 
-    if model.switches["rcic_v_1"]["position"] == 0 and model.switches["rcic_v_1"]["percent_open"] <= 0:
+    if model.switches["rcic_v_1"]["position"] == 0 and fluid.valves["rcic_v_1"]["percent_open"] <= 0:
         model.turbines["rcic_turbine"]["trip"] = False
 
     if fluid.valves["rcic_v_45"]["percent_open"] != 0 and trip_permissive_delay == -1:
