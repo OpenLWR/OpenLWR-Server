@@ -678,6 +678,16 @@ switches = {
             "red" : False,
         },
     },
+
+    "rfw_trip": {
+        "positions": {
+			0: 45,
+			1: 0,
+            2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+    },
 }
 
 values = {
