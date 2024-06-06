@@ -5,11 +5,34 @@ def clamp(val, clamp_min, clamp_max):
     return min(max(val,clamp_min),clamp_max)
 
 breakers = {
-	
+	"cb_s1" : {
+        "type" : ElectricalType.BREAKER,
+		"closed" : True,
+		"incoming" : "TRS",
+		"running" : "1", 
+		"lockout" : False, #Breaker lockout relay tripped
+	    "flag_position" : False,
+
+        "current_limit" : 12.5, #amps
+    },
 }
 
 busses = {
-     
+    "1" : { #SM-1
+        "type" : ElectricalType.BUS,
+        "voltage" : 4160,
+        "frequency" : 60,
+        "current" : 0,
+        "loads" : [],
+        "feeders" : [],
+
+        "rated_voltage" : 4160,
+
+        "lockout" : False, #ANY source breaker is locked out (prevents re-energizing a faulted bus)
+        "source_breakers" : ["cb_s1"],
+
+        "annunciators" : {}
+    },
 }
 
 transformers = {
@@ -17,7 +40,7 @@ transformers = {
 }
 
 sources = {
-    "Startup" : { #make this an actual transformer later
+    "TRS" : { #make this an actual transformer later
         "type" : ElectricalType.SOURCE,
         "voltage" : 4160,
         "frequency" : 60,
@@ -36,9 +59,12 @@ def run(switches,alarms,indicators,runs):
 
             if switches[breaker_name]["position"] == 2: close_breaker(breaker_name)
 
-        indicators[breaker_name+"_green"] = not breakers[breaker_name]["closed"]
+            switches[breaker_name]["lights"]["green"] = not breakers[breaker_name]["closed"]
+            switches[breaker_name]["lights"]["red"] = breakers[breaker_name]["closed"]
 
-        indicators[breaker_name+"_red"] = breakers[breaker_name]["closed"]
+        
+
+        
 
         #TODO: find a way to resolve this minor pyramid
         if breakers[breaker_name]["closed"]:
@@ -52,13 +78,24 @@ def run(switches,alarms,indicators,runs):
     for bus_name in busses:
         bus = busses[bus_name]
 		#handling for breaker interactions with the bus
+
+        #lockout the whole bus if any source is locked out
+        bus["lockout"] = False
+        for breaker in bus["source_breakers"]:
+            if breakers[breaker]["lockout"]:
+                bus["lockout"] = True
+
         for feeder in bus["feeders"]:
+                
             #remove the feeder if its not supplying anything
             match get_type(feeder):
                 case ElectricalType.BREAKER:
                     component = breakers[feeder]
                     if not verify_path_closed(feeder):
                         bus["feeders"].remove(feeder)
+
+                    if bus["lockout"] and (feeder in bus["source_breakers"]):
+                        open_breaker(feeder)
             
                     #TODO: interactions between multiple feeders
 
@@ -81,7 +118,7 @@ def run(switches,alarms,indicators,runs):
             bus["voltage"] = 0
             bus["frequency"] = 0
         
-        if bus["voltage"] < bus["undervoltage_setpoint"]:
+        if bus["voltage"] < 0:
             if "UNDERVOLTAGE" in bus["annunciators"]:
                 alarms[bus["annunciators"]["UNDERVOLTAGE"]]["alarm"] = True
 
@@ -167,7 +204,7 @@ def get_type(name):
         return ElectricalType.BREAKER
     if "tr" in name:
         return ElectricalType.TRANSFORMER
-    if "Startup" in name:
+    if "Startup" or "TRS" in name:
         return ElectricalType.SOURCE
     else:
         return ElectricalType.BUS

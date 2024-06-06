@@ -16,6 +16,7 @@ def fire(alarms): #TODO only send ones that need to be updated (were changed)
     silent = {
         "1" : {"F":True,"S":True}, # F - Fast S - Slow
         "2" : {"F":True,"S":True},
+        "3" : {"F":True,"S":True},
     }
 
     for alarm in alarms:

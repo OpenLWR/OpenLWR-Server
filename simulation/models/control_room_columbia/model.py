@@ -205,6 +205,14 @@ alarms = {
         "silenced" : False,
     },
 
+    #HPCS
+    "hpcs_init_rpv_level_low" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "3",
+        "silenced" : False,
+    },
+
 }
 
 switches = {
@@ -854,6 +862,24 @@ buttons = {
         "state" : False,
         "armed" : False,
     },
+
+    "ALARM_ACK_2": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ALARM_RESET_2": {
+        "state" : False,
+        "armed" : False,
+    },
+
+    "ALARM_ACK_3": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ALARM_RESET_3": {
+        "state" : False,
+        "armed" : False,
+    },
     
     #RMCS pushbuttons
     "ACCUM_TROUBLE_RESET": {
@@ -978,7 +1004,7 @@ pumps = {
         "flow" : 0,
         "actual_flow" : 0,
         "rated_rpm" : 5000,
-        "rated_discharge_press" : 1400,
+        "rated_discharge_press" : 1600,
         "rated_flow" : 625,
         "header" : "rcic_discharge_header",
         "suct_header" : "rcic_suction_header",

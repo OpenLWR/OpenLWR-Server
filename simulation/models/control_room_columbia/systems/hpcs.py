@@ -14,6 +14,11 @@ def run():
     model.values["hpcs_flow"] = model.pumps["hpcs_p_1"]["actual_flow"]
     model.values["hpcs_press"] = fluid.headers["hpcs_discharge_header"]["pressure"]/6895
 
+    model.alarms["hpcs_init_rpv_level_low"]["alarm"] = hpcs_init
+
+    if reactor_inventory.rx_level_wr < -51:
+        hpcs_init = True
+
     if model.pumps["hpcs_p_1"]["motor_breaker_closed"]:
         fluid.valves["hpcs_v_12"]["sealed_in"] = model.pumps["hpcs_p_1"]["actual_flow"] < 1200
 
