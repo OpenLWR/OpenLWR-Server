@@ -696,6 +696,82 @@ switches = {
         "position": 1,
         "lights" : {},
     },
+
+    #LPCS
+
+    "lpcs_p_1": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+
+    "lpcs_v_5": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "lpcs_v_11": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "lpcs_v_12": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "lpcs_v_1": {
+        "positions": {
+			0: 45,
+			1: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+
+    "rhr_p_2a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
 }
 
 values = {
@@ -757,6 +833,12 @@ values = {
 
     "rcic_pump_suct_press" : 0,
     "rcic_pump_disch_press" : 0,
+
+    "lpcs_flow" : 0,
+    "lpcs_press" : 0,
+
+    "rhr_a_flow" : 0,
+    "rhr_a_press" : 0,
 }
 
 indicators = {
@@ -958,6 +1040,34 @@ pumps = {
         "type" : pump.PumpTypes.Type1,
     },
 
+    "lpcs_p_1" : {
+        "motor_breaker_closed" : False,
+        "motor_control_switch" : "lpcs_p_1",
+        "bus" : "8",
+        "horsepower" : 1000,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 250,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 10000,
+        "header" : "lpcs_discharge_header",
+        "suct_header" : "lpcs_suction_header",
+        "type" : pump.PumpTypes.Type1,
+    },
+
+    "rhr_p_2a" : {
+        "motor_breaker_closed" : False,
+        "motor_control_switch" : "rhr_p_2a",
+        "bus" : "8",
+        "horsepower" : 1000,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 250,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 10000,
+        "header" : "rhr_a_discharge_header",
+        "suct_header" : "rhr_a_suction_header",
+        "type" : pump.PumpTypes.Type1,
+    },
+
     "rhr_p_2b" : {
         "motor_breaker_closed" : False,
         "motor_control_switch" : "rhr_p_2b",
@@ -1047,6 +1157,7 @@ from simulation.models.control_room_columbia.systems import irm_srm_positioner
 from simulation.models.control_room_columbia.systems import feedwater
 from simulation.models.control_room_columbia.systems import rcic
 from simulation.models.control_room_columbia.systems import hpcs
+from simulation.models.control_room_columbia.systems import lpcs
 feedwater.initialize()
 
 runs = 0
@@ -1069,6 +1180,7 @@ def model_run(delta):
     feedwater.run()
     rcic.run()
     hpcs.run()
+    lpcs.run()
     #from simulation.models.control_room_columbia.systems import fukushima
     #fukushima.run(runs)
     runs += 1

@@ -41,6 +41,58 @@ headers = { #most lines have a common header that they discharge into
         "mass" : 0,
     },
 
+    "lpcs_discharge_header" : {
+        #6"RCIC(1)-4-1
+
+        "diameter" : 406.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+    "lpcs_suction_header" : {
+        #8"RCIC(2)-1-1
+
+        "diameter" : 609.60, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+
+    "rhr_a_main_header" : {
+        #18" RHR(1)-2-5
+
+        "diameter" : 457.20, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+    "rhr_a_discharge_header" : {
+        #18" RHR(1)-2-4
+
+        "diameter" : 457.20, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+    "rhr_a_suction_header" : {
+        #24" RHR(2)-2-2
+
+        "diameter" : 609.60, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+
     "rhr_b_main_header" : {
         #18" RHR(1)-2-5
 
@@ -265,6 +317,116 @@ valves = {
         "diameter" : 406.40, #mm
         "open_speed" : 0.333, #30 seconds to open from full closed.
         "seal_in" : True,
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
+        #TODO: valve control power and motive power
+    },
+
+    "lpcs_v_5" : {
+        "control_switch" : "lpcs_v_5",
+        "input" : "lpcs_discharge_header",
+        "output" : StaticTanks.Reactor,
+        "percent_open" : 0,
+        "diameter" : 406.40, #mm
+        "open_speed" : 0.333, #30 seconds to open from full closed.
+        "seal_in" : True, #Valve is seal-in, meaning it is not throttable (normally)
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "lpcs_v_11" : { 
+        "control_switch" : "lpcs_v_11",
+        "input" : "lpcs_discharge_header",
+        "output" : StaticTanks.Wetwell,
+        "percent_open" : 100,
+        "diameter" : 101.60, #mm 4 in
+        "open_speed" : 0.333, #30 seconds to open from full closed.
+        "seal_in" : True, 
+        "sealed_in" : True, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
+        #TODO: valve control power and motive power
+    },
+    "lpcs_v_1" : { 
+        "control_switch" : "lpcs_v_1",
+        "input" : StaticTanks.Wetwell,
+        "output" : "lpcs_suction_header",
+        "percent_open" : 100,
+        "diameter" : 609.60, #mm, 24 in
+        "open_speed" : 0.333, #30 seconds to open from full closed.
+        "seal_in" : True, 
+        "sealed_in" : True, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
+        #TODO: valve control power and motive power
+    },
+    "lpcs_v_12" : {
+        "control_switch" : "lpcs_v_12",
+        "input" : "lpcs_discharge_header",
+        "output" : StaticTanks.Wetwell,
+        "percent_open" : 0,
+        "diameter" : 406.40, #mm
+        "open_speed" : 0.333, #30 seconds to open from full closed.
+        "seal_in" : True,
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
+        #TODO: valve control power and motive power
+    },
+
+    "rhr_v_4a" : { 
+        "control_switch" : "",
+        "input" : StaticTanks.Wetwell,
+        "output" : "rhr_a_suction_header",
+        "percent_open" : 100,
+        "diameter" : 609.60, #mm, 24 in
+        "open_speed" : 0.0666, #2.5 minutes to open from full closed.
+        "seal_in" : True, 
+        "sealed_in" : True, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
+        #TODO: valve control power and motive power
+    },
+    "rhr_v_6a" : { 
+        "control_switch" : "",
+        "input" : StaticTanks.Reactor,
+        "output" : "rhr_a_suction_header",
+        "percent_open" : 0,
+        "diameter" : 609.60, #mm, 24 in
+        "open_speed" : 0.0666, #2.5 minutes to open from full closed.
+        "seal_in" : True, 
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
+        #TODO: valve control power and motive power
+    },
+    "rhr_v_48a" : { 
+        "control_switch" : "",
+        "input" : "rhr_a_discharge_header",
+        "output" : "rhr_a_main_header",
+        "percent_open" : 100,
+        "diameter" : 457.20, #mm, 18 in
+        "open_speed" : 0.0666, #2.5 minutes to open from full closed.
+        "seal_in" : False, 
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
+        #TODO: valve control power and motive power
+    },
+    "rhr_v_3a" : { 
+        "control_switch" : "",
+        "input" : "rhr_a_discharge_header",
+        "output" : "rhr_a_main_header",
+        "percent_open" : 100,
+        "diameter" : 457.20, #mm, 18 in
+        "open_speed" : 0.0666, #2.5 minutes to open from full closed.
+        "seal_in" : False, 
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
+        #TODO: valve control power and motive power
+    },
+    "rhr_v_42a" : { 
+        "control_switch" : "",
+        "input" : "rhr_a_main_header",
+        "output" : StaticTanks.Reactor,
+        "percent_open" : 0,
+        "diameter" : 355.60, #mm, 14 in
+        "open_speed" : 0.333, #30 seconds to open from full closed.
+        "seal_in" : True, 
         "sealed_in" : False, #current state
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
         #TODO: valve control power and motive power
