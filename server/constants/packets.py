@@ -7,6 +7,7 @@ class ClientPackets(IntEnum):
     ROD_SELECT_UPDATE = 11,
     USER_LOGIN = 12,
     SYNCHRONIZE = 14,
+    CHAT = 15,
 
 class ServerPackets(IntEnum):
     METER_PARAMETERS_UPDATE = 0
@@ -18,3 +19,4 @@ class ServerPackets(IntEnum):
     PLAYER_POSITION_PARAMETERS_UPDATE = 8
     ROD_POSITION_PARAMETERS_UPDATE = 10
     USER_LOGIN_ACK = 13,
+    CHAT = 15,
