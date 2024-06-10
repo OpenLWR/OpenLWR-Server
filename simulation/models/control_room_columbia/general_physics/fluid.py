@@ -158,6 +158,36 @@ headers = { #most lines have a common header that they discharge into
 
     #Nuclear Boiler / Main Steam System
 
+    "main_steam_line_a_drywell" : {
+        #26" MS(1)-4-2 (G.E) (LINE "B")
+
+        "diameter" : 660.40, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "main_steam_line_a_penetration" : {
+        #26" MS(1)-4-2 (G.E) (LINE "B")
+
+        "diameter" : 660.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "main_steam_line_a_tunnel" : {
+        #26" MS(1)-4-2 (G.E) (LINE "B")
+
+        "diameter" : 660.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
     "main_steam_line_b_drywell" : {
         #26" MS(1)-4-2 (G.E) (LINE "B")
 
@@ -183,6 +213,102 @@ headers = { #most lines have a common header that they discharge into
 
         "diameter" : 660.40, #millimeters
         "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+
+    "main_steam_line_c_drywell" : {
+        #26" MS(1)-4-2 (G.E) (LINE "B")
+
+        "diameter" : 660.40, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "main_steam_line_c_penetration" : {
+        #26" MS(1)-4-2 (G.E) (LINE "B")
+
+        "diameter" : 660.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "main_steam_line_c_tunnel" : {
+        #26" MS(1)-4-2 (G.E) (LINE "B")
+
+        "diameter" : 660.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+
+    "main_steam_line_d_drywell" : {
+        #26" MS(1)-4-2 (G.E) (LINE "B")
+
+        "diameter" : 660.40, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "main_steam_line_d_penetration" : {
+        #26" MS(1)-4-2 (G.E) (LINE "B")
+
+        "diameter" : 660.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "main_steam_line_d_tunnel" : {
+        #26" MS(1)-4-2 (G.E) (LINE "B")
+
+        "diameter" : 660.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+
+    #Main Steam System
+
+    "bypass_steam_header" : {
+        #24" MS (1)-4-31
+
+        "diameter" : 609.60, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "turbine_bypass_manifold" : {
+        #Unknown diameter. Assume 30"?
+
+        "diameter" : 762.00, #millimeters
+        "length" : 200000, #increased length due to this needing to bypass a lot of steam
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+
+    "fake_turbine" : {
+        #this shit fake it dont have a pipe
+
+        "diameter" : 762.00, #millimeters
+        "length" : 200000, #increased length due to this needing to bypass a lot of steam
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Gas,
@@ -372,7 +498,7 @@ valves = {
     },
 
     "rhr_v_4a" : { 
-        "control_switch" : "",
+        "control_switch" : "rhr_v_4a",
         "input" : StaticTanks.Wetwell,
         "output" : "rhr_a_suction_header",
         "percent_open" : 100,
@@ -384,7 +510,7 @@ valves = {
         #TODO: valve control power and motive power
     },
     "rhr_v_6a" : { 
-        "control_switch" : "",
+        "control_switch" : "rhr_v_6a",
         "input" : StaticTanks.Reactor,
         "output" : "rhr_a_suction_header",
         "percent_open" : 0,
@@ -396,7 +522,7 @@ valves = {
         #TODO: valve control power and motive power
     },
     "rhr_v_48a" : { 
-        "control_switch" : "",
+        "control_switch" : "rhr_v_48a",
         "input" : "rhr_a_discharge_header",
         "output" : "rhr_a_main_header",
         "percent_open" : 100,
@@ -408,7 +534,7 @@ valves = {
         #TODO: valve control power and motive power
     },
     "rhr_v_3a" : { 
-        "control_switch" : "",
+        "control_switch" : "rhr_v_3a",
         "input" : "rhr_a_discharge_header",
         "output" : "rhr_a_main_header",
         "percent_open" : 100,
@@ -420,9 +546,21 @@ valves = {
         #TODO: valve control power and motive power
     },
     "rhr_v_42a" : { 
-        "control_switch" : "",
+        "control_switch" : "rhr_v_42a",
         "input" : "rhr_a_main_header",
         "output" : StaticTanks.Reactor,
+        "percent_open" : 0,
+        "diameter" : 355.60, #mm, 14 in
+        "open_speed" : 0.333, #30 seconds to open from full closed.
+        "seal_in" : True, 
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
+        #TODO: valve control power and motive power
+    },
+    "rhr_v_64a" : {  #min flow
+        "control_switch" : "rhr_v_64a",
+        "input" : "rhr_a_discharge_header",
+        "output" : StaticTanks.Wetwell,
         "percent_open" : 0,
         "diameter" : 355.60, #mm, 14 in
         "open_speed" : 0.333, #30 seconds to open from full closed.
@@ -557,10 +695,46 @@ valves = {
 
     #Nuclear Boiler / Main Steam System
 
+    "nozzle_ms_3a" : { #Main steam line nozzle for MSL B (always 100% open)
+        "control_switch" : "",
+        "input" : StaticTanks.SteamDome,
+        "output" : "main_steam_line_a_drywell",
+        "percent_open" : 100,
+        "diameter" : 300, #mm, same size as main steam line
+        "open_speed" : 0, #Cant change
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
     "nozzle_ms_3b" : { #Main steam line nozzle for MSL B (always 100% open)
         "control_switch" : "",
         "input" : StaticTanks.SteamDome,
         "output" : "main_steam_line_b_drywell",
+        "percent_open" : 100,
+        "diameter" : 300, #mm, same size as main steam line
+        "open_speed" : 0, #Cant change
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "nozzle_ms_3c" : { #Main steam line nozzle for MSL B (always 100% open)
+        "control_switch" : "",
+        "input" : StaticTanks.SteamDome,
+        "output" : "main_steam_line_c_drywell",
+        "percent_open" : 100,
+        "diameter" : 300, #mm, same size as main steam line
+        "open_speed" : 0, #Cant change
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "nozzle_ms_3d" : { #Main steam line nozzle for MSL B (always 100% open)
+        "control_switch" : "",
+        "input" : StaticTanks.SteamDome,
+        "output" : "main_steam_line_d_drywell",
         "percent_open" : 100,
         "diameter" : 300, #mm, same size as main steam line
         "open_speed" : 0, #Cant change
@@ -670,6 +844,287 @@ valves = {
         "diameter" : 203.20, #mm, 8 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    #MSIV Inboard
+    "ms_v_22a" : { 
+        "control_switch" : "ms_v_22a",
+        "input" : "main_steam_line_a_drywell",
+        "output" : "main_steam_line_a_penetration",
+        "percent_open" : 0,
+        "diameter" : 203.20, #mm, 8 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_22b" : { 
+        "control_switch" : "ms_v_22b",
+        "input" : "main_steam_line_b_drywell",
+        "output" : "main_steam_line_b_penetration",
+        "percent_open" : 0,
+        "diameter" : 203.20, #mm, 8 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_22c" : { 
+        "control_switch" : "ms_v_22c",
+        "input" : "main_steam_line_c_drywell",
+        "output" : "main_steam_line_c_penetration",
+        "percent_open" : 0,
+        "diameter" : 203.20, #mm, 8 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_22d" : { 
+        "control_switch" : "ms_v_22d",
+        "input" : "main_steam_line_d_drywell",
+        "output" : "main_steam_line_d_penetration",
+        "percent_open" : 0,
+        "diameter" : 203.20, #mm, 8 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    #MSIV Outboard
+    "ms_v_28a" : { 
+        "control_switch" : "ms_v_28a",
+        "input" : "main_steam_line_a_penetration",
+        "output" : "main_steam_line_a_tunnel",
+        "percent_open" : 0,
+        "diameter" : 203.20, #mm, 8 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_28b" : { 
+        "control_switch" : "ms_v_28b",
+        "input" : "main_steam_line_b_penetration",
+        "output" : "main_steam_line_b_tunnel",
+        "percent_open" : 0,
+        "diameter" : 203.20, #mm, 8 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_28c" : { 
+        "control_switch" : "ms_v_28c",
+        "input" : "main_steam_line_c_penetration",
+        "output" : "main_steam_line_c_tunnel",
+        "percent_open" : 0,
+        "diameter" : 203.20, #mm, 8 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_28d" : { 
+        "control_switch" : "ms_v_28d",
+        "input" : "main_steam_line_d_penetration",
+        "output" : "main_steam_line_d_tunnel",
+        "percent_open" : 0,
+        "diameter" : 203.20, #mm, 8 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    #Main Steam System
+
+    #Nozzles to the Bypass Steam Header
+
+    "nozzle_byp_a" : { #Nozzle for MSL A to the bypass steam header
+        "control_switch" : "",
+        "input" : "main_steam_line_a_tunnel",
+        "output" : "bypass_steam_header",
+        "percent_open" : 100,
+        "diameter" : 457.20, #mm,
+        "open_speed" : 0, #Cant change
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "nozzle_byp_b" : { #Nozzle for MSL A to the bypass steam header
+        "control_switch" : "",
+        "input" : "main_steam_line_b_tunnel",
+        "output" : "bypass_steam_header",
+        "percent_open" : 100,
+        "diameter" : 457.20, #mm,
+        "open_speed" : 0, #Cant change
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "nozzle_byp_c" : { #Nozzle for MSL A to the bypass steam header
+        "control_switch" : "",
+        "input" : "main_steam_line_c_tunnel",
+        "output" : "bypass_steam_header",
+        "percent_open" : 100,
+        "diameter" : 457.20, #mm,
+        "open_speed" : 0, #Cant change
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "nozzle_byp_d" : { #Nozzle for MSL A to the bypass steam header
+        "control_switch" : "",
+        "input" : "main_steam_line_d_tunnel",
+        "output" : "bypass_steam_header",
+        "percent_open" : 100,
+        "diameter" : 457.20, #mm,
+        "open_speed" : 0, #Cant change
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    "the_nothing_nozzle" : { #Sends bypass steam to narnia
+        "control_switch" : "",
+        "input" : "turbine_bypass_manifold",
+        "output" : "magic",
+        "percent_open" : 100,
+        "diameter" : 1000, #mm,
+        "open_speed" : 0, #Cant change
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    "the_nothing_nozzle2" : { #Sends turbine steam to narnia
+        "control_switch" : "",
+        "input" : "fake_turbine",
+        "output" : "magic",
+        "percent_open" : 100,
+        "diameter" : 1000, #mm,
+        "open_speed" : 0, #Cant change
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    #Bypass Valves
+
+    "ms_v_160a" : { 
+        "control_switch" : "bypass_valve",
+        "input" : "bypass_steam_header",
+        "output" : "turbine_bypass_manifold",
+        "percent_open" : 0,
+        "diameter" : 254.00, #mm, 8 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_160b" : { 
+        "control_switch" : "bypass_valve",
+        "input" : "bypass_steam_header",
+        "output" : "turbine_bypass_manifold",
+        "percent_open" : 0,
+        "diameter" : 254.00, #mm, 8 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_160c" : { 
+        "control_switch" : "bypass_valve",
+        "input" : "bypass_steam_header",
+        "output" : "turbine_bypass_manifold",
+        "percent_open" : 0,
+        "diameter" : 254.00, #mm, 8 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_160d" : { 
+        "control_switch" : "bypass_valve",
+        "input" : "bypass_steam_header",
+        "output" : "turbine_bypass_manifold",
+        "percent_open" : 0,
+        "diameter" : 254.00, #mm, 8 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    #Governor valves
+
+    "ms_v_gv1" : { 
+        "control_switch" : "turbine_valve",
+        "input" : "main_steam_line_a_tunnel",
+        "output" : "fake_turbine",
+        "percent_open" : 0,
+        "diameter" : 300, #mm, 28 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_gv2" : { 
+        "control_switch" : "turbine_valve",
+        "input" : "main_steam_line_b_tunnel",
+        "output" : "fake_turbine",
+        "percent_open" : 0,
+        "diameter" : 300, #mm, 28 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_gv3" : { 
+        "control_switch" : "turbine_valve",
+        "input" : "main_steam_line_c_tunnel",
+        "output" : "fake_turbine",
+        "percent_open" : 0,
+        "diameter" : 300, #mm, 28 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_gv4" : { 
+        "control_switch" : "turbine_valve",
+        "input" : "main_steam_line_d_tunnel",
+        "output" : "fake_turbine",
+        "percent_open" : 0,
+        "diameter" : 300, #mm, 28 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
         "sealed_in" : False,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power

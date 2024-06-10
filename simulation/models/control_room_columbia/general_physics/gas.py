@@ -32,34 +32,20 @@ def run():
         if inlet["type"] == fluid.FluidTypes.Liquid or outlet["type"] == fluid.FluidTypes.Liquid:
             continue #this is handled by fluid.py
 
+        #gas has to be calculated differently
+        #here i am attempting to usea combination of equations,
+        #Reynolds Number, (Re=puL/μ)
+        #Bernoulli's Equation, (P+1/2pv^2+pgh=constant)
 
-        #Poiseuille's law
-        #Q = π(P₁ – P₂)r⁴ / 8μL.
-        #where,
-        #Q is the volumetric flow rate,
-        #P1 and P2 are the pressures at both ends of the pipe,
-        #r is the radius of the pipe,
-        #μ is the viscosity of the fluid,
-        #L is the length of the pipe.
+        #Q=Cd*pi/4*d^2*[2(p1-p2)/p(1-d^4)]^1/2
+        #this hurts my brain
+        #Q = flow
+        #Cd = Discharge Coefficient
+        #p = Density of fluid
+        #d = Diameter two/ Diameter one
 
-        #viscosity of steam (saturated steam at 1000 psia) = 0.00019 poise
-        #placeholder 20000 mm as length (so 20 cm)
-
-        radius = valve["diameter"]/2
-        radius = radius*0.1 #to cm
-
-        flow_resistance = (8*20*2000)/(math.pi*(radius**4))
-
-        #flow = math.pi*((inlet["pressure"]*0.001)-(outlet["pressure"]*0.001))*(radius**4)/(8*0.01*200)
-
-        flow = (inlet["pressure"]-outlet["pressure"])/flow_resistance
-        flow = abs(flow)
-
-        flow = flow*(valve["percent_open"]/100) #TODO: Exponents? Flow is not linear.
-        #flow is in cubic centimeters per second
-        flow = flow/1000 #to liter/s
-        valve["flow"] = flow
-        flow = flow*0.1 #to liter/0.1s (or the sim time)
+        flow = 0
+       
         if inlet["pressure"] < outlet["pressure"]:
             continue
         else:

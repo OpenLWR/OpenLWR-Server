@@ -1,0 +1,125 @@
+from simulation.models.control_room_columbia import model
+from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
+from simulation.models.control_room_columbia.general_physics import fluid
+from simulation.models.control_room_columbia.systems import residual_heat_removal
+
+isolation_groups = {
+    "1" : { #Main isolation group. MSIVs, MSL drains
+        "ms_v_22a",
+        "ms_v_22b",
+        "ms_v_22c",
+        "ms_v_22d",
+        "ms_v_28a",
+        "ms_v_28b",
+        "ms_v_28c",
+        "ms_v_28d",
+
+        #MSLD
+        "ms_v_67a",
+        "ms_v_67b",
+        "ms_v_67c",
+        "ms_v_67d",
+        "ms_v_16",
+        "ms_v_19",
+
+    }, 
+    "2" : { #Reactor Water Sample
+        "rrc_v_19",
+        "rrc_v_20",
+    }, 
+    "3" : { #Containment exhaust & supply purge
+
+    }, 
+    "4" : { #Typical FAZ signal. Has TIP and EDR/FDR isolations.
+
+    }, 
+    "6" : { #RHR System & LPCI
+
+    }, 
+    "7" : { #RWCU System
+
+    }, 
+    "8" : { #RCIC System
+
+    }, 
+    "10" : { #I dunno what this is
+
+    }, 
+    "11" : { #I dunno what this is
+
+    }, 
+}
+
+isolation_signals = {
+    "A" : { #RPV Level 2
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "C" : { #Main Steam Line - Radiation High
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "D" : { #Main Steam Line - Leak Det (Tunnel high temp, high delta T or high flow)
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "E" : { #RWCU high diff flow or high blowdown flow
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "F" : { #High Drywell Pressure
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "G" : { #Low Condenser Vacuum
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "J" : { #RWCU system - Leak Det (high area temperature or high delta T)
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "K" : { #RCIC System - Leak Det (high area temperature, high delta T, or high steam flow) NOTE: Low Steam Pressure and Turb Exhaust Diaph high press are not a part of the PCRVIS
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "L" : { #RPV Level 3
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "M" : { #RHR SDC System - High Suction Flow
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "P" : { #Main Steam Line Pressure - Low (At turbine inlet) * RMS in RUN
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "R" : { #RHR System - Leak Det (High area temperature or high delta T)
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "U" : { #High Reactor Pressure (SDC Isolation)
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "V" : { #RPV Level 1
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "W" : { #High Temp at outlet of RWCU HX
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "Y" : { #SLC Actuated
+        "signal" : False,
+        "seal_in" : False,
+    },
+    "Z" : { #Reactor building ventilation exhaust plenum high radiation
+        "signal" : False,
+        "seal_in" : False,
+    },
+}
+
+def run():
+    pass

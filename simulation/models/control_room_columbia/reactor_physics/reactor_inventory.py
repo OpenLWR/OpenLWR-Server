@@ -50,8 +50,8 @@ def run():
 		vapMass = steam_functions.vaporize(waterMass, water_temperature, pressure.Pressures["Vessel"])
 		reactor_physics.kgSteam = reactor_physics.kgSteam+max(vapMass["vm"],0)
 		
-		if limit_press and pressure.Pressures["Vessel"]/6895 >= 900:
-			reactor_physics.kgSteam -= max(vapMass["vm"],0)
+		#if limit_press and pressure.Pressures["Vessel"]/6895 >= 900:
+			#reactor_physics.kgSteam -= max(vapMass["vm"],0)
 
 		NewPress = pressure.getPressure(reactor_physics.kgSteam, water_temperature,pressure.Volumes["Vessel"])
 		pressure.Pressures["Vessel"]= NewPress
@@ -72,11 +72,11 @@ def run():
 
 	model.reactor_water_temperature = water_temperature
 
-	print("RX Press %s" % str(pressure.Pressures["Vessel"]/6895)) #Print pressure in PSI
+	#print("RX Press %s" % str(pressure.Pressures["Vessel"]/6895)) #Print pressure in PSI
 	raw_level = mm_to_inches(calculate_level_cylinder(Vessel_Diameter,waterMass))
 	rx_level_wr = raw_level-528.55
-	print("RX Level, WR %s" % str(rx_level_wr))
-	print("RX Level %s" % str(raw_level))
+	#print("RX Level, WR %s" % str(rx_level_wr))
+	#print("RX Level %s" % str(raw_level))
 
 	model.values["rpv_level_recorder_1"] = round(rx_level_wr,1)
 	model.values["rpv_pressure_recorder_1"] = round(pressure.Pressures["Vessel"]/6895,1)

@@ -29,7 +29,7 @@ def run():
 
     #forces operator to depress for six seconds until the signal comes in
     if initiation or start_delay == 0 or model.buttons["rcic_init"]["state"]:
-        model.alarms["rcic_init_rpv_level_low"]["alarm"] = True #should this come in?
+        model.alarms["rcic_actuated"]["alarm"] = True #should this come in?
         if start_delay == -1:
             start_delay = 60
         elif start_delay > 0:
@@ -45,6 +45,8 @@ def run():
                 fluid.valves["rcic_v_13"]["sealed_in"] = True
     else:
         start_delay = -1
+        model.alarms["rcic_actuated"]["alarm"] = False
+        model.indicators["rcic_init"] = False
 
     if model.buttons["rcic_init_reset"]["state"] and (initiation == False and model.buttons["rcic_init"]["state"] == False):
         start_delay = -1

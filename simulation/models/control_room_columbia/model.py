@@ -181,12 +181,22 @@ alarms = {
         "silenced" : False,
     },
 
-
-
-
+    #RHR A/LPCS
+    "lpcs_rhr_a_actuated" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "lpcs_rhr_a_init_rpv_level_low" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
 
     #P601.A4 (RCIC)
-    "rcic_init_rpv_level_low" : {
+    "rcic_actuated" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
         "group" : "2",
@@ -198,15 +208,9 @@ alarms = {
         "group" : "2",
         "silenced" : False,
     },
-    "rcic_rpv_level_high" : {
-        "alarm" : False,
-        "state" : AnnunciatorStates.CLEAR,
-        "group" : "2",
-        "silenced" : False,
-    },
 
     #HPCS
-    "hpcs_init_rpv_level_low" : {
+    "hpcs_actuated" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
         "group" : "3",
@@ -760,6 +764,7 @@ switches = {
         },
     },
 
+    #RHR A
     "rhr_p_2a": {
         "positions": {
 			0: 45,
@@ -771,6 +776,207 @@ switches = {
             "green" : True,
             "red" : False,
         },
+    },
+    "rhr_v_42a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_53a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_48a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_3a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_64a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_4a": {
+        "positions": {
+			0: 45,
+			1: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "rhr_v_6a": {
+        "positions": {
+			0: 45,
+			1: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+
+    #MSIVs (inboard)
+    "ms_v_22a": {
+        "positions": {
+			0: 45,
+			1: 0,
+            2: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "ms_v_22b": {
+        "positions": {
+			0: 45,
+			1: 0,
+            2: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "ms_v_22c": {
+        "positions": {
+			0: 45,
+			1: 0,
+            2: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "ms_v_22d": {
+        "positions": {
+			0: 45,
+			1: 0,
+            2: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+
+    #MSIVs (outboard)
+    "ms_v_28a": {
+        "positions": {
+			0: 45,
+			1: 0,
+            2: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "ms_v_28b": {
+        "positions": {
+			0: 45,
+			1: 0,
+            2: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "ms_v_28c": {
+        "positions": {
+			0: 45,
+			1: 0,
+            2: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+    "ms_v_28d": {
+        "positions": {
+			0: 45,
+			1: 0,
+            2: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+    },
+
+    "bypass_valve": {
+        "positions": {
+			0: 45,
+			1: 0,
+            2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+    },
+    "turbine_valve": {
+        "positions": {
+			0: 45,
+			1: 0,
+            2: -45,
+		},
+        "position": 1,
+        "lights" : {},
     },
 }
 
@@ -907,6 +1113,8 @@ indicators = {
     "CHART_RECORDERS_OPERATE": False,
 
     "rcic_init": False,
+
+    "lpcs_init": False,
 }
 
 buttons = {
@@ -1005,6 +1213,33 @@ buttons = {
         "armed" : False,
     },
     "rcic_init_reset": {
+        "state" : False,
+        "armed" : False,
+    },
+
+    "lpcs_man_init": {
+        "state" : False,
+        "armed" : False,
+    },
+    "lpcs_init_reset": {
+        "state" : False,
+        "armed" : False,
+    },
+
+    #MSIV logic
+    "msiv_logic_a": {
+        "state" : False,
+        "armed" : False,
+    },
+    "msiv_logic_b": {
+        "state" : False,
+        "armed" : False,
+    },
+    "msiv_logic_c": {
+        "state" : False,
+        "armed" : False,
+    },
+    "msiv_logic_d": {
         "state" : False,
         "armed" : False,
     },
@@ -1158,6 +1393,8 @@ from simulation.models.control_room_columbia.systems import feedwater
 from simulation.models.control_room_columbia.systems import rcic
 from simulation.models.control_room_columbia.systems import hpcs
 from simulation.models.control_room_columbia.systems import lpcs
+from simulation.models.control_room_columbia.systems import deh
+deh.initialize()
 feedwater.initialize()
 
 runs = 0
@@ -1181,6 +1418,7 @@ def model_run(delta):
     rcic.run()
     hpcs.run()
     lpcs.run()
+    deh.run()
     #from simulation.models.control_room_columbia.systems import fukushima
     #fukushima.run(runs)
     runs += 1

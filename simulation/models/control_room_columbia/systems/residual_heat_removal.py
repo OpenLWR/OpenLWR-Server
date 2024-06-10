@@ -16,14 +16,17 @@ def run():
     global rhr_cb_init
     global rhr_cb_init_first
 
+    model.values["rhr_a_flow"] = model.pumps["rhr_p_2a"]["actual_flow"]
+    model.values["rhr_a_press"] = fluid.headers["rhr_a_discharge_header"]["pressure"]/6895
+
     model.values["rhr_b_flow"] = model.pumps["rhr_p_2b"]["actual_flow"]
     model.values["rhr_b_press"] = fluid.headers["rhr_b_discharge_header"]["pressure"]/6895
 
     model.values["rhr_c_flow"] = model.pumps["rhr_p_2c"]["actual_flow"]
     model.values["rhr_c_press"] = fluid.headers["rhr_c_discharge_header"]["pressure"]/6895    
 
-    #if model.pumps["rhr_p_2c"]["motor_breaker_closed"]:
-    #    fluid.valves["hpcs_v_12"]["sealed_in"] = model.pumps["hpcs_p_1"]["actual_flow"] < 1200
+    if model.pumps["rhr_p_2a"]["motor_breaker_closed"]:
+        fluid.valves["rhr_v_64a"]["sealed_in"] = model.pumps["rhr_p_2a"]["actual_flow"] < 1200
 
     if model.buttons["rhr_cb_init"]["state"]:
         rhr_cb_init = True
