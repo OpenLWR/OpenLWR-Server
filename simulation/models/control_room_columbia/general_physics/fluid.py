@@ -1019,8 +1019,8 @@ valves = {
         "control_switch" : "",
         "input" : "fake_turbine",
         "output" : "magic",
-        "percent_open" : 250,
-        "diameter" : 100, #mm,
+        "percent_open" : 100,
+        "diameter" : 400, #mm,
         "open_speed" : 0, #Cant change
         "seal_in" : False, 
         "sealed_in" : False,

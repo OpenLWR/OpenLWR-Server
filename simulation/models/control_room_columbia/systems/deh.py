@@ -30,7 +30,7 @@ gov_valve = 30
 def initialize():
     #initialize our PIDs:
     global PressureController
-    PressureController = PID(Kp=0.2, Ki=0, Kd=0.2)
+    PressureController = PID(Kp=0.05, Ki=0, Kd=0.1)
     #DT is DeltaTime (just use 1 for now)
 
 def run():
@@ -39,8 +39,9 @@ def run():
 
     global gov_valve
     
-    control_signal = PressureController.update(setpoint,fluid.headers["main_steam_line_a_tunnel"]["pressure"]/6895,1)
-    #control_signal = PressureController.update(setpoint,pressure.Pressures["Vessel"]/6895,1)
+    #control_signal = PressureController.update(setpoint,fluid.headers["main_steam_line_a_tunnel"]["pressure"]/6895,1)
+    #we're using reactor pressure as the variable because main steam line pressure is unreliable with large fluctuations
+    control_signal = PressureController.update(setpoint,pressure.Pressures["Vessel"]/6895,1)
 
     gov_valve = max(min(gov_valve-control_signal,100),0)
     print(gov_valve)
