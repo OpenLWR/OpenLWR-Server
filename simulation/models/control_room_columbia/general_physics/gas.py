@@ -33,18 +33,27 @@ def run():
             continue #this is handled by fluid.py
 
         #gas has to be calculated differently
-        #here i am attempting to usea combination of equations,
-        #Reynolds Number, (Re=puL/μ)
-        #Bernoulli's Equation, (P+1/2pv^2+pgh=constant)
+        #It is the exact same as regular fluids, however it has an extra factor, (P1+P2/2*P2), expressing the average pressure relative to the outlet pressure
 
-        #Q=Cd*pi/4*d^2*[2(p1-p2)/p(1-d^4)]^1/2
-        #this hurts my brain
-        #Q = flow
-        #Cd = Discharge Coefficient
-        #p = Density of fluid
-        #d = Diameter two/ Diameter one
+        radius = valve["diameter"]/2
+        radius = radius*0.1 #to cm
+        
+        flow_resistance = (8*1.1*2000)/(math.pi*(radius**4))
 
-        flow = 0
+        flow = (inlet["pressure"]-max(outlet["pressure"],0))/flow_resistance
+
+        #here is our extra factor
+        #if max(outlet["pressure"],0) != 0:
+            #flow = (inlet["pressure"]+max(outlet["pressure"],0))/(2*(max(outlet["pressure"],0)))
+
+        flow = abs(flow)
+
+        flow = flow*(valve["percent_open"]/100) #TODO: Exponents? Flow is not linear.
+        flow = flow*0.98
+        #flow is in cubic centimeters per second
+        flow = flow/1000 #to liter/s
+        valve["flow"] = flow
+        flow = flow*0.1 #to liter/0.1s (or the sim time)
        
         if inlet["pressure"] < outlet["pressure"]:
             continue

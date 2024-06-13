@@ -867,7 +867,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 0,
+        "position": 2,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -879,7 +879,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 0,
+        "position": 2,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -891,7 +891,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 0,
+        "position": 2,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -903,7 +903,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 0,
+        "position": 2,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -917,7 +917,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 0,
+        "position": 2,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -929,7 +929,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 0,
+        "position": 2,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -941,7 +941,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 0,
+        "position": 2,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -953,7 +953,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 0,
+       "position": 2,
         "lights" : {
             "green" : True,
             "red" : False,
