@@ -33,6 +33,13 @@ def run(alarms,buttons):
             if "ALARM_SILENCE" in button and group in button and buttons[button]["state"]:
                annunciator["silenced"] = True
 
+      #at columbia, pressing any main panel acknowledge will silence all alarms for other main panels.
+      #this was done because there was not enough room for silence pushbuttons (and they already laid out the panels)
+      for button in buttons:
+         #TODO: blacklist/whitelist groups together
+         if "ALARM_ACK" in button and buttons[button]["state"]:
+            annunciator["silenced"] = True
+
       #unsilence if the alarm comes back
                
       if annunciator["silenced"] and not annunciator["alarm"]:

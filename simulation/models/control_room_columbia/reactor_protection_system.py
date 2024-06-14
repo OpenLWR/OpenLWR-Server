@@ -1,5 +1,6 @@
 
 from simulation.constants.annunciator_states import AnnunciatorStates
+from simulation.models.control_room_columbia.general_physics import fluid
 import math
 
 reactor_protection_systems = {
@@ -21,12 +22,14 @@ rps_alarms = {
         "RPV Press High" : "rpv_press_high_trip_a",
         "Mode Switch In Shutdown" : "mode_switch_in_shutdown_position_a",
         "Neutron Monitor System" : "neutron_monitor_system_trip_a",
+        "MSIV Closure" : "msiv_closure_trip_a",
     },
     "B" : {
         "RPV Level Low" : "rpv_level_low_trip_b",
         "RPV Press High" : "rpv_press_high_trip_b",
         "Mode Switch In Shutdown" : "mode_switch_in_shutdown_position_b",
         "Neutron Monitor System" : "neutron_monitor_system_trip_b",
+        "MSIV Closure" : "msiv_closure_trip_b",
     },
 }
 
@@ -45,6 +48,10 @@ def run(alarms,buttons,indicators,rods,switches):
         add_withdraw_block("Mode_Switch_Shutdown")
     else:
         remove_withdraw_block("Mode_Switch_Shutdown")
+
+    #run
+    rps_scram_trips["A"]["MSIV Closure"]["bypassed"] = switches["reactor_mode_switch"]["position"] != 3
+    rps_scram_trips["B"]["MSIV Closure"]["bypassed"] = switches["reactor_mode_switch"]["position"] != 3
 
     if buttons["SCRAM_A1"]["state"]:
         reactor_protection_systems["A"]["channel_1_trip"] = True
@@ -96,7 +103,7 @@ def run(alarms,buttons,indicators,rods,switches):
         alarms[rps_alarms["A"][reason]]["alarm"] = rps_scram_trips["A"][reason]["sealed_in"]
 
     for reason in rps_scram_trips["B"]:
-        alarms[rps_alarms["B"][reason]]["alarm"] = rps_scram_trips["A"][reason]["sealed_in"]
+        alarms[rps_alarms["B"][reason]]["alarm"] = rps_scram_trips["B"][reason]["sealed_in"]
 
 
 
@@ -169,7 +176,7 @@ def automatic_scram_signals():
     for scram in rps_scram_trips["A"]:
 
         scram_trip = rps_scram_trips["A"][scram]
-        scram_trip["active"] = scram_trip["function"](scram_trip)
+        scram_trip["active"] = scram_trip["function"](scram_trip,"A")
 
         if scram_trip["active"]:
             reactor_protection_systems["A"]["channel_1_trip"] = True
@@ -179,38 +186,79 @@ def automatic_scram_signals():
     for scram in rps_scram_trips["B"]:
 
         scram_trip = rps_scram_trips["B"][scram]
-        scram_trip["active"] = scram_trip["function"](scram_trip)
+        scram_trip["active"] = scram_trip["function"](scram_trip,"B")
 
         if scram_trip["active"]:
             reactor_protection_systems["B"]["channel_1_trip"] = True
             reactor_protection_systems["B"]["channel_2_trip"] = True
             scram_trip["sealed_in"] = True
 
-def scram_trip_mode_switch_shutdown(info):
+def scram_trip_mode_switch_shutdown(info,system):
     from simulation.models.control_room_columbia import model 
     if (not info["bypassed"]) and model.switches["reactor_mode_switch"]["position"] == 0 :
         return True
 
     return False
 
-def scram_trip_rpv_press_high(info):
+def scram_trip_rpv_press_high(info,system):
     from simulation.models.control_room_columbia.reactor_physics import pressure 
     if pressure.Pressures["Vessel"]/6895 > 1060:
         return True
 
     return False
 
-def scram_trip_rpv_level_low(info):
+def scram_trip_rpv_level_low(info,system):
     from simulation.models.control_room_columbia.reactor_physics import reactor_inventory 
     if reactor_inventory.rx_level_wr < 13:
         return True
     
     return False
 
-def scram_trip_neutron_monitor_system(info):
+def scram_trip_neutron_monitor_system(info,system):
     from simulation.models.control_room_columbia import neutron_monitoring 
 
     return neutron_monitoring.scram_reactor
+
+msiv_associations = {
+    "A" : {
+        "A1" : {
+            "K3A":{"ms_v_22a","ms_v_28a"},
+            "K3B":{"ms_v_22b","ms_v_28b"},
+        },
+        "A2" : {
+            "K3C":{"ms_v_22c","ms_v_28c"},
+            "K3G":{"ms_v_22d","ms_v_28d"},
+        },
+    },
+    "B" : {
+        "B1":{
+            "K3B":{"ms_v_22a","ms_v_28a"},
+            "K3F":{"ms_v_22c","ms_v_28c"},
+        },
+        "B2":{
+            "K3D":{"ms_v_22c","ms_v_28c"},
+            "K3H":{"ms_v_22d","ms_v_28d"},
+        },
+    },
+}
+
+def scram_trip_msiv_closure(info,system):
+
+    if (not info["bypassed"]):
+        for trip_channel in msiv_associations[system]:
+            trip_channel = msiv_associations[system][trip_channel]
+            tripped = 0
+            for valve_set in trip_channel:
+                valve_set = trip_channel[valve_set]
+                for valve_name in valve_set:
+                    if fluid.valves[valve_name]["percent_open"] <= 90:
+                        tripped += 1
+                        break
+            
+            if tripped >= 1:
+                return True
+
+    return False
     
 
 rps_scram_trips = {
@@ -239,6 +287,12 @@ rps_scram_trips = {
             "active" : False, 
             "function" : scram_trip_neutron_monitor_system,
         },
+        "MSIV Closure" : {
+            "bypassed" : False,
+            "sealed_in" : False,
+            "active" : False, 
+            "function" : scram_trip_msiv_closure
+        },
     },
     "B" : {
         "Mode Switch In Shutdown" : {
@@ -264,6 +318,12 @@ rps_scram_trips = {
             "sealed_in" : False,
             "active" : False, 
             "function" : scram_trip_neutron_monitor_system,
+        },
+        "MSIV Closure" : {
+            "bypassed" : False,
+            "sealed_in" : False,
+            "active" : False, 
+            "function" : scram_trip_msiv_closure
         },
     },
 }

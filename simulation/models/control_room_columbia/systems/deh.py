@@ -30,7 +30,7 @@ gov_valve = 30
 def initialize():
     #initialize our PIDs:
     global PressureController
-    PressureController = PID(Kp=0.05, Ki=0, Kd=0.1)
+    PressureController = PID(Kp=0.05, Ki=0, Kd=0.2)
     #DT is DeltaTime (just use 1 for now)
 
 def run():

@@ -53,6 +53,13 @@ alarms = {
         "group" : "1",
         "silenced" : False,
     },
+    "msiv_closure_trip_a" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+
     "rod_accumulator_trouble" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
@@ -103,6 +110,12 @@ alarms = {
         "silenced" : False,
     },
     "neutron_monitor_system_trip_b" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "msiv_closure_trip_b" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
@@ -178,6 +191,34 @@ alarms = {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
+        "silenced" : False,
+    },
+
+    #P601.A11
+    "msiv_half_trip_system_b" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "rc_2_half_trip" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+
+    #P601.A12
+    "msiv_half_trip_system_a" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "rc_1_half_trip" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
         "silenced" : False,
     },
 
@@ -867,7 +908,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 2,
+        "position": 1,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -879,7 +920,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 2,
+        "position": 1,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -891,7 +932,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 2,
+        "position": 1,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -903,7 +944,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 2,
+        "position": 1,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -917,7 +958,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 2,
+        "position": 1,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -929,7 +970,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 2,
+        "position": 1,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -941,7 +982,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 2,
+        "position": 1,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -953,7 +994,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-       "position": 2,
+       "position": 1,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -1243,6 +1284,15 @@ buttons = {
         "state" : False,
         "armed" : False,
     },
+
+    "isol_logic_reset_1": {
+        "state" : False,
+        "armed" : False,
+    },
+    "isol_logic_reset_2": {
+        "state" : False,
+        "armed" : False,
+    },
 }
 
 from simulation.models.control_room_columbia.general_physics import pump
@@ -1394,6 +1444,7 @@ from simulation.models.control_room_columbia.systems import rcic
 from simulation.models.control_room_columbia.systems import hpcs
 from simulation.models.control_room_columbia.systems import lpcs
 from simulation.models.control_room_columbia.systems import deh
+from simulation.models.control_room_columbia.systems import pcis
 deh.initialize()
 feedwater.initialize()
 
@@ -1419,6 +1470,7 @@ def model_run(delta):
     hpcs.run()
     lpcs.run()
     deh.run()
+    pcis.run()
     #from simulation.models.control_room_columbia.systems import fukushima
     #fukushima.run(runs)
     runs += 1

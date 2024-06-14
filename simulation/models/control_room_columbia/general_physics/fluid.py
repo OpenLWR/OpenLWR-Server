@@ -854,11 +854,11 @@ valves = {
         "control_switch" : "ms_v_22a",
         "input" : "main_steam_line_a_drywell",
         "output" : "main_steam_line_a_penetration",
-        "percent_open" : 0,
+        "percent_open" : 100,
         "diameter" : 203.20, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -866,11 +866,11 @@ valves = {
         "control_switch" : "ms_v_22b",
         "input" : "main_steam_line_b_drywell",
         "output" : "main_steam_line_b_penetration",
-        "percent_open" : 0,
+        "percent_open" : 100,
         "diameter" : 203.20, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -878,11 +878,11 @@ valves = {
         "control_switch" : "ms_v_22c",
         "input" : "main_steam_line_c_drywell",
         "output" : "main_steam_line_c_penetration",
-        "percent_open" : 0,
+        "percent_open" : 100,
         "diameter" : 203.20, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -890,11 +890,11 @@ valves = {
         "control_switch" : "ms_v_22d",
         "input" : "main_steam_line_d_drywell",
         "output" : "main_steam_line_d_penetration",
-        "percent_open" : 0,
+        "percent_open" : 100,
         "diameter" : 203.20, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -904,11 +904,11 @@ valves = {
         "control_switch" : "ms_v_28a",
         "input" : "main_steam_line_a_penetration",
         "output" : "main_steam_line_a_tunnel",
-        "percent_open" : 0,
+        "percent_open" : 100,
         "diameter" : 203.20, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -916,11 +916,11 @@ valves = {
         "control_switch" : "ms_v_28b",
         "input" : "main_steam_line_b_penetration",
         "output" : "main_steam_line_b_tunnel",
-        "percent_open" : 0,
+        "percent_open" : 100,
         "diameter" : 203.20, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -928,11 +928,11 @@ valves = {
         "control_switch" : "ms_v_28c",
         "input" : "main_steam_line_c_penetration",
         "output" : "main_steam_line_c_tunnel",
-        "percent_open" : 0,
+        "percent_open" : 100,
         "diameter" : 203.20, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -940,11 +940,11 @@ valves = {
         "control_switch" : "ms_v_28d",
         "input" : "main_steam_line_d_penetration",
         "output" : "main_steam_line_d_tunnel",
-        "percent_open" : 0,
+        "percent_open" : 100,
         "diameter" : 203.20, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },

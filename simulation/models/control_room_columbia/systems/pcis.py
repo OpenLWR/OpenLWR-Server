@@ -54,6 +54,7 @@ isolation_signals = {
     "A" : { #RPV Level 2
         "signal" : False,
         "seal_in" : False,
+        "alarm" : "nssss_isol_rpv_level_low",
     },
     "C" : { #Main Steam Line - Radiation High
         "signal" : False,
@@ -106,6 +107,7 @@ isolation_signals = {
     "V" : { #RPV Level 1
         "signal" : False,
         "seal_in" : False,
+        "alarm" : "ns4_group_1_isol_rpv_level_low",
     },
     "W" : { #High Temp at outlet of RWCU HX
         "signal" : False,
@@ -121,5 +123,55 @@ isolation_signals = {
     },
 }
 
+logic = {
+    "A" : False,
+    "B" : False,
+    "C" : False,
+    "D" : False,
+}
+
 def run():
-    pass
+    system_a = False
+    system_b = False
+
+    #This is all kind of a mess
+
+    #TODO: check if the logic is allowed to be reset at this time
+    if model.buttons["isol_logic_reset_1"]["state"]:
+        logic["A"] = False
+        logic["B"] = False
+
+    if model.buttons["isol_logic_reset_2"]["state"]:
+        logic["C"] = False
+        logic["D"] = False
+
+    if model.buttons["msiv_logic_a"]["state"]:
+        logic["A"] = True
+
+    if model.buttons["msiv_logic_b"]["state"]:
+        logic["B"] = True
+
+    if model.buttons["msiv_logic_c"]["state"]:
+        logic["C"] = True
+
+    if model.buttons["msiv_logic_d"]["state"]:
+        logic["D"] = True
+
+    if logic["A"] or logic["C"]: #half MSIV trip
+        system_a = True
+        model.alarms["msiv_half_trip_system_a"]["alarm"] = True
+
+    if logic["B"] or logic["D"]:
+        system_b = True
+        model.alarms["msiv_half_trip_system_b"]["alarm"] = True
+
+    if logic["B"]: #Outboard P601 Valve isolation
+        model.alarms["rc_1_half_trip"]["alarm"] = True
+
+    if logic["D"]: #Inboard P601 Valve Isolation
+        model.alarms["rc_2_half_trip"]["alarm"] = True
+
+    if system_a and system_b:
+        #MSIV Closure occurs
+        for msiv in {"ms_v_22a","ms_v_22b","ms_v_22c","ms_v_22d","ms_v_28a","ms_v_28b","ms_v_28c","ms_v_28d"}:
+            fluid.valves[msiv]["sealed_in"] = False
