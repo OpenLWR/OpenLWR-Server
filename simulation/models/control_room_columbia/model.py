@@ -270,6 +270,7 @@ switches = {
 		},
         "position": 3,
         "lights" : {},
+        "flag" : "green",
     },
 
     "irm_a_range": {
@@ -287,6 +288,7 @@ switches = {
 		},
         "position": 0,
         "lights" : {},
+        "flag" : "green",
     },
     "irm_c_range": {
         "positions": {
@@ -303,6 +305,7 @@ switches = {
 		},
         "position": 0,
         "lights" : {},
+        "flag" : "green",
     },
     "irm_g_range": {
         "positions": {
@@ -319,6 +322,7 @@ switches = {
 		},
         "position": 0,
         "lights" : {},
+        "flag" : "green",
     },
     "irm_e_range": {
         "positions": {
@@ -335,6 +339,7 @@ switches = {
 		},
         "position": 0,
         "lights" : {},
+        "flag" : "green",
     },
 
     "irm_b_range": {
@@ -352,6 +357,7 @@ switches = {
 		},
         "position": 0,
         "lights" : {},
+        "flag" : "green",
     },
     "irm_d_range": {
         "positions": {
@@ -368,6 +374,7 @@ switches = {
 		},
         "position": 0,
         "lights" : {},
+        "flag" : "green",
     },
     "irm_h_range": {
         "positions": {
@@ -384,6 +391,7 @@ switches = {
 		},
         "position": 0,
         "lights" : {},
+        "flag" : "green",
     },
     "irm_f_range": {
         "positions": {
@@ -400,6 +408,7 @@ switches = {
 		},
         "position": 0,
         "lights" : {},
+        "flag" : "green",
     },
 
 
@@ -415,6 +424,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "hpcs_p_3": {
         "positions": {
@@ -426,6 +436,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "hpcs_v_4": {
         "positions": {
@@ -439,6 +450,7 @@ switches = {
             "red" : False,
             "override" : False,
         },
+        "flag" : "green",
     },
     "hpcs_v_1": {
         "positions": {
@@ -451,6 +463,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "hpcs_v_12": {
         "positions": {
@@ -463,6 +476,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "hpcs_v_15": {
         "positions": {
@@ -476,6 +490,7 @@ switches = {
             "red" : False,
             "override" : False,
         },
+        "flag" : "green",
     },
     "hpcs_v_23": {
         "positions": {
@@ -488,6 +503,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
 
     "rhr_p_2b": {
@@ -501,6 +517,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_48b": {
         "positions": {
@@ -513,6 +530,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_3b": {
         "positions": {
@@ -525,6 +543,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_42b": {
         "positions": {
@@ -537,6 +556,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_4b": {
         "positions": {
@@ -548,6 +568,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_6b": {
         "positions": {
@@ -559,6 +580,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
 
     "rhr_p_2c": {
@@ -572,6 +594,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_p_3": {
         "positions": {
@@ -583,6 +606,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_4c": {
         "positions": {
@@ -594,6 +618,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_42c": {
         "positions": {
@@ -606,6 +631,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_24c": {
         "positions": {
@@ -618,6 +644,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
 
     #safety/relief valves
@@ -633,6 +660,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "ms_rv_4c": {
         "positions": {
@@ -645,6 +673,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
 
     "rcic_v_45": {
@@ -658,6 +687,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rcic_v_1": {
         "positions": {
@@ -670,6 +700,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rcic_v_8": {
         "positions": {
@@ -681,6 +712,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rcic_v_63": {
         "positions": {
@@ -692,6 +724,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rcic_v_68": {
         "positions": {
@@ -703,6 +736,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
 
     #flow paths
@@ -717,6 +751,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
 
     "rcic_v_31": {
@@ -730,6 +765,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
 
     "rfw_trip": {
@@ -740,6 +776,7 @@ switches = {
 		},
         "position": 1,
         "lights" : {},
+        "flag" : "green",
     },
 
     #LPCS
@@ -755,6 +792,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
 
     "lpcs_v_5": {
@@ -768,6 +806,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "lpcs_v_11": {
         "positions": {
@@ -780,6 +819,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "lpcs_v_12": {
         "positions": {
@@ -792,6 +832,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "lpcs_v_1": {
         "positions": {
@@ -803,6 +844,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
 
     #RHR A
@@ -817,6 +859,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_42a": {
         "positions": {
@@ -829,6 +872,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_53a": {
         "positions": {
@@ -841,6 +885,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_48a": {
         "positions": {
@@ -853,6 +898,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_3a": {
         "positions": {
@@ -865,6 +911,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_64a": {
         "positions": {
@@ -877,6 +924,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_4a": {
         "positions": {
@@ -888,6 +936,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "rhr_v_6a": {
         "positions": {
@@ -899,6 +948,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
 
     #MSIVs (inboard)
@@ -913,6 +963,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "ms_v_22b": {
         "positions": {
@@ -925,6 +976,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "ms_v_22c": {
         "positions": {
@@ -937,6 +989,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "ms_v_22d": {
         "positions": {
@@ -949,6 +1002,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
 
     #MSIVs (outboard)
@@ -963,6 +1017,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "ms_v_28b": {
         "positions": {
@@ -975,6 +1030,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "ms_v_28c": {
         "positions": {
@@ -987,6 +1043,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
     "ms_v_28d": {
         "positions": {
@@ -999,6 +1056,7 @@ switches = {
             "green" : True,
             "red" : False,
         },
+        "flag" : "green",
     },
 
     "bypass_valve": {
@@ -1009,6 +1067,7 @@ switches = {
 		},
         "position": 1,
         "lights" : {},
+        "flag" : "green",
     },
     "turbine_valve": {
         "positions": {
@@ -1018,6 +1077,7 @@ switches = {
 		},
         "position": 1,
         "lights" : {},
+        "flag" : "green",
     },
 }
 
