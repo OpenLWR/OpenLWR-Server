@@ -1,14 +1,15 @@
 from simulation.constants.electrical_types import ElectricalType
 from simulation.constants.equipment_states import EquipmentStates
-from general_physics import ac_power
-from control_room_nmp2 import model
+from simulation.models.control_room_columbia.general_physics import ac_power
+from simulation.models.control_room_columbia import model
 
 def clamp(val, clamp_min, clamp_max):
     return min(max(val,clamp_min),clamp_max)
 
 diesel_generators = {
-    "EDG1" : {
+    "DG1" : {
         "state" : EquipmentStates.STOPPED,
+        "control_switch" : "diesel_gen_1",
         "rpm" : 0, #normal is 900
         "start_air_press" : 500,
         "auto_start" : False,
@@ -19,11 +20,8 @@ diesel_generators = {
         "voltage" : 0,
         "frequency" : 0, #8 pole generator. 60hz@900rpm
         "annunciators" : {
-            "START_TROUBLE" : "edg_1_start_system_trouble",
-            "RUNNING" : "edg_1_running",
-            "START_TROUBLE" : "edg_1_start_system_trouble",
-            "START_TROUBLE" : "edg_1_start_system_trouble",
-            "START_TROUBLE" : "edg_1_start_system_trouble",
+            "START_TROUBLE" : "dg_1_start_system_trouble",
+            "RUNNING" : "dg_1_running",
         },
     }
 }
@@ -31,6 +29,20 @@ diesel_generators = {
 def run():
    for name in diesel_generators:
         dg = diesel_generators[name]
+
+        if dg["control_switch"] in model.switches:
+            cont_sw = model.switches[dg["control_switch"]]
+
+            if cont_sw["position"] == 0:
+                #a loca autostart prevents this?
+                if dg["state"] == EquipmentStates.RUNNING:
+                    dg["state"] = EquipmentStates.STOPPING
+
+            if cont_sw["position"] == 2:
+                #TODO: flag position autostart alarm clear (and running alarm?)
+                if dg["state"] == EquipmentStates.STOPPED:
+                    dg["state"] = EquipmentStates.STARTING
+
         match dg["state"]:
             case EquipmentStates.STARTING:
                 dg["rpm"] += 7.5
@@ -62,3 +74,6 @@ def run():
                 dg["frequency"] = 0
                 dg["voltage"] = 0
 
+        if name in ac_power.sources:
+            ac_power.sources[name]["voltage"] = dg["voltage"]
+            ac_power.sources[name]["frequency"] = dg["frequency"]

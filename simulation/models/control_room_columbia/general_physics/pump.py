@@ -138,6 +138,7 @@ def run():
 
             if pump_bus["voltage"] < 120:
                 pump["motor_breaker_closed"] = False
+                continue
 
             Acceleration = (pump["rated_rpm"]-pump["rpm"])*0.1 #TODO: variable motor accel
             pump["rpm"] = clamp(pump["rpm"]+Acceleration,0,pump["rated_rpm"]+100)

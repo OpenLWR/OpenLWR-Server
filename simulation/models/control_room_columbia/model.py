@@ -1097,6 +1097,134 @@ switches = {
         },
         "flag" : "green",
     },
+    "cb_s2": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+    "cb_s3": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+
+    "cb_7_1": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+    "cb_1_7": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+    "cb_8_3": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+    "cb_3_8": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+
+    #DG1
+    "cb_dg1_7": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+    "cb_7dg1": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+    "diesel_gen_1": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
 }
 
 values = {
@@ -1515,6 +1643,8 @@ from simulation.models.control_room_columbia.general_physics import gas
 from simulation.models.control_room_columbia.general_physics import turbine
 turbine.initialize_pumps()
 
+from simulation.models.control_room_columbia.general_physics import diesel_generator
+
 from simulation.models.control_room_columbia.systems import safety_relief
 from simulation.models.control_room_columbia.systems import irm_srm_positioner
 from simulation.models.control_room_columbia.systems import feedwater
@@ -1536,7 +1666,8 @@ def model_run(delta):
     reactor_physics.run(rods)
     neutron_monitoring.run(alarms,buttons,indicators,rods,switches,values)
     ac_power.run(switches,alarms,indicators,runs)
-    fluid.run()
+    diesel_generator.run()
+    fluid.run() 
     pump.run()
     gas.run()
     turbine.run()
