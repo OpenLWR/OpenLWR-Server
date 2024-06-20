@@ -7,10 +7,12 @@ def clamp(val, clamp_min, clamp_max):
 breakers = {
 	"cb_s1" : {
         "type" : ElectricalType.BREAKER,
+        "control_switch" : "cb_s1",
 		"closed" : True,
 		"incoming" : "TRS",
 		"running" : "1", 
 		"lockout" : False, #Breaker lockout relay tripped
+        "ptl" : False, #Pull To Lock
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -54,25 +56,32 @@ def run(switches,alarms,indicators,runs):
     #indicators["cr_light_normal"] = True#get_bus_power("101",4000)
     #indicators["cr_light_emergency"] = False#not get_bus_power("101",4000)
     for breaker_name in breakers:
-        if breaker_name in switches:
-            if switches[breaker_name]["position"] == 0: open_breaker(breaker_name)
+        bkr = breakers[breaker_name]
+        if bkr["control_switch"] in switches:
+            if switches[bkr["control_switch"]]["position"] == 0: open_breaker(breaker_name)
 
-            if switches[breaker_name]["position"] == 2: close_breaker(breaker_name)
+            if switches[bkr["control_switch"]]["position"] == 2: close_breaker(breaker_name)
 
-            switches[breaker_name]["lights"]["green"] = not breakers[breaker_name]["closed"]
-            switches[breaker_name]["lights"]["red"] = breakers[breaker_name]["closed"]
+            switches[bkr["control_switch"]]["lights"]["green"] = not bkr["closed"]
+            switches[bkr["control_switch"]]["lights"]["red"] = bkr["closed"]
+
+            if "lockout" in switches[bkr["control_switch"]]["lights"]:
+                switches[bkr["control_switch"]]["lights"]["lockout"] = not bkr["lockout"]
 
         
 
-        
 
         #TODO: find a way to resolve this minor pyramid
-        if breakers[breaker_name]["closed"]:
-            if get_type(breakers[breaker_name]["running"]) == ElectricalType.BUS:
+        if bkr["closed"]:
+            if bkr["lockout"]:
+                bkr["closed"] = False
+                continue
+
+            if get_type(bkr["running"]) == ElectricalType.BUS:
                 #add this breaker to that busses feeders, if it isnt already there
                 #TODO: clean this up
-                if not breaker_name in busses[breakers[breaker_name]["running"]]["feeders"]:
-                    busses[breakers[breaker_name]["running"]]["feeders"].append(breaker_name)
+                if not breaker_name in busses[bkr["running"]]["feeders"]:
+                    busses[bkr["running"]]["feeders"].append(breaker_name)
                  
 
     for bus_name in busses:

@@ -11,9 +11,9 @@ def fire(switches):
     to_send = {}
     for switch in switches:
         if type(switches[switch]) == int:
-            to_send[switch] = {"position" : switches[switch], "lights" : model.switches[switch]["lights"]}
+            to_send[switch] = {"position" : switches[switch], "lights" : model.switches[switch]["lights"], "flag" : model.switches[switch]["flag"]}
         else:
-            to_send[switch] = {"position" : switches[switch]["position"], "lights" : switches[switch]["lights"]}
+            to_send[switch] = {"position" : switches[switch]["position"], "lights" : model.switches[switch]["lights"], "flag" : switches[switch]["flag"]}
 
     manager.broadcast_packet(packet_helper.build(packets.ServerPackets.SWITCH_PARAMETERS_UPDATE, json.dumps(to_send)))
 
@@ -22,5 +22,5 @@ def fire_initial(token):
     model = importlib.import_module(f"simulation.models.{config.model}.model")
     switches_to_send = {}
     for switch in model.switches:
-        switches_to_send[switch] = {"position" : model.switches[switch]["position"], "lights" : model.switches[switch]["lights"]}
+        switches_to_send[switch] = {"position" : model.switches[switch]["position"], "lights" : model.switches[switch]["lights"], "flag" : model.switches[switch]["flag"]}
     manager.send_user_packet(packet_helper.build(packets.ServerPackets.SWITCH_PARAMETERS_UPDATE, json.dumps(switches_to_send)), token)

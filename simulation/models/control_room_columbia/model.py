@@ -1079,6 +1079,24 @@ switches = {
         "lights" : {},
         "flag" : "green",
     },
+
+
+    #P800 (BD. C)
+
+    "cb_s1": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
 }
 
 values = {
