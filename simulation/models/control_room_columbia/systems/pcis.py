@@ -1,6 +1,7 @@
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
 from simulation.models.control_room_columbia.general_physics import fluid
+from simulation.models.control_room_columbia.general_physics import ac_power
 from simulation.models.control_room_columbia.systems import residual_heat_removal
 
 isolation_groups = {
@@ -135,6 +136,18 @@ def run():
     system_b = False
 
     #This is all kind of a mess
+
+    #TODO: use the actual RPS bus and whatnot
+
+    #RPS A Powers A/C, so no isolations would result from a loss of RPS A.
+    if not ac_power.get_bus_power("7",4000):
+        logic["A"] = True
+        logic["C"] = True
+
+    #an inboard and outboard isolation except MSIVs would result from a loss of RPS B
+    if not ac_power.get_bus_power("8",4000):
+        logic["B"] = True
+        logic["D"] = True
 
     #TODO: check if the logic is allowed to be reset at this time
     if model.buttons["isol_logic_reset_1"]["state"]:

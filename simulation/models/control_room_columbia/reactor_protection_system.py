@@ -1,6 +1,7 @@
 
 from simulation.constants.annunciator_states import AnnunciatorStates
 from simulation.models.control_room_columbia.general_physics import fluid
+from simulation.models.control_room_columbia.general_physics import ac_power
 import math
 
 reactor_protection_systems = {
@@ -43,6 +44,19 @@ def run(alarms,buttons,indicators,rods,switches):
 
     withdraw_block = withdraw_blocks != []
 
+    if not ac_power.get_bus_power("7",4000):
+        reactor_protection_systems["A"]["channel_1_trip"] = True
+        reactor_protection_systems["A"]["channel_2_trip"] = True
+
+        for reason in rps_scram_trips["A"]:
+            rps_scram_trips["A"][reason]["sealed_in"] = True
+
+    if not ac_power.get_bus_power("8",4000):
+        reactor_protection_systems["B"]["channel_1_trip"] = True
+        reactor_protection_systems["B"]["channel_2_trip"] = True
+
+        for reason in rps_scram_trips["B"]:
+            rps_scram_trips["B"][reason]["sealed_in"] = True
 
     if switches["reactor_mode_switch"]["position"] == 0:
         add_withdraw_block("Mode_Switch_Shutdown")
