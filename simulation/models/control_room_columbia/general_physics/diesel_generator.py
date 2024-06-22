@@ -10,6 +10,7 @@ diesel_generators = {
     "DG1" : {
         "state" : EquipmentStates.STOPPED,
         "control_switch" : "diesel_gen_1",
+        "output_breaker" : "cb_dg1_7",
         "rpm" : 0, #normal is 900
         "start_air_press" : 500,
         "auto_start" : False,
@@ -23,7 +24,26 @@ diesel_generators = {
             "START_TROUBLE" : "dg_1_start_system_trouble",
             "RUNNING" : "dg_1_running",
         },
-    }
+    },
+    "DG2" : {
+        "state" : EquipmentStates.STOPPED,
+        "control_switch" : "diesel_gen_2",
+        "output_breaker" : "cb_dg2_8",
+        "rpm" : 0, #normal is 900
+        "start_air_press" : 500,
+        "auto_start" : False,
+        "loca_start" : False,
+        "trip" : False,
+        "lockout" : False,
+        #TODO: voltage regulator/rpm governor
+        "voltage" : 0,
+        "frequency" : 0, #8 pole generator. 60hz@900rpm
+        "annunciators" : {
+            "START_TROUBLE" : "dg_1_start_system_trouble",
+            "RUNNING" : "dg_1_running",
+        },
+    },
+
 }
 
 def run():
@@ -43,12 +63,20 @@ def run():
                 if dg["state"] == EquipmentStates.STOPPED:
                     dg["state"] = EquipmentStates.STARTING
 
+            if "green" in cont_sw["lights"]:
+                cont_sw["lights"]["green"] = dg["state"] == EquipmentStates.STOPPED
+                cont_sw["lights"]["red"] = dg["state"] != EquipmentStates.STOPPED
+
+
         match dg["state"]:
             case EquipmentStates.STARTING:
                 dg["rpm"] += 7.5
                 #TODO: actual start air press
                 dg["start_air_press"] = 100
                 if dg["rpm"] >= 900:
+                    #TODO: Dont close output breaker if bus is not UV'd
+                    if dg["auto_start"] and not dg["loca_start"]:
+                        ac_power.close_breaker(dg["output_breaker"])
                     dg["state"] = EquipmentStates.RUNNING
                     dg["rpm"] = 900
 

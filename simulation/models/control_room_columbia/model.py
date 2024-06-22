@@ -1225,6 +1225,49 @@ switches = {
         },
         "flag" : "green",
     },
+
+    #DG2
+    "cb_dg2_8": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+    "cb_8dg2": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+    "diesel_gen_2": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
 }
 
 values = {
@@ -1292,6 +1335,8 @@ values = {
 
     "rhr_a_flow" : 0,
     "rhr_a_press" : 0,
+
+    "bus_4_voltage" : 4160,
 }
 
 indicators = {
@@ -1317,7 +1362,8 @@ indicators = {
     "RMCS_INSERT": False,
     "RMCS_WITHDRAW": False,
 
-    "cr_light_normal": True,
+    "cr_light_normal_1": True,
+    "cr_light_normal_2": True,
     "cr_light_emergency": False,
 
     #APRM Status

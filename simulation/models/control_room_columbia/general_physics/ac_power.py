@@ -1,4 +1,6 @@
 from simulation.constants.electrical_types import ElectricalType
+from simulation.constants.equipment_states import EquipmentStates
+from simulation.models.control_room_columbia.general_physics import diesel_generator
 import math
 
 def clamp(val, clamp_min, clamp_max):
@@ -118,6 +120,33 @@ breakers = {
         "current_limit" : 12.5, #amps
     },
 
+    #DG2
+
+    "cb_dg2_8" : {
+        "type" : ElectricalType.BREAKER,
+        "control_switch" : "cb_dg2_8",
+		"closed" : False,
+		"incoming" : "DG2",
+		"running" : "cb_8dg2", 
+		"lockout" : False, #Breaker lockout relay tripped
+        "ptl" : False, #Pull To Lock
+	    "flag_position" : False,
+
+        "current_limit" : 12.5, #amps
+    },
+    "cb_8dg2" : {
+        "type" : ElectricalType.BREAKER,
+        "control_switch" : "cb_8dg2",
+		"closed" : True,
+		"incoming" : "cb_dg2_8",
+		"running" : "8", 
+		"lockout" : False, #Breaker lockout relay tripped
+        "ptl" : False, #Pull To Lock
+	    "flag_position" : False,
+
+        "current_limit" : 12.5, #amps
+    },
+
 }
 
 busses = {
@@ -215,7 +244,14 @@ sources = {
 
         "annunciators" : {}
     },
-    "DG1" : { #make this an actual transformer later
+    "DG1" : {
+        "type" : ElectricalType.SOURCE,
+        "voltage" : 4160,
+        "frequency" : 60,
+
+        "annunciators" : {}
+    },
+    "DG2" : {
         "type" : ElectricalType.SOURCE,
         "voltage" : 4160,
         "frequency" : 60,
@@ -226,8 +262,43 @@ sources = {
 
 def run(switches,alarms,indicators,runs):
 
-    indicators["cr_light_normal"] = get_bus_power("7",4000)
-    indicators["cr_light_emergency"] = not get_bus_power("7",4000)
+    indicators["cr_light_normal_1"] = get_bus_power("7",4000)
+    indicators["cr_light_normal_2"] = get_bus_power("8",4000)
+    indicators["cr_light_emergency"] = not (get_bus_power("7",4000) and get_bus_power("8",4000)) #TODO: divisional emergency lights
+
+    
+
+    #This loop is ONLY for logic!
+    for bus_name in busses:
+        bus = busses[bus_name]
+
+        #Primary undervoltage 
+        if bus["voltage"]/bus["rated_voltage"] < 0.69:
+            #TODO: load shedding
+
+            #TODO: Backup Transformer
+
+            if bus_name == "7":
+                if diesel_generator.diesel_generators["DG1"]["state"] == EquipmentStates.STOPPED and not diesel_generator.diesel_generators["DG1"]["trip"]:
+                    diesel_generator.diesel_generators["DG1"]["state"] = EquipmentStates.STARTING
+                    diesel_generator.diesel_generators["DG1"]["auto_start"] = True
+
+                open_breaker("cb_7_1")
+
+            if bus_name == "8":
+                if diesel_generator.diesel_generators["DG2"]["state"] == EquipmentStates.STOPPED and not diesel_generator.diesel_generators["DG2"]["trip"]:
+                    diesel_generator.diesel_generators["DG2"]["state"] = EquipmentStates.STARTING
+                    diesel_generator.diesel_generators["DG2"]["auto_start"] = True
+
+                open_breaker("cb_8_3")
+
+
+    #TODO: Secondary undervoltage
+
+
+
+
+
     for breaker_name in breakers:
         bkr = breakers[breaker_name]
         if bkr["control_switch"] in switches:
