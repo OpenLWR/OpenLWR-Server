@@ -66,6 +66,12 @@ alarms = {
         "group" : "1",
         "silenced" : False,
     },
+    "rpis_or_rwm_inop" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
     "rod_out_block" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
@@ -1337,6 +1343,11 @@ values = {
     "rhr_a_press" : 0,
 
     "bus_4_voltage" : 4160,
+
+    "rwm_group" : -1,
+    "rwm_insert_error_1" : -1,
+    "rwm_insert_error_2" : -1,
+    "rwm_withdraw_error" : -1,
 }
 
 indicators = {
@@ -1357,6 +1368,7 @@ indicators = {
     #RMCS Indicators
     "RMCS_INSERT_BLOCK": False,
     "RMCS_WITHDRAW_BLOCK": False,
+    "RMCS_SELECT_BLOCK": False,
     #Rod Motion Controls
     "RMCS_SETTLE": False,
     "RMCS_INSERT": False,
@@ -1408,6 +1420,23 @@ indicators = {
     "rcic_init": False,
 
     "lpcs_init": False,
+
+    "rwm_insert_block": False,
+    "rwm_withdraw_block": False,
+    "rwm_select_error": False,
+    "rwm_manual": False,
+    "rwm_auto": False,
+
+    "rwm_seq": False,
+    "rwm_init": False,
+    "rwm_lpsp": False,
+    "rwm_lpap": False,
+    "rwm_test": False,
+    "rwm_select": False,
+    "rwm_diag": False,
+    "rwm_rwm": False,
+    "rwm_comp": False,
+    "rwm_prog": False,
 }
 
 buttons = {
@@ -1542,6 +1571,23 @@ buttons = {
         "armed" : False,
     },
     "isol_logic_reset_2": {
+        "state" : False,
+        "armed" : False,
+    },
+
+    "rwm_seq": {
+        "state" : False,
+        "armed" : False,
+    },
+    "rwm_rwm_comp_prog": {
+        "state" : False,
+        "armed" : False,
+    },
+    "rwm_diag": {
+        "state" : False,
+        "armed" : False,
+    },
+    "rwm_test": {
         "state" : False,
         "armed" : False,
     },
@@ -1699,6 +1745,7 @@ from simulation.models.control_room_columbia.systems import hpcs
 from simulation.models.control_room_columbia.systems import lpcs
 from simulation.models.control_room_columbia.systems import deh
 from simulation.models.control_room_columbia.systems import pcis
+from simulation.models.control_room_columbia.systems import rod_worth_minimizer
 deh.initialize()
 feedwater.initialize()
 
@@ -1726,6 +1773,7 @@ def model_run(delta):
     lpcs.run()
     deh.run()
     pcis.run()
+    rod_worth_minimizer.run()
     #from simulation.models.control_room_columbia.systems import fukushima
     #fukushima.run(runs)
     runs += 1

@@ -37,12 +37,16 @@ rps_alarms = {
 withdraw_blocks = []
 
 withdraw_block = False
+
+insert_blocks = []
+
 insert_block = False
 
 def run(alarms,buttons,indicators,rods,switches):
-    global withdraw_block
 
     withdraw_block = withdraw_blocks != []
+    insert_block = insert_blocks != []
+
 
     if not ac_power.get_bus_power("7",4000):
         reactor_protection_systems["A"]["channel_1_trip"] = True
@@ -183,6 +187,14 @@ def add_withdraw_block(reason):
 def remove_withdraw_block(reason):
     if reason in withdraw_blocks:
         withdraw_blocks.remove(reason)
+
+def add_insert_block(reason):
+    if not reason in insert_blocks:
+        insert_blocks.append(reason)
+
+def remove_insert_block(reason):
+    if reason in insert_blocks:
+        insert_blocks.remove(reason)
 
 #Scram trips
 

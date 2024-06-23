@@ -1,10 +1,29 @@
 import math
 from simulation.models.control_room_columbia import reactor_protection_system
+from simulation.models.control_room_columbia import model
 from threading import Thread
 any_rod_driving = False
+select_block = False
+
 def run(rods,buttons):
     any_rod_driving = False
-	#TODO: rod motions by the operator
+    global select_block
+
+    refuel_mode = (model.switches["reactor_mode_switch"]["position"] == model.ReactorMode.REFUEL) 
+    select_block = False
+
+    if refuel_mode:
+        all_rods_in = True
+        for r in model.rods:
+            r = model.rods[r]
+            if r["insertion"] > 0:
+                all_rods_in = False
+
+        if not all_rods_in:
+            select_block = True
+
+    model.indicators["RMCS_SELECT_BLOCK"] = select_block
+
     for rod in rods:
         info = rods[rod]
 
@@ -15,6 +34,8 @@ def run(rods,buttons):
                 insert_rod(rod)
             elif buttons["RMCS_WITHDRAW_PB"]["state"]:
                 withdraw_rod(rod)
+
+
 
         if info["scram"]:
             #TODO: accumulator pressure and its affect on rod drive
@@ -59,7 +80,6 @@ def insert_rod_motion(args):
     #TODO: holding down "insert" inserts the rod for however long its pressed, but still end with a settle sequence.
     #This is different from continuous insert, as that does not have a settle sequence.
     
-    target_insertion -= 2
     #insert the rod for 2.9 seconds
     runs = 0
     while runs < 29 and not model.rods[rod]["scram"]:
