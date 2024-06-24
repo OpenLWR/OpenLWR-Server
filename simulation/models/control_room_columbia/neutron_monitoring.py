@@ -262,11 +262,23 @@ average_power_range_monitors = {
 rod_block_monitors = { #TODO
     "A" : {
         "power" : 0,
-        "core_flow" : 0,
+        "core_flow" : 98,
+        "gain" : 1.0,
+        "selected_rod" : "",
+        "lprm_strings" : [],
+        "trip_setpoint_sel" : 1,
+        "bypassed" : False,
+        "reference_aprm" : "A", #TODO: this can be changed?
     },
     "B" : {
         "power" : 0,
-        "core_flow" : 0,
+        "core_flow" : 98,
+        "gain" : 1.0,
+        "selected_rod" : "",
+        "lprm_strings" : [],
+        "trip_setpoint_sel" : 1,
+        "bypassed" : False,
+        "reference_aprm" : "B", #TODO: this can be changed?
     },
 }
 
@@ -277,13 +289,16 @@ scram_reactor = False
 def run(alarms,buttons,indicators,rods,switches,values):
 
     from simulation.models.control_room_columbia import model
+    from simulation.models.control_room_columbia import rod_position_information_system
     global scram_reactor
     scram_reactor = False
 
+    model.alarms["rbm_downscale"]["alarm"] = False
     model.alarms["irm_downscale"]["alarm"] = False
     model.alarms["lprm_downscale"]["alarm"] = False
     model.alarms["aprm_downscale"]["alarm"] = False
 
+    model.alarms["rbm_upscale_or_inop"]["alarm"] = False
     model.alarms["irm_upscale"]["alarm"] = False
     model.alarms["lprm_upscale"]["alarm"] = False
     model.alarms["aprm_upscale"]["alarm"] = False
@@ -383,6 +398,162 @@ def run(alarms,buttons,indicators,rods,switches,values):
             model.alarms["lprm_upscale"]["alarm"] = True
 
     from simulation.models.control_room_columbia import reactor_protection_system
+
+    for rbm_name in rod_block_monitors:
+        rbm = rod_block_monitors[rbm_name]
+        
+        selected = rod_position_information_system.selected_rod
+        
+        if selected == "none":
+            rbm["selected_rod"] = ""
+            continue
+
+
+        if selected != rbm["selected_rod"]:
+            rbm["gain"] = 0.0
+            rbm["selected_rod"] = selected
+            select_groups = rod_position_information_system.select_groups
+            select_group_pos = 0
+
+            for group in select_groups:
+                grp = select_groups[group]
+                for rod_num in grp:
+                    rod = grp[rod_num]
+                    if rod == selected:
+                        select_group_pos = rod_num
+                        break
+
+            directions = {}
+
+            match select_group_pos:
+                case 2:
+                    directions = {
+                        1 : {"x" : -2, "y" : 2},
+                        2 : {"x" : 6, "y" : 2},
+                        3 : {"x" : -2, "y" : -6},
+                        4 : {"x" : 6, "y" : -6},
+                    }
+                case 1:
+                    directions = {
+                        1 : {"x" : -6, "y" : 2},
+                        2 : {"x" : 2, "y" : 2},
+                        3 : {"x" : -6, "y" : -6},
+                        4 : {"x" : 2, "y" : -6},
+                    }
+                case 4:
+                    directions = {
+                        1 : {"x" : -2, "y" : 6},
+                        2 : {"x" : 6, "y" : 6},
+                        3 : {"x" : -2, "y" : -2},
+                        4 : {"x" : 6, "y" : -2},
+                    }
+                case 3:
+                    directions = {
+                        1 : {"x" : -6, "y" : 6},
+                        2 : {"x" : 2, "y" : 6},
+                        3 : {"x" : -6, "y" : -2},
+                        4 : {"x" : 2, "y" : -2},
+                    }
+
+            sel_x = int(selected.split("-")[0])
+            sel_y = int(selected.split("-")[1])
+
+            rbm_lprms = []
+
+            for lprm_number in directions:
+                direction = directions[lprm_number]
+                lprm_x = str(sel_x+direction["x"])
+                lprm_y = str(sel_y+direction["y"])
+
+                lprm_name = "%s-%s" % (lprm_x,lprm_y)
+
+                if lprm_name in local_power_range_monitors:
+                    rbm_lprms.append(lprm_name)
+
+            rbm["lprm_strings"] = rbm_lprms
+
+        if len(rbm["lprm_strings"]) == 0:
+            rbm["bypassed"] = True
+        else:
+            rbm["bypassed"] = False
+
+        #TODO: count circuit and edge rod selection
+        rbm_power = 0
+
+        for lprm_string in rbm["lprm_strings"]:
+            lprm_string = local_power_range_monitors[lprm_string]
+            
+            rbm_power += lprm_string["A"]["power"]
+        if rbm["bypassed"]:
+            rbm_power = 0
+            rbm["gain"] = 1.0
+        else:
+            rbm_power = rbm_power/len(rbm["lprm_strings"])
+
+        rbm_core_flow = rbm["core_flow"] 
+
+        low_block_setpoint = (0.66*rbm_core_flow) + 25
+        med_block_setpoint = (0.66*rbm_core_flow) + 33
+        hi_block_setpoint = (0.66*rbm_core_flow) + 41
+
+        #gain change circuit
+        if rbm_power < average_power_range_monitors[rbm["reference_aprm"]]["power"] and rbm["gain"] == 0.0 and not rbm["bypassed"]:
+
+            rbm["gain"] = average_power_range_monitors[rbm["reference_aprm"]]["power"]/rbm_power
+
+            if (rbm_power*rbm["gain"]) < low_block_setpoint:
+                rbm["trip_setpoint_sel"] = 1
+            elif (rbm_power*rbm["gain"]) < med_block_setpoint:
+                rbm["trip_setpoint_sel"] = 2
+            else:
+                rbm["trip_setpoint_sel"] = 3
+
+        elif rbm_power >= average_power_range_monitors[rbm["reference_aprm"]]["power"] and rbm["gain"] == 0.0:
+
+            rbm["gain"] = 1.0
+
+            if (rbm_power*rbm["gain"]) < low_block_setpoint:
+                rbm["trip_setpoint_sel"] = 1
+            elif (rbm_power*rbm["gain"]) < med_block_setpoint:
+                rbm["trip_setpoint_sel"] = 2
+            else:
+                rbm["trip_setpoint_sel"] = 3
+
+        #TODO: "Push To Setup" pushbutton
+
+        rbm["power"] = rbm_power*rbm["gain"]
+
+        upscale = False
+        downscale = False
+        inop = False
+
+        if rbm["power"] <= 5 and not rbm["bypassed"]:
+            downscale = True
+
+        #initiate rod blocks based on trip setpoints
+        if rbm["power"] >= low_block_setpoint and rbm["trip_setpoint_sel"] == 1:
+            reactor_protection_system.add_withdraw_block("rbm_%s_low_trip" % rbm_name)
+            upscale = True
+        else:
+            reactor_protection_system.remove_withdraw_block("rbm_%s_low_trip" % rbm_name)
+        
+        if rbm["power"] >= med_block_setpoint and rbm["trip_setpoint_sel"] == 2:
+            reactor_protection_system.add_withdraw_block("rbm_%s_med_trip" % rbm_name)
+            upscale = True
+        else:
+            reactor_protection_system.remove_withdraw_block("rbm_%s_med_trip" % rbm_name)
+
+        if rbm["power"] >= hi_block_setpoint:
+            reactor_protection_system.add_withdraw_block("rbm_%s_high_trip" % rbm_name)
+            upscale = True
+        else:
+            reactor_protection_system.remove_withdraw_block("rbm_%s_high_trip" % rbm_name)
+
+        if downscale:
+            model.alarms["rbm_downscale"]["alarm"] = True
+
+        if upscale or inop:
+            model.alarms["rbm_upscale_or_inop"]["alarm"] = True
 
     for aprm_name in average_power_range_monitors:
         aprm = average_power_range_monitors[aprm_name]

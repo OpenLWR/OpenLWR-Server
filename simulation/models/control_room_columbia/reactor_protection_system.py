@@ -1,5 +1,4 @@
 
-from simulation.constants.annunciator_states import AnnunciatorStates
 from simulation.models.control_room_columbia.general_physics import fluid
 from simulation.models.control_room_columbia.general_physics import ac_power
 import math

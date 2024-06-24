@@ -155,6 +155,12 @@ alarms = {
     },
 
 
+    "rbm_downscale" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
     "lprm_downscale" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
@@ -168,6 +174,12 @@ alarms = {
         "silenced" : False,
     },
 
+    "rbm_upscale_or_inop" : {
+        "alarm" : False,
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
     "lprm_upscale" : {
         "alarm" : False,
         "state" : AnnunciatorStates.CLEAR,
