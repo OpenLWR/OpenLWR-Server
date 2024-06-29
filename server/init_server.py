@@ -13,6 +13,8 @@ from server.server_events import server_player_position_parameters_update_event
 from server.client_events import client_player_position_parameters_update_event
 from server.server_events import server_rod_position_parameters_update_event
 from server.client_events import client_rod_select_update_event
+from server.server_events import server_chat_event
+from server.client_events import client_chat_event
 
 def init_server(websocket):
     for packet in websocket:
@@ -42,6 +44,8 @@ def init_server(websocket):
     #server_player_position_parameters_update_event.fire_initial(token_str)
 
     #server_rod_position_parameters_update_event.fire_initial(token_str)
+
+    #server_chat_event.fire_initial(token_object)
     
     for packet in websocket:
         try:
@@ -67,6 +71,8 @@ def init_server(websocket):
                     server_player_position_parameters_update_event.fire_initial(token_str)
                     server_rod_position_parameters_update_event.fire_initial(token_str)
 
+                case packets.ClientPackets.CHAT:
+                    client_chat_event.handle(packet_data, token_object.username)
         except websockets.exceptions.ConnectionClosed:
             print("client disconnected%s" % token_object.username)
             manager.disconnect(token_str)
