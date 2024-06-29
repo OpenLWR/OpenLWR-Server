@@ -44,8 +44,8 @@ def run():
     control_signal = PressureController.update(setpoint,pressure.Pressures["Vessel"]/6895,1)
 
     gov_valve = max(min(gov_valve-control_signal,100),0)
-    print(gov_valve)
-    print(fluid.headers["main_steam_line_a_tunnel"]["pressure"]/6895)
+    #print(gov_valve)
+    #print(fluid.headers["main_steam_line_a_tunnel"]["pressure"]/6895)
     fluid.valves["ms_v_gv1"]["percent_open"] = gov_valve
     fluid.valves["ms_v_gv2"]["percent_open"] = gov_valve
     fluid.valves["ms_v_gv3"]["percent_open"] = gov_valve

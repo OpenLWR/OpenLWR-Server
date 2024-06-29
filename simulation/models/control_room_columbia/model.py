@@ -1593,6 +1593,7 @@ indicators = {
     "RMCS_SETTLE": False,
     "RMCS_INSERT": False,
     "RMCS_WITHDRAW": False,
+    "RMCS_CONT_WITHDRAW": False,
 
     "cr_light_normal_1": True,
     "cr_light_normal_2": True,
@@ -1784,6 +1785,14 @@ buttons = {
         "armed" : False,
     },
     "RMCS_WITHDRAW_PB": {
+        "state" : False,
+        "armed" : False,
+    },
+    "RMCS_CONT_INSERT_PB": {
+        "state" : False,
+        "armed" : False,
+    },
+    "RMCS_CONT_WITHDRAW_PB": {
         "state" : False,
         "armed" : False,
     },

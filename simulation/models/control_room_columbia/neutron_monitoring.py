@@ -477,7 +477,6 @@ def run(alarms,buttons,indicators,rods,switches,values):
         else:
             rbm["bypassed"] = False
 
-        #TODO: count circuit and edge rod selection
         rbm_power = 0
 
         for lprm_string in rbm["lprm_strings"]:
