@@ -110,7 +110,7 @@ def insert_rod_motion(args):
     while runs < 29:
         model.rods[rod]["insertion"] = model.rods[rod]["insertion"] - 0.082
         time.sleep(0.11)
-        if model.buttons["RMCS_INSERT_PB"]["state"] and runs >= 28:
+        if model.buttons["RMCS_INSERT_PB"]["state"] and runs >= 28 and not reactor_protection_system.insert_block:
             runs = 0
             model.rods[rod]["insertion"] = target_insertion
             target_insertion = model.rods[rod]["insertion"] - 2
@@ -174,7 +174,7 @@ def cont_insert_rod_motion(args):
     model.indicators["RMCS_INSERT"] = True
     
     #insert the rod as long as insert is depressed
-    while model.buttons["RMCS_CONT_INSERT_PB"]["state"]:
+    while model.buttons["RMCS_CONT_INSERT_PB"]["state"] and not reactor_protection_system.insert_block:
         model.rods[rod]["insertion"] = model.rods[rod]["insertion"] - 0.082
         time.sleep(0.11)
 
@@ -312,7 +312,7 @@ def cont_withdraw_rod_motion(args):
     while runs < 15:
         model.rods[rod]["insertion"] = model.rods[rod]["insertion"] + 0.144
         time.sleep(0.11)
-        if model.buttons["RMCS_CONT_WITHDRAW_PB"]["state"] and runs >= 14:
+        if model.buttons["RMCS_CONT_WITHDRAW_PB"]["state"] and runs >= 14 and not reactor_protection_system.withdraw_block:
             runs = 0
             model.rods[rod]["insertion"] = target_insertion
             target_insertion = model.rods[rod]["insertion"] + 2
