@@ -667,6 +667,71 @@ switches = {
 
     #safety/relief valves
 
+        "ms_rv_5b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_3d": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_5c": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_4d": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_4b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
     "ms_rv_4a": {
         "positions": {
 			0: 45,
@@ -681,6 +746,149 @@ switches = {
         "flag" : "green",
     },
     "ms_rv_4c": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_1a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_2b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_1c": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_1b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_2c": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_1d": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_3c": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_2d": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_2a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_3b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ms_rv_3a": {
         "positions": {
 			0: 45,
 			1: 0,
@@ -1415,16 +1623,72 @@ indicators = {
 
     "hpcs_init": False,
 
-    "APRM_A_DOWNSCALE": False,
-    "APRM_B_DOWNSCALE": False,
-    "APRM_C_DOWNSCALE": False,
-    "APRM_D_DOWNSCALE": False,
-    "APRM_E_DOWNSCALE": False,
-    "APRM_F_DOWNSCALE": False,
+
+    # SRMs
 
     "SELECT_SRM_A": False,
     "SRM_A_POS_IN": False,
     "SRM_A_POS_OUT": False,
+    "SRM_A_RETRACT_PERMIT": False,
+
+    "SELECT_SRM_B": False,
+    "SRM_B_POS_IN": False,
+    "SRM_B_POS_OUT": False,
+    "SRM_B_RETRACT_PERMIT": False,
+
+    "SELECT_SRM_C": False,
+    "SRM_C_POS_IN": False,
+    "SRM_C_POS_OUT": False,
+    "SRM_C_RETRACT_PERMIT": False,
+
+    "SELECT_SRM_D": False,
+    "SRM_D_POS_IN": False,
+    "SRM_D_POS_OUT": False,
+    "SRM_D_RETRACT_PERMIT": False,
+    
+    # IRMs
+
+    "SELECT_IRM_A": False,
+    "IRM_A_POS_IN": False,
+    "IRM_A_POS_OUT": False,
+    "IRM_A_RETRACT_PERMIT": False,
+
+    "SELECT_IRM_B": False,
+    "IRM_B_POS_IN": False,
+    "IRM_B_POS_OUT": False,
+    "IRM_B_RETRACT_PERMIT": False,
+
+    "SELECT_IRM_C": False,
+    "IRM_C_POS_IN": False,
+    "IRM_C_POS_OUT": False,
+    "IRM_C_RETRACT_PERMIT": False,
+
+    "SELECT_IRM_D": False,
+    "IRM_D_POS_IN": False,
+    "IRM_D_POS_OUT": False,
+    "IRM_D_RETRACT_PERMIT": False,
+
+    "SELECT_IRM_E": False,
+    "IRM_E_POS_IN": False,
+    "IRM_E_POS_OUT": False,
+    "IRM_E_RETRACT_PERMIT": False,
+
+    "SELECT_IRM_F": False,
+    "IRM_F_POS_IN": False,
+    "IRM_F_POS_OUT": False,
+    "IRM_F_RETRACT_PERMIT": False,
+
+    "SELECT_IRM_G": False,
+    "IRM_G_POS_IN": False,
+    "IRM_G_POS_OUT": False,
+    "IRM_G_RETRACT_PERMIT": False,
+
+    "SELECT_IRM_H": False,
+    "IRM_H_POS_IN": False,
+    "IRM_H_POS_OUT": False,
+    "IRM_H_RETRACT_PERMIT": False,
+
+
 
     "FCD_OPERATE": True,
     "CHART_RECORDERS_OPERATE": False,
@@ -1530,6 +1794,50 @@ buttons = {
     },
 
     "SELECT_SRM_A": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SELECT_SRM_B": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SELECT_SRM_C": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SELECT_SRM_D": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SELECT_IRM_A": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SELECT_IRM_B": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SELECT_IRM_C": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SELECT_IRM_D": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SELECT_IRM_E": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SELECT_IRM_F": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SELECT_IRM_G": {
+        "state" : False,
+        "armed" : False,
+    },
+    "SELECT_IRM_H": {
         "state" : False,
         "armed" : False,
     },
