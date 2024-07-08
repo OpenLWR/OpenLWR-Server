@@ -10,9 +10,17 @@ UNDERLINE = '\033[4m'
 
 import logging
 
+import json
+
+try:
+    config = json.load(open("config.json"))
+except:
+    config = {"debug" : False} #if we cant get config.json, we just cry about it and wait for the config.py to error out
+
+
 
 logging.basicConfig(    format='[%(asctime)s] %(levelname)s - %(message)s',
-    level=logging.DEBUG, #TODO: fix config for logging
+    level=logging.DEBUG if config["debug"] else logging.INFO,
     datefmt='%Y-%m-%d %H:%M:%S')
 
 logger = logging.getLogger()
