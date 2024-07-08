@@ -5,7 +5,7 @@ from simulation.models.control_room_columbia.reactor_physics import pressure
 
 setpoint = 950 #pressure drop is ~ 50 psig across the main steam system
 
-
+#Despite this being named DEH, we are using an EHC. Rename this? TODO
 #TODO: move this somewhere better
 class PID:
     def __init__(self, Kp, Ki, Kd):

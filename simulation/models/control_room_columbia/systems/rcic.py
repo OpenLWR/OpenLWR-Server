@@ -18,7 +18,7 @@ def run():
     model.values["rcic_pump_disch_press"] = fluid.headers["rcic_discharge_header"]["pressure"]/6895
 
     if fluid.headers["rcic_exhaust_steam_line"]["pressure"]/6895 >= 30: #tech specs 3.3.6.1
-        model.turbines["rcic_turbine"]["trip"] = True #this actually isolates RCIC, instead of tripping the turbine
+        model.turbines["rcic_turbine"]["trip"] = True #this trips the RCIC turbine, and if the rupture disk blows, RCIC isolates
 
     #FSAR states RCIC-V-45 being NOT full closed initiates a 15 second time delay for the low suction and discharge pressure trip and;
     #initiates the startup ramp

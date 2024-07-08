@@ -1689,6 +1689,9 @@ indicators = {
     "IRM_H_POS_OUT": False,
     "IRM_H_RETRACT_PERMIT": False,
 
+    "DET_DRIVE_IN": False,
+    "DET_DRIVE_OUT": False,
+
 
 
     "FCD_OPERATE": True,

@@ -10,10 +10,9 @@ UNDERLINE = '\033[4m'
 
 import logging
 
-import config
 
 logging.basicConfig(    format='[%(asctime)s] %(levelname)s - %(message)s',
-    level=logging.DEBUG if config.config["debug"] else logging.INFO,
+    level=logging.DEBUG, #TODO: fix config for logging
     datefmt='%Y-%m-%d %H:%M:%S')
 
 logger = logging.getLogger()
@@ -22,7 +21,6 @@ def debug(message):
     logger.debug(message)
 
 def info(message):
-    print("a")
     logger.info(message)
 
 def warning(message):

@@ -212,7 +212,13 @@ def run():
         else:
             valve["open_percent"] = max(min(valve["open_percent"]-10,100),0)
 
-        SRVOutflow = ((valve["flow"]*0.000001)/(2.20462*60*0.00001*1.736842105))*(pressure.Pressures["Vessel"]/(valve["auto"]*6895))*(valve["open_percent"]/100)
-        
+        #take pounds per hour
+        #becomes kilograms per hour (0.4536)
+        #to kilograms per second /60
+
+        SRVOutflow = ((valve["flow"]*0.4536)/60)*(pressure.Pressures["Vessel"]/(valve["auto"]*6895))*(valve["open_percent"]/100)
+
+        SRVOutflow = SRVOutflow*0.1 #sim time
+
         if SRVOutflow > 0:
             reactor_inventory.remove_steam(SRVOutflow)

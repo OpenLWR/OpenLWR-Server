@@ -5,7 +5,7 @@ import importlib
 import log
 
 def handle(data):
-    model = importlib.import_module(f"simulation.models.{config.model}.model")
+    model = importlib.import_module(f"simulation.models.{config.config["model"]}.model")
     try:
         buttons_updated = json.loads(data)
     except json.decoder.JSONDecodeError:
