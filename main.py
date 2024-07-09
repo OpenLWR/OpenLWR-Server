@@ -1,15 +1,16 @@
 from websockets.sync.server import serve
 from websockets.http11 import Response
 from websockets.datastructures import Headers
-import websockets
+import websockets #why are we doing websockets here?
 import config
 from server import init_server
 import threading
 import json
 
+
 def main():
-    with serve(init_server.init_server, config.server_ip, 7001,
-               process_request=process_request) as server:
+    with serve(init_server.init_server, config.server_ip, 7001, process_request=process_request) as server:
+        print(f"> Listening for clients on {config.config["server_ip"]}:7001")
         server.serve_forever()
 
 def process_request(connection, headers):
@@ -30,6 +31,14 @@ def import_simulation():
     import simulation
 
 if __name__ == '__main__':
-    thread = threading.Thread(target=import_simulation)
-    thread.start()
-    main()
+    print("""   ____                   __ _       ______ 
+  / __ \\____  ___  ____  / /| |     / / __ \\
+ / / / / __ \\/ _ \\/ __ \\/ / | | /| / / /_/ /
+/ /_/ / /_/ /  __/ / / / /__| |/ |/ / _, _/ 
+\\____/ .___/\\___/_/ /_/_____/__/|__/_/ |_|  
+    /_/                                     \n""")
+    print("> Welcome to OpenLWR-Server")
+    import config
+    if config.config != None:
+        threading.Thread(target=import_simulation).start()
+        main()

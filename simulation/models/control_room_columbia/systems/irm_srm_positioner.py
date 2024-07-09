@@ -4,11 +4,15 @@ from simulation.models.control_room_columbia import neutron_monitoring
 srm_selected = []
 irm_selected = []
 currently_pressed = []
+drive_in_latch = False
+drive_in_pressed = False
 
 def run():
     global srm_selected
     global irm_selected
     global currently_pressed
+    global drive_in_latch
+    global drive_in_pressed
     for srm_name in neutron_monitoring.source_range_monitors:
         if not "SELECT_SRM_%s" % srm_name in model.buttons:
             continue
@@ -49,7 +53,16 @@ def run():
         model.indicators["IRM_%s_POS_OUT" % irm_name] = neutron_monitoring.intermediate_range_monitors[irm_name]["withdrawal_percent"] >= 100
         model.indicators["IRM_%s_POS_IN" % irm_name] = neutron_monitoring.intermediate_range_monitors[irm_name]["withdrawal_percent"] <= 0
 
-    if model.buttons["DET_DRIVE_IN"]["state"]:
+    if model.buttons["DET_DRIVE_IN"]["state"] and not drive_in_pressed:
+        drive_in_latch = not drive_in_latch
+
+    drive_in_pressed = model.buttons["DET_DRIVE_IN"]["state"]
+
+
+    model.indicators["DET_DRIVE_IN"] = drive_in_latch
+    model.indicators["DET_DRIVE_OUT"] = model.buttons["DET_DRIVE_OUT"]["state"]
+    if drive_in_latch:
+        
         for detector in srm_selected:
             srm = neutron_monitoring.source_range_monitors[detector]
             srm["withdrawal_percent"] = min(max(srm["withdrawal_percent"]-0.0416,0),100)

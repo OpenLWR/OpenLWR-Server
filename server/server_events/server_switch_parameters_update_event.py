@@ -7,7 +7,7 @@ import importlib
 
 
 def fire(switches):
-    model = importlib.import_module(f"simulation.models.{config.model}.model")
+    model = importlib.import_module(f"simulation.models.{config.config["model"]}.model")
     to_send = {}
     for switch in switches:
         if type(switches[switch]) == int:
@@ -19,7 +19,7 @@ def fire(switches):
 
 # used when a client first connects to sync up switch positions
 def fire_initial(token):
-    model = importlib.import_module(f"simulation.models.{config.model}.model")
+    model = importlib.import_module(f"simulation.models.{config.config["model"]}.model")
     switches_to_send = {}
     for switch in model.switches:
         switches_to_send[switch] = {"position" : model.switches[switch]["position"], "lights" : model.switches[switch]["lights"], "flag" : model.switches[switch]["flag"]}

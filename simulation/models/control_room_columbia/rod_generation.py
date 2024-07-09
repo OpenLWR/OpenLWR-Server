@@ -88,6 +88,7 @@ def run(rods,buttons):
 						"accum_trouble_acknowledged": False,
 						"reed_switch_fail" : False,
 						"drift_alarm": False,
+						"driftto": -15,
 						"driving": False,
 						"select": False,
 						"x" : x,

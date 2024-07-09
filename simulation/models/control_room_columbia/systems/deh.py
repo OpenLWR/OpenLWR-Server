@@ -5,7 +5,7 @@ from simulation.models.control_room_columbia.reactor_physics import pressure
 
 setpoint = 950 #pressure drop is ~ 50 psig across the main steam system
 
-
+#Despite this being named DEH, we are using an EHC. Rename this? TODO
 #TODO: move this somewhere better
 class PID:
     def __init__(self, Kp, Ki, Kd):
@@ -44,8 +44,8 @@ def run():
     control_signal = PressureController.update(setpoint,pressure.Pressures["Vessel"]/6895,1)
 
     gov_valve = max(min(gov_valve-control_signal,100),0)
-    print(gov_valve)
-    print(fluid.headers["main_steam_line_a_tunnel"]["pressure"]/6895)
+    #print(gov_valve)
+    #print(fluid.headers["main_steam_line_a_tunnel"]["pressure"]/6895)
     fluid.valves["ms_v_gv1"]["percent_open"] = gov_valve
     fluid.valves["ms_v_gv2"]["percent_open"] = gov_valve
     fluid.valves["ms_v_gv3"]["percent_open"] = gov_valve

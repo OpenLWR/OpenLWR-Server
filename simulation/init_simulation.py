@@ -8,7 +8,7 @@ from server.server_events import server_alarm_parameters_update_event
 import config
 
 # import the model specified in the config
-model = importlib.import_module(f"simulation.models.{config.model}.model")
+model = importlib.import_module(f"simulation.models.{config.config["model"]}.model")
 
 class Simulation:
     def __init__(self):

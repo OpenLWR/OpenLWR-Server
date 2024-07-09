@@ -15,13 +15,13 @@ def fire(rods): #TODO only send ones that need to be updated (were changed)
             del new_rods[rod_name]
         else:
             old_rods[rod_name] = json.loads(json.dumps(rod)) # hack to copy this properly
-            #print("sent:",rod_name)
+            #log.debug(f"sent: {rod_name}")
 
     if new_rods != {}:
         manager.broadcast_packet(packet_helper.build(packets.ServerPackets.ROD_POSITION_PARAMETERS_UPDATE, json.dumps(new_rods)))
 
 # send initial state of indicators
 def fire_initial(token):
-    #model = importlib.import_module(f"simulation.models.{config.model}.model")
+    #model = importlib.import_module(f"simulation.models.{config.config["model"]}.model")
     #manager.send_user_packet(packet_helper.build(packets.ServerPackets.ROD_POSITION_PARAMETERS_UPDATE, json.dumps(old_rods)), token)
     manager.broadcast_packet(packet_helper.build(packets.ServerPackets.ROD_POSITION_PARAMETERS_UPDATE, json.dumps(old_rods)))
