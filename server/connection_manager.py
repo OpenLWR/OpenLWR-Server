@@ -17,10 +17,12 @@ class ConnectionManager:
         return self.tokens[token]
 
     def disconnect(self, token: str):
+        print(self.tokens)
+        print(token)
         if token in self.tokens:
             self.tokens.pop(token)
         else:
-            log.warning(f"attempted to disconnect nonexistant client: {token}")
+            log.warning(f"attempted to disconnect nonexistent client: {token}")
 
     def send_user_packet(self, message: str, token: str):
         try:

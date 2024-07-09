@@ -9,7 +9,7 @@ import json
 
 
 def main():
-    with serve(init_server.init_server, config.server_ip, 7001, process_request=process_request) as server:
+    with serve(init_server.init_server, config.config["server_ip"], 7001, process_request=process_request) as server:
         print(f"> Listening for clients on {config.config["server_ip"]}:7001")
         server.serve_forever()
 
@@ -17,15 +17,13 @@ def process_request(connection, headers):
     path = connection.request.path
     print(path)
     if path == "/status":
-        response = bytes(json.dumps({'status': '{}'.format(config.model), 'model': config.model, 'motd': motd()}),'UTF-8')
+        response = bytes(json.dumps({'status': '{}'.format(config.config["model"]), 'model': config.config["model"], 'motd': motd()}),'UTF-8')
         return Response(200, "OK", Headers({'Content-Type': 'application/json', 'Content-Length': len(response)}),
                         response)
     return None
 
 def motd():
-    return """[p align=center][font_size=48]OpenLWR[/font_size]
-version i have no fucking clue
-running model {}[/p]""".format(config.model)
+    return config.config["server_motd"]
 
 def import_simulation():
     import simulation

@@ -35,7 +35,7 @@ def init_server(websocket):
                 raise Exception("Username invalid.")
         except Exception as e: 
             manager.disconnect(token_str)
-            log.warning(f"User login failed: {e}")
+            log.warning(f"User login failed: {e}") #TODO: Differentiate controlled exceptions (invalid username) from actual exceptions
 
     # inform the client of all switch positions
     #server_switch_parameters_update_event.fire_initial(token_str)
