@@ -1,4 +1,4 @@
-# TODO: colors
+
 PINK = '\033[95m'
 BLUE = '\033[94m'
 GREEN = '\033[92m'
@@ -9,13 +9,20 @@ BOLD = '\033[1m'
 UNDERLINE = '\033[4m'
 
 import logging
+from dhooks import Webhook, File, Embed #this util allows us to log to discord easily
 
 import json
 
 try:
     config = json.load(open("config.json"))
 except:
+    print("Logging failed to initialize. Is config.json missing?")
     config = {"debug" : False} #if we cant get config.json, we just cry about it and wait for the config.py to error out
+
+hook = None
+
+if config["discord_webhook_logging"] != "":
+    hook = Webhook(config["discord_webhook_logging"])
 
 
 
@@ -25,18 +32,44 @@ logging.basicConfig(    format='[%(asctime)s] %(levelname)s - %(message)s',
 
 logger = logging.getLogger()
 
-def debug(message):
+def debug(message:str,color:str = None):
+    """message, *color"""
+    if color:
+        message = color + message + ENDC
     logger.debug(message)
 
-def info(message):
+def info(message:str,color:str = None):
+    """message, *color"""
+    if color:
+        message = color + message + ENDC
     logger.info(message)
 
-def warning(message):
-    # TODO: add option for logging to an external service (discord, datadog, etc)
+def warning(message:str,color:str = None):
+    """message, *color"""
+
+    if hook != None:
+        embed = Embed(title = "Warning",description = message,timestamp = "now",color=0xFFA500)
+        hook.send(embed=embed)
+
+    if color:
+        message = color + message + ENDC
+
+    # TODO: add option for logging to other external services(datadog, etc)
     logger.warning(message)
 
-def error(message):
-    # TODO: add option for logging to an external service (discord, datadog, etc)
+def error(message:str,color:str = None):
+    """message, *color"""
+
+    #TODO: not all errors are sent because they arent sent through log.py. Is there a way to include them?
+    if hook != None:
+        embed = Embed(title = "Error",description = message,timestamp = "now",color=0xFF0000)
+        hook.send(embed=embed)
+
+    if color:
+        message = color + message + ENDC
+
+
+    # TODO: add option for logging to other external services(datadog, etc)
     logger.error(message)
 
 def blame(user,message): #TODO: More elegant way of doing this?

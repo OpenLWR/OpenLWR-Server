@@ -1,2 +1,3 @@
 websockets==12.0
 iapws==1.5.4
+dhooks==1.1.4
