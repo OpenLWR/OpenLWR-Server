@@ -38,3 +38,7 @@ def warning(message):
 def error(message):
     # TODO: add option for logging to an external service (discord, datadog, etc)
     logger.error(message)
+
+def blame(user,message): #TODO: More elegant way of doing this?
+    if config["blame_logging"]:
+        print("Server blames %s for  %s" % (user,message))

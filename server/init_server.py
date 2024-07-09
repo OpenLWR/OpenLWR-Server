@@ -53,15 +53,18 @@ def init_server(websocket):
             match packet_id:
                 case packets.ClientPackets.SWITCH_PARAMETERS_UPDATE:
                     client_switch_parameters_update_event.handle(packet_data)
+                    log.blame(token_object.username,packet_data)
 
                 case packets.ClientPackets.BUTTON_PARAMETERS_UPDATE:
                     client_button_parameters_update_event.handle(packet_data)
+                    log.blame(token_object.username,packet_data)
 
                 case packets.ClientPackets.PLAYER_POSITION_PARAMETERS_UPDATE:
                     client_player_position_parameters_update_event.handle(packet_data,token_object.username)
 
                 case packets.ClientPackets.ROD_SELECT_UPDATE:
                     client_rod_select_update_event.handle(packet_data)
+                    log.blame(token_object.username,packet_data)
 
                 case packets.ClientPackets.SYNCHRONIZE: #allows the client to request all the simulation data, like how it was when they joined the server.
                     server_switch_parameters_update_event.fire_initial(token_str)

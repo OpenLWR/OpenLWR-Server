@@ -2,5 +2,6 @@
     "server_ip": "0.0.0.0",
     "model": "control_room_columbia",
     "debug": false,
+    "blame_logging": false,
     "server_motd" : "MOTD"
 }

@@ -18,7 +18,7 @@ def handle(data):
                 model.buttons[button] = buttons_updated[button]
             else:
                 log.warning(f"Got a button that is invalid from client: {button}")
-    
+
         server_button_parameters_update_event.fire(data)
     
     else:
