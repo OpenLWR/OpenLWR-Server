@@ -38,5 +38,6 @@ if __name__ == '__main__':
     print("> Welcome to OpenLWR-Server")
     import config
     if config.config != None:
+        import log
         threading.Thread(target=import_simulation).start()
         main()

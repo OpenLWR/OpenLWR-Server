@@ -13,21 +13,17 @@ from dhooks import Webhook, File, Embed #this util allows us to log to discord e
 
 import json
 
-try:
-    config = json.load(open("config.json"))
-except:
-    print("Logging failed to initialize. Is config.json missing?")
-    config = {"debug" : False} #if we cant get config.json, we just cry about it and wait for the config.py to error out
+import config
 
 hook = None
 
-if config["discord_webhook_logging"] != "":
-    hook = Webhook(config["discord_webhook_logging"])
+if config.config["discord_webhook_logging"] != "":
+    hook = Webhook(config.config["discord_webhook_logging"])
 
 
 
 logging.basicConfig(    format='[%(asctime)s] %(levelname)s - %(message)s',
-    level=logging.DEBUG if config["debug"] else logging.INFO,
+    level=logging.DEBUG if config.config["debug"] else logging.INFO,
     datefmt='%Y-%m-%d %H:%M:%S')
 
 logger = logging.getLogger()
