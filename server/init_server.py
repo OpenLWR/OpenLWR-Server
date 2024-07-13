@@ -23,30 +23,30 @@ def init_server(websocket):
         try:
             token_str = str(uuid.uuid4())
             packet_id, packet_data = packet_helper.parse(packet)
-            if packet_id != packets.ClientPackets.USER_LOGIN:
-                raise Exception("User login packet invalid.")
+
+            login_parameters = json.loads(packet_data)
+
+            username = login_parameters["username"]
+
+            # check the packet is the correct type and the username is valid
+            assert packet_id == packets.ClientPackets.USER_LOGIN
+            assert not len(username) <= 20 and len(username) >= 2
+
             username = packet_data
-            if len(username) <= 20 and len(username) >= 2:
-                token_object = manager.connect(websocket, token_str)
-                manager.set_username(token_str, username)
-                manager.broadcast_packet(packet_helper.build(packets.ServerPackets.USER_LOGIN_ACK, ""))
-                break
-            else:
-                raise Exception("Username invalid.")
-        except Exception as e: 
+            token_object = manager.connect(websocket, token_str)
+            manager.set_username(token_str, username)
+            manager.broadcast_packet(packet_helper.build(packets.ServerPackets.USER_LOGIN_ACK))
+            break
+
+        except AssertionError:
+            # login invalid
+            log.warning(f"User login failed.")
             manager.disconnect(token_str)
-            log.warning(f"User login failed: {e}") #TODO: Differentiate controlled exceptions (invalid username) from actual exceptions
 
-    # inform the client of all switch positions
-    #server_switch_parameters_update_event.fire_initial(token_str)
-    # do the same for all button positions
-    #server_button_parameters_update_event.fire_initial(token_str)
+        except Exception:
+            # exception in login
+            log.error(traceback.format_exc())
 
-    #server_player_position_parameters_update_event.fire_initial(token_str)
-
-    #server_rod_position_parameters_update_event.fire_initial(token_str)
-
-    #server_chat_event.fire_initial(token_object)
     try:
         for packet in websocket:
             packet_id, packet_data = packet_helper.parse(packet)
