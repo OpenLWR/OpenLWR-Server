@@ -22,7 +22,7 @@ if config == None:
             print("The configured model has a directory but no model.py. Did you misspell model.py?")
             exit()
 
-        print("The config initialized sucessfully.",log.BLUE)
+        print("The config initialized sucessfully.")
 
 
     except Exception as e:

@@ -69,5 +69,5 @@ def error(message:str,color:str = None):
     logger.error(message)
 
 def blame(user,message): #TODO: More elegant way of doing this?
-    if config["blame_logging"]:
+    if config.config["blame_logging"]:
         print("Server blames %s for  %s" % (user,message))

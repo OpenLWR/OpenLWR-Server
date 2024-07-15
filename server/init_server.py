@@ -15,6 +15,7 @@ from server.server_events import server_rod_position_parameters_update_event
 from server.client_events import client_rod_select_update_event
 from server.server_events import server_chat_event
 from server.client_events import client_chat_event
+import json
 
 
 def init_server(websocket):
@@ -30,7 +31,7 @@ def init_server(websocket):
 
             # check the packet is the correct type and the username is valid
             assert packet_id == packets.ClientPackets.USER_LOGIN
-            assert not len(username) <= 20 and len(username) >= 2
+            assert (len(username) <= 20 and len(username) >= 2)
 
             username = packet_data
             token_object = manager.connect(websocket, token_str)
