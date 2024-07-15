@@ -50,8 +50,8 @@ def run():
 		vapMass = steam_functions.vaporize(waterMass, water_temperature, pressure.Pressures["Vessel"])
 		reactor_physics.kgSteam = reactor_physics.kgSteam+max(vapMass["vm"],0)
 		
-		#if limit_press and pressure.Pressures["Vessel"]/6895 >= 900:
-			#reactor_physics.kgSteam -= max(vapMass["vm"],0)
+		if limit_press and pressure.Pressures["Vessel"]/6895 >= 900:
+			reactor_physics.kgSteam -= max(vapMass["vm"],0)
 
 		NewPress = pressure.getPressure(reactor_physics.kgSteam, water_temperature,pressure.Volumes["Vessel"])
 		pressure.Pressures["Vessel"]= NewPress

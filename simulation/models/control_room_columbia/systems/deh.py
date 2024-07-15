@@ -1,55 +1,111 @@
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia import reactor_protection_system
 from simulation.models.control_room_columbia.general_physics import fluid
+from simulation.models.control_room_columbia.general_physics import main_turbine
 from simulation.models.control_room_columbia.reactor_physics import pressure
+from simulation.models.control_room_columbia.lib.pid import PID
 
 setpoint = 950 #pressure drop is ~ 50 psig across the main steam system
 
 #Despite this being named DEH, we are using an EHC. Rename this? TODO
-#TODO: move this somewhere better
-class PID:
-    def __init__(self, Kp, Ki, Kd):
-        self.Kp = Kp
-        self.Ki = Ki
-        self.Kd = Kd
-        self.last_error = 0
-        self.integral = 0
-
-    def update(self, setpoint, current, dt):
-        error = setpoint-current
-        derivative = (error-self.last_error)/dt
-        self.integral += error * dt
-        output = (self.Kp * error) + (self.Ki * self.integral) + (self.Kd * derivative)
-        self.last_error = error
-        output = max(min(output,100),-100)
-        return output
 
 PressureController = None
-gov_valve = 30
+SpeedController = None
+gov_valve = 0
+last_speed = 0
+
+SpeedReference = {
+    "ehc_closed" : -500,
+    "ehc_100" : 100,
+    "ehc_500" : 500,
+    "ehc_1500" : 1500,
+    "ehc_1800" : 1800,
+    "ehc_overspeed" : 9999,
+}
+
+AccelerationReference = {
+    "ehc_slow" : 10,
+    "ehc_med" : 40,
+    "ehc_fast" : 70,
+}
+
+SelectedAccelerationReference = 10
+
+SelectedSpeedReference = -500
 
 def initialize():
     #initialize our PIDs:
     global PressureController
-    PressureController = PID(Kp=0.05, Ki=0, Kd=0.2)
+    PressureController = PID(Kp=0.05, Ki=0, Kd=0.2, minimum=0,maximum=100)
+
+    global SpeedController
+    SpeedController = PID(Kp=0.05, Ki=0, Kd=0.2, minimum=-0.04,maximum=0.03)
+
+    global AccelerationController
+    AccelerationController = PID(Kp=0.05, Ki=0, Kd=0.2, minimum=-0.03,maximum=0.03)
     #DT is DeltaTime (just use 1 for now)
 
 def run():
 
-    global setpoint
+    #Speed Control
+    
+    global SelectedSpeedReference
+    global SelectedAccelerationReference
 
     global gov_valve
+
+    global last_speed
+
+    #get the Turbine Speed
+    rpm = main_turbine.Turbine["RPM"]
+
+    for button in SpeedReference:
+        if model.buttons[button]["state"]:
+            SelectedSpeedReference = SpeedReference[button]
+            model.indicators[button] = True
+            #set each other one to off
+            for b in SpeedReference:
+                if b != button:
+                    model.indicators[b] = False
+
+    speed_control_signal = SpeedController.update(SelectedSpeedReference,rpm,1)
+
+    gov_valve = max(min(gov_valve+speed_control_signal,100),0)
+
+    Acceleration = max((rpm-last_speed)*100,0)
+
+    for button in AccelerationReference:
+        if model.buttons[button]["state"]:
+            SelectedAccelerationReference = AccelerationReference[button]
+            model.indicators[button] = True
+            #set each other one to off
+            for b in AccelerationReference:
+                if b != button:
+                    model.indicators[b] = False
+
+    acceleration_control_signal = AccelerationController.update(SelectedAccelerationReference,Acceleration,1)
+
+    gov_valve = max(min(gov_valve+acceleration_control_signal,100),0)
+
+    
+
+    fluid.valves["ms_v_gv1"]["percent_open"] = gov_valve
+    fluid.valves["ms_v_gv2"]["percent_open"] = gov_valve
+    fluid.valves["ms_v_gv3"]["percent_open"] = gov_valve
+    fluid.valves["ms_v_gv4"]["percent_open"] = gov_valve
+
+    global setpoint
+
+    last_speed = rpm
     
     #control_signal = PressureController.update(setpoint,fluid.headers["main_steam_line_a_tunnel"]["pressure"]/6895,1)
     #we're using reactor pressure as the variable because main steam line pressure is unreliable with large fluctuations
     control_signal = PressureController.update(setpoint,pressure.Pressures["Vessel"]/6895,1)
 
-    gov_valve = max(min(gov_valve-control_signal,100),0)
+    #gov_valve = max(min(gov_valve-control_signal,100),0)
     #print(gov_valve)
     #print(fluid.headers["main_steam_line_a_tunnel"]["pressure"]/6895)
-    fluid.valves["ms_v_gv1"]["percent_open"] = gov_valve
-    fluid.valves["ms_v_gv2"]["percent_open"] = gov_valve
-    fluid.valves["ms_v_gv3"]["percent_open"] = gov_valve
-    fluid.valves["ms_v_gv4"]["percent_open"] = gov_valve
+    
 
 
 
