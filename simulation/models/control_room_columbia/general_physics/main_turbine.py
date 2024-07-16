@@ -20,11 +20,10 @@ Turbine = {
     "SteamInlet": 0,
 }
 
+Generator = {
+    "Synchronized" : False,
+}
 
-def CalculateFlux(N_turns, fieldCurrent):
-    flux = N_turns*fieldCurrent
-
-    return flux
 
 def run():
     
@@ -38,7 +37,6 @@ def run():
 
     # Electrical Properties
     turbineFrequency = (Turbine["AngularVelocity"]/(math.pi))
-    synchronized = False
     # Physics
 
     Torque = 0
@@ -66,6 +64,7 @@ def run():
     T = Q # Nm (torque)
 
     Torque = T
+    
 
     NetTorque = Torque-(((Turbine["AngularVelocity"]+(900/60*(2*math.pi)))**2*60)/5e2)
     Turbine["AngularVelocity"] += NetTorque/Inertia
@@ -74,7 +73,7 @@ def run():
     Turbine["Angle"] %= 360
     Turbine["Angle"] = 0
     
-    
+    Turbine["Torque"] = Q
     Turbine["RPM"] = Turbine["AngularVelocity"]*60/(2*math.pi)
     Turbine["Frequency"] = turbineFrequency
 

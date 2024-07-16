@@ -1939,6 +1939,11 @@ buttons = {
         "armed" : False,
     },
 
+    "ehc_lamp_test": {
+        "state" : False,
+        "armed" : False,
+    },
+
     "ehc_closed": {
         "state" : False,
         "armed" : False,
@@ -2121,6 +2126,8 @@ from simulation.models.control_room_columbia.general_physics import turbine
 turbine.initialize_pumps()
 
 from simulation.models.control_room_columbia.general_physics import main_turbine
+from simulation.models.control_room_columbia.general_physics import main_generator
+
 
 from simulation.models.control_room_columbia.general_physics import diesel_generator
 
@@ -2152,6 +2159,7 @@ def model_run(delta):
     gas.run()
     turbine.run()
     main_turbine.run()
+    main_generator.run()
 
     safety_relief.run()
     irm_srm_positioner.run()

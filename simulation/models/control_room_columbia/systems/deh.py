@@ -3,7 +3,7 @@ from simulation.models.control_room_columbia import reactor_protection_system
 from simulation.models.control_room_columbia.general_physics import fluid
 from simulation.models.control_room_columbia.general_physics import main_turbine
 from simulation.models.control_room_columbia.reactor_physics import pressure
-from simulation.models.control_room_columbia.lib.pid import PID
+from simulation.models.control_room_columbia.libraries.pid import PID
 
 setpoint = 950 #pressure drop is ~ 50 psig across the main steam system
 
@@ -28,6 +28,8 @@ AccelerationReference = {
     "ehc_med" : 40,
     "ehc_fast" : 70,
 }
+
+LoadSetpoint = 0
 
 SelectedAccelerationReference = 10
 
