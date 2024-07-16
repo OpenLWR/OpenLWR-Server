@@ -1568,6 +1568,10 @@ values = {
     "rwm_insert_error_1" : -1,
     "rwm_insert_error_2" : -1,
     "rwm_withdraw_error" : -1,
+
+
+    #EHC
+    "mt_rpm" : 0,
 }
 
 indicators = {
@@ -1717,6 +1721,17 @@ indicators = {
     "rwm_rwm": False,
     "rwm_comp": False,
     "rwm_prog": False,
+
+    "ehc_closed": True,
+    "ehc_100": False,
+    "ehc_500": False,
+    "ehc_1500": False,
+    "ehc_1800": False,
+    "ehc_overspeed": False,
+
+    "ehc_slow": True,
+    "ehc_med": False,
+    "ehc_fast": False,
 }
 
 buttons = {
@@ -1923,6 +1938,44 @@ buttons = {
         "state" : False,
         "armed" : False,
     },
+
+    "ehc_closed": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ehc_100": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ehc_500": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ehc_1500": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ehc_1800": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ehc_overspeed": {
+        "state" : False,
+        "armed" : False,
+    },
+
+    "ehc_slow": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ehc_med": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ehc_fast": {
+        "state" : False,
+        "armed" : False,
+    },
 }
 
 from simulation.models.control_room_columbia.general_physics import pump
@@ -2067,6 +2120,8 @@ from simulation.models.control_room_columbia.general_physics import gas
 from simulation.models.control_room_columbia.general_physics import turbine
 turbine.initialize_pumps()
 
+from simulation.models.control_room_columbia.general_physics import main_turbine
+
 from simulation.models.control_room_columbia.general_physics import diesel_generator
 
 from simulation.models.control_room_columbia.systems import safety_relief
@@ -2096,6 +2151,7 @@ def model_run(delta):
     pump.run()
     gas.run()
     turbine.run()
+    main_turbine.run()
 
     safety_relief.run()
     irm_srm_positioner.run()
