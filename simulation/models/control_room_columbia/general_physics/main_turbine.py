@@ -2,6 +2,7 @@ from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.reactor_physics import pressure
 from simulation.models.control_room_columbia.reactor_physics import steam_functions
 from simulation.models.control_room_columbia.general_physics import fluid
+from simulation.models.control_room_columbia.general_physics import main_generator
 import math
 
 Turbine = {
@@ -20,9 +21,6 @@ Turbine = {
     "SteamInlet": 0,
 }
 
-Generator = {
-    "Synchronized" : False,
-}
 
 
 def run():
@@ -69,9 +67,11 @@ def run():
     NetTorque = Torque-(((Turbine["AngularVelocity"]+(900/60*(2*math.pi)))**2*60)/5e2)
     Turbine["AngularVelocity"] += NetTorque/Inertia
     Turbine["AngularVelocity"] = max(Turbine["AngularVelocity"],0)
-    Turbine["Angle"] += Turbine["AngularVelocity"]
-    Turbine["Angle"] %= 360
-    Turbine["Angle"] = 0
+
+    if main_generator.Generator["Synchronized"]:
+        grid_frequency = 60
+
+        Turbine["AngularVelocity"] = grid_frequency*math.pi
     
     Turbine["Torque"] = Q
     Turbine["RPM"] = Turbine["AngularVelocity"]*60/(2*math.pi)

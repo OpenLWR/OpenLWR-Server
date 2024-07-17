@@ -1,6 +1,7 @@
 from simulation.constants.electrical_types import ElectricalType
 from simulation.constants.equipment_states import EquipmentStates
 from simulation.models.control_room_columbia.general_physics import diesel_generator
+from simulation.models.control_room_columbia import model
 import math
 
 def clamp(val, clamp_min, clamp_max):
@@ -147,6 +148,45 @@ breakers = {
         "current_limit" : 12.5, #amps
     },
 
+    #Normal System
+
+    "cb_gen_output" : { #this stays always closed?
+        "type" : ElectricalType.BREAKER,
+        "control_switch" : "",
+		"closed" : True,
+		"incoming" : "GEN",
+		"running" : "gen_bus", 
+		"lockout" : False, #Breaker lockout relay tripped
+        "ptl" : False, #Pull To Lock
+	    "flag_position" : False,
+
+        "current_limit" : 12.5, #amps
+    },
+    "cb_4885" : { #Generator output to grid
+        "type" : ElectricalType.BREAKER,
+        "control_switch" : "cb_4885",
+		"closed" : False,
+		"incoming" : "GRID",
+		"running" : "gen_bus", 
+		"lockout" : False, #Breaker lockout relay tripped
+        "ptl" : False, #Pull To Lock
+	    "flag_position" : False,
+
+        "current_limit" : 12.5, #amps
+    },
+    "cb_4888" : { #Generator output to grid
+        "type" : ElectricalType.BREAKER,
+        "control_switch" : "cb_4888",
+		"closed" : False,
+		"incoming" : "GRID",
+		"running" : "gen_bus", 
+		"lockout" : False, #Breaker lockout relay tripped
+        "ptl" : False, #Pull To Lock
+	    "flag_position" : False,
+
+        "current_limit" : 12.5, #amps
+    },
+
 }
 
 busses = {
@@ -155,6 +195,7 @@ busses = {
         "voltage" : 4160,
         "frequency" : 60,
         "current" : 0,
+        "phase" : 0,
         "loads" : [],
         "feeders" : [],
 
@@ -170,6 +211,7 @@ busses = {
         "voltage" : 4160,
         "frequency" : 60,
         "current" : 0,
+        "phase" : 0,
         "loads" : [],
         "feeders" : [],
 
@@ -185,6 +227,7 @@ busses = {
         "voltage" : 4160,
         "frequency" : 60,
         "current" : 0,
+        "phase" : 0,
         "loads" : [],
         "feeders" : [],
 
@@ -203,6 +246,7 @@ busses = {
         "voltage" : 4160,
         "frequency" : 60,
         "current" : 0,
+        "phase" : 0,
         "loads" : [],
         "feeders" : [],
 
@@ -218,6 +262,7 @@ busses = {
         "voltage" : 4160,
         "frequency" : 60,
         "current" : 0,
+        "phase" : 0,
         "loads" : [],
         "feeders" : [],
 
@@ -225,6 +270,25 @@ busses = {
 
         "lockout" : False, #ANY source breaker is locked out (prevents re-energizing a faulted bus)
         "source_breakers" : ["cb_8_3"],
+
+        "annunciators" : {}
+    },
+
+    #Normal System
+
+    "gen_bus" : { #TR-N and TR-M Feed
+        "type" : ElectricalType.BUS,
+        "voltage" : 0,
+        "frequency" : 0,
+        "current" : 0,
+        "phase" : 0,
+        "loads" : [],
+        "feeders" : [],
+
+        "rated_voltage" : 25000,
+
+        "lockout" : False, #ANY source breaker is locked out (prevents re-energizing a faulted bus)
+        "source_breakers" : [],
 
         "annunciators" : {}
     },
@@ -241,6 +305,7 @@ sources = {
         "type" : ElectricalType.SOURCE,
         "voltage" : 4160,
         "frequency" : 60,
+        "phase" : 0,
 
         "annunciators" : {}
     },
@@ -248,6 +313,7 @@ sources = {
         "type" : ElectricalType.SOURCE,
         "voltage" : 4160,
         "frequency" : 60,
+        "phase" : 0,
 
         "annunciators" : {}
     },
@@ -255,10 +321,38 @@ sources = {
         "type" : ElectricalType.SOURCE,
         "voltage" : 4160,
         "frequency" : 60,
+        "phase" : 0,
+
+        "annunciators" : {}
+    },
+    "GRID" : {
+        "type" : ElectricalType.SOURCE,
+        "voltage" : 25000, #change from 25 to 500 (or normal grid voltage?)
+        "frequency" : 60,
+        "phase" : 0,
+
+        "annunciators" : {}
+    },
+    "GEN" : {
+        "type" : ElectricalType.SOURCE,
+        "voltage" : 0, #Main generator, output is 25kv
+        "frequency" : 0,
+        "phase" : 0,
 
         "annunciators" : {}
     },
 }
+
+def calculate_phase(frequency,phase):
+    #hertz is number of revolutions per second
+    #so at 60hz, we revolve 60 times
+    phase = phase+((frequency*360)*0.1) #make 0.1 the execution time instead
+
+    if phase >= 360:
+        mul = math.floor(phase/360)
+        phase = phase-(360*mul) #is this the correct way to do this?
+
+    return phase
 
 def run(switches,alarms,indicators,runs):
 
@@ -266,7 +360,7 @@ def run(switches,alarms,indicators,runs):
     indicators["cr_light_normal_2"] = get_bus_power("8",4000)
     indicators["cr_light_emergency"] = not (get_bus_power("7",4000) and get_bus_power("8",4000)) #TODO: divisional emergency lights
 
-    
+    model.values["synchroscope"] = sources["GRID"]["phase"]-busses["gen_bus"]["phase"]
 
     #This loop is ONLY for logic!
     for bus_name in busses:
@@ -340,7 +434,7 @@ def run(switches,alarms,indicators,runs):
         for breaker in bus["source_breakers"]:
             if breakers[breaker]["lockout"]:
                 bus["lockout"] = True
-
+        
         for feeder in bus["feeders"]:
                 
             #remove the feeder if its not supplying anything
@@ -361,6 +455,7 @@ def run(switches,alarms,indicators,runs):
 
                     bus["voltage"] = source["voltage"]
                     bus["frequency"] = source["frequency"]
+                    bus["phase"] = source["phase"]
                 case ElectricalType.TRANSFORMER:
                     component = transformers[feeder]
                     if not component["breakers_closed"]:
@@ -370,11 +465,13 @@ def run(switches,alarms,indicators,runs):
 
                     bus["voltage"] = source["voltage"]
                     bus["frequency"] = source["frequency"]
+                    bus["phase"] = source["phase"]
            
 
         if len(bus["feeders"]) == 0:
             bus["voltage"] = 0
             bus["frequency"] = 0
+            bus["phase"] = 0
         
         if bus["voltage"] < 0:
             if "UNDERVOLTAGE" in bus["annunciators"]:
@@ -398,8 +495,9 @@ def run(switches,alarms,indicators,runs):
         xfmr["voltage"] = incoming_voltage
         xfmr["frequency"] = incoming_frequency
 
-    #from general_physics import diesel_generator
-    #diesel_generator.run()
+    for source in sources:
+        source = sources[source]
+        source["phase"] = calculate_phase(source["frequency"],source["phase"])
 
 
 

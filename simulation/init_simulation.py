@@ -5,6 +5,7 @@ from server.server_events import server_meter_parameters_update_event
 from server.server_events import server_indicator_parameters_update_event
 from server.server_events import server_switch_parameters_update_event
 from server.server_events import server_alarm_parameters_update_event
+import log
 import config
 
 # import the model specified in the config
@@ -34,7 +35,7 @@ class Simulation:
             end = time.perf_counter()
             delta = end - start
             if self.timestep - delta < 0:
-                print(f"[ALERT] simulation cant keep up, time we have:{self.timestep}, time we took: {delta}")
+                log.warning(f"[ALERT] simulation cant keep up, time we have:{self.timestep}, time we took: {delta}")
             else:
                 time.sleep(self.timestep - delta)
             self.timesteps += 1

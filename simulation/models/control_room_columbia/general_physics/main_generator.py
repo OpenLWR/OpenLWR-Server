@@ -1,5 +1,6 @@
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.general_physics import main_turbine
+from simulation.models.control_room_columbia.general_physics import ac_power
 import math
 import log
 
@@ -29,12 +30,25 @@ def run():
     
    #TODO: Volts per hertz
 
+    Generator["Synchronized"] = ac_power.breakers["cb_4885"]["closed"] or ac_power.breakers["cb_4888"]["closed"]
+
     Volt, Amp, Power, Factor = getVoltageAmperesPower()
 
-    if Generator["Synchronized"]:
-        grid_frequency = 60
+    ac_power.sources["GEN"]["voltage"] = Volt
+    ac_power.sources["GEN"]["frequency"] = (main_turbine.Turbine["AngularVelocity"]/(math.pi))
 
-        main_turbine.Turbine["AngularVelocity"] = grid_frequency*math.pi
+    if Generator["Synchronized"] and (abs(ac_power.sources["GRID"]["phase"]-ac_power.busses["gen_bus"]["phase"]) > 10):
+        #basically, when something is synchronized out of phase,
+        #the bigger generator wins and forces the smaller one into phase,
+        #violently...
+        #in our case the grid always wins and the generator becomes a new showpiece in our parking lot
+        #TODO: send the fucking turbine
+        log.info("holy shit bro")
+
+
+
+
+    
     
 
 

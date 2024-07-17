@@ -1,10 +1,11 @@
 from simulation.constants.annunciator_states import AnnunciatorStates
+from simulation.models.control_room_columbia import model
 import math
 
-def run(alarms,buttons):
+def run():
 
-   for alarm in alarms:
-      annunciator = alarms[alarm]
+   for alarm in model.alarms:
+      annunciator = model.alarms[alarm]
       group = annunciator["group"]
       #reflash + active normally
       if annunciator["alarm"] and (annunciator["state"] == AnnunciatorStates.CLEAR or annunciator["state"] == AnnunciatorStates.ACTIVE_CLEAR):
@@ -15,29 +16,29 @@ def run(alarms,buttons):
       
       #acknowledge behavior
       if annunciator["state"] == AnnunciatorStates.ACTIVE:
-         for button in buttons:
-            if "ALARM_ACK" in button and group in button and buttons[button]["state"]:
+         for button in model.buttons:
+            if "ALARM_ACK" in button and group in button and model.buttons[button]["state"]:
                annunciator["state"] = AnnunciatorStates.ACKNOWLEDGED
                annunciator["silenced"] = False
 
       #clear behavior
       if annunciator["state"] == AnnunciatorStates.ACTIVE_CLEAR:
-         for button in buttons:
-            if "ALARM_RESET" in button and group in button and buttons[button]["state"]:
+         for button in model.buttons:
+            if "ALARM_RESET" in button and group in button and model.buttons[button]["state"]:
                annunciator["state"] = AnnunciatorStates.CLEAR
                annunciator["silenced"] = False
 
       #silence behavior
       if annunciator["state"] == AnnunciatorStates.ACTIVE or annunciator["state"] == AnnunciatorStates.ACTIVE_CLEAR:
-         for button in buttons:
-            if "ALARM_SILENCE" in button and group in button and buttons[button]["state"]:
+         for button in model.buttons:
+            if "ALARM_SILENCE" in button and group in button and model.buttons[button]["state"]:
                annunciator["silenced"] = True
 
       #at columbia, pressing any main panel acknowledge will silence all alarms for other main panels.
       #this was done because there was not enough room for silence pushbuttons (and they already laid out the panels)
-      for button in buttons:
+      for button in model.buttons:
          #TODO: blacklist/whitelist groups together
-         if "ALARM_ACK" in button and buttons[button]["state"]:
+         if "ALARM_ACK" in button and model.buttons[button]["state"]:
             annunciator["silenced"] = True
 
       #unsilence if the alarm comes back

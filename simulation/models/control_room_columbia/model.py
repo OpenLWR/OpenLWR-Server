@@ -1494,6 +1494,33 @@ switches = {
         },
         "flag" : "green",
     },
+
+    "cb_4885": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "cb_4888": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
 }
 
 values = {
@@ -1563,6 +1590,7 @@ values = {
     "rhr_a_press" : 0,
 
     "bus_4_voltage" : 4160,
+    "synchroscope" : 0,
 
     "rwm_group" : -1,
     "rwm_insert_error_1" : -1,
@@ -2146,8 +2174,8 @@ feedwater.initialize()
 runs = 0
 def model_run(delta):
     global runs
-    annunciators.run(alarms,buttons)
-    reactor_protection_system.run(alarms,buttons,indicators,rods,switches)
+    annunciators.run()
+    reactor_protection_system.run()
     rod_drive_control_system.run(rods,buttons)
     rod_position_information_system.run(rods,alarms,buttons)
     reactor_physics.run(rods)

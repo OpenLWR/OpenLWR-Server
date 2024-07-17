@@ -1,6 +1,9 @@
-
+from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.general_physics import fluid
 from simulation.models.control_room_columbia.general_physics import ac_power
+from simulation.models.control_room_columbia import neutron_monitoring 
+from simulation.models.control_room_columbia.reactor_physics import reactor_inventory 
+from simulation.models.control_room_columbia.reactor_physics import pressure 
 import math
 
 reactor_protection_systems = {
@@ -41,7 +44,7 @@ insert_blocks = []
 
 insert_block = False
 
-def run(alarms,buttons,indicators,rods,switches):
+def run():
 
     withdraw_block = withdraw_blocks != []
     insert_block = insert_blocks != []
@@ -61,33 +64,33 @@ def run(alarms,buttons,indicators,rods,switches):
         for reason in rps_scram_trips["B"]:
             rps_scram_trips["B"][reason]["sealed_in"] = True
 
-    if switches["reactor_mode_switch"]["position"] == 0:
+    if model.switches["reactor_mode_switch"]["position"] == 0:
         add_withdraw_block("Mode_Switch_Shutdown")
     else:
         remove_withdraw_block("Mode_Switch_Shutdown")
 
     #run
-    rps_scram_trips["A"]["MSIV Closure"]["bypassed"] = switches["reactor_mode_switch"]["position"] != 3
-    rps_scram_trips["B"]["MSIV Closure"]["bypassed"] = switches["reactor_mode_switch"]["position"] != 3
+    rps_scram_trips["A"]["MSIV Closure"]["bypassed"] = model.switches["reactor_mode_switch"]["position"] != 3
+    rps_scram_trips["B"]["MSIV Closure"]["bypassed"] = model.switches["reactor_mode_switch"]["position"] != 3
 
-    if buttons["SCRAM_A1"]["state"]:
+    if model.buttons["SCRAM_A1"]["state"]:
         reactor_protection_systems["A"]["channel_1_trip"] = True
-    if buttons["SCRAM_A2"]["state"]:
+    if model.buttons["SCRAM_A2"]["state"]:
         reactor_protection_systems["A"]["channel_2_trip"] = True
 
-    if buttons["SCRAM_B1"]["state"]:
+    if model.buttons["SCRAM_B1"]["state"]:
         reactor_protection_systems["B"]["channel_1_trip"] = True
-    if buttons["SCRAM_B2"]["state"]:
+    if model.buttons["SCRAM_B2"]["state"]:
         reactor_protection_systems["B"]["channel_2_trip"] = True
 
-    if buttons["SCRAM_RESET_A"]["state"]:
+    if model.buttons["SCRAM_RESET_A"]["state"]:
         if scram_reset_permissive("A"):
             reactor_protection_systems["A"]["channel_1_trip"] = False
             reactor_protection_systems["A"]["channel_2_trip"] = False
             for scram in rps_scram_trips["A"]:
                 rps_scram_trips["A"][scram]["sealed_in"] = False
 
-    if buttons["SCRAM_RESET_B"]["state"]:
+    if model.buttons["SCRAM_RESET_B"]["state"]:
         if scram_reset_permissive("B"):
             reactor_protection_systems["B"]["channel_1_trip"] = False
             reactor_protection_systems["B"]["channel_2_trip"] = False
@@ -95,14 +98,14 @@ def run(alarms,buttons,indicators,rods,switches):
                 rps_scram_trips["B"][scram]["sealed_in"] = False
 
 
-    if reactor_protection_systems["A"]["reset_timer"] == 0 and switches["reactor_mode_switch"]["position"] == 0:
+    if reactor_protection_systems["A"]["reset_timer"] == 0 and model.switches["reactor_mode_switch"]["position"] == 0:
         rps_scram_trips["A"]["Mode Switch In Shutdown"]["bypassed"] = True
-    elif reactor_protection_systems["A"]["reset_timer"] == 0 and switches["reactor_mode_switch"]["position"] != 0 :
+    elif reactor_protection_systems["A"]["reset_timer"] == 0 and model.switches["reactor_mode_switch"]["position"] != 0 :
         rps_scram_trips["A"]["Mode Switch In Shutdown"]["bypassed"] = False
 
-    if reactor_protection_systems["B"]["reset_timer"] == 0 and switches["reactor_mode_switch"]["position"] == 0:
+    if reactor_protection_systems["B"]["reset_timer"] == 0 and model.switches["reactor_mode_switch"]["position"] == 0:
         rps_scram_trips["B"]["Mode Switch In Shutdown"]["bypassed"] = True
-    elif reactor_protection_systems["B"]["reset_timer"] == 0 and switches["reactor_mode_switch"]["position"] != 0 :
+    elif reactor_protection_systems["B"]["reset_timer"] == 0 and model.switches["reactor_mode_switch"]["position"] != 0 :
         rps_scram_trips["B"]["Mode Switch In Shutdown"]["bypassed"] = False
 
     automatic_scram_signals()
@@ -111,16 +114,16 @@ def run(alarms,buttons,indicators,rods,switches):
 
     trip_b = (reactor_protection_systems["B"]["channel_1_trip"] or reactor_protection_systems["B"]["channel_2_trip"])
 
-    alarms["1/2_scram_system_a"]["alarm"] = trip_a 
-    alarms["1/2_scram_system_b"]["alarm"] = trip_b
-    alarms["reactor_scram_a1_and_b1_loss"]["alarm"] = reactor_protection_systems["A"]["channel_1_trip"] and reactor_protection_systems["B"]["channel_1_trip"]
-    alarms["reactor_scram_a2_and_b2_loss"]["alarm"] = reactor_protection_systems["A"]["channel_2_trip"] and reactor_protection_systems["B"]["channel_2_trip"]
+    model.alarms["1/2_scram_system_a"]["alarm"] = trip_a 
+    model.alarms["1/2_scram_system_b"]["alarm"] = trip_b
+    model.alarms["reactor_scram_a1_and_b1_loss"]["alarm"] = reactor_protection_systems["A"]["channel_1_trip"] and reactor_protection_systems["B"]["channel_1_trip"]
+    model.alarms["reactor_scram_a2_and_b2_loss"]["alarm"] = reactor_protection_systems["A"]["channel_2_trip"] and reactor_protection_systems["B"]["channel_2_trip"]
 
     for reason in rps_scram_trips["A"]:
-        alarms[rps_alarms["A"][reason]]["alarm"] = rps_scram_trips["A"][reason]["sealed_in"]
+        model.alarms[rps_alarms["A"][reason]]["alarm"] = rps_scram_trips["A"][reason]["sealed_in"]
 
     for reason in rps_scram_trips["B"]:
-        alarms[rps_alarms["B"][reason]]["alarm"] = rps_scram_trips["B"][reason]["sealed_in"]
+        model.alarms[rps_alarms["B"][reason]]["alarm"] = rps_scram_trips["B"][reason]["sealed_in"]
 
 
 
@@ -137,36 +140,36 @@ def run(alarms,buttons,indicators,rods,switches):
         elif reactor_protection_systems["B"]["reset_timer"] > 0:
             reactor_protection_systems["B"]["reset_timer"] -= 1
 
-    elif switches["reactor_mode_switch"]["position"] != 0:
+    elif model.switches["reactor_mode_switch"]["position"] != 0:
         reactor_protection_systems["A"]["reset_timer"] = -1
         reactor_protection_systems["B"]["reset_timer"] = -1
 
-    for rod in rods:
-        info = rods[rod] 
+    for rod in model.rods:
+        info = model.rods[rod] 
         #scram the reactor if both RPS trains are tripped
         if info["scram"] != scram_signal:
             info["scram"] = scram_signal
 
     #Scram trips
 
-    #indicators for, IE, the RMCS
+    #model.indicators for, IE, the RMCS
 
-    indicators["SCRAM_A1"] = not trip_a
-    indicators["SCRAM_A2"] = not trip_a
-    indicators["SCRAM_A3"] = not trip_a
-    indicators["SCRAM_A4"] = not trip_a
-    indicators["SCRAM_A5"] = trip_a
-    indicators["SCRAM_A6"] = trip_a
+    model.indicators["SCRAM_A1"] = not trip_a
+    model.indicators["SCRAM_A2"] = not trip_a
+    model.indicators["SCRAM_A3"] = not trip_a
+    model.indicators["SCRAM_A4"] = not trip_a
+    model.indicators["SCRAM_A5"] = trip_a
+    model.indicators["SCRAM_A6"] = trip_a
 
-    indicators["SCRAM_B1"] = not trip_b
-    indicators["SCRAM_B2"] = not trip_b
-    indicators["SCRAM_B3"] = not trip_b
-    indicators["SCRAM_B4"] = not trip_b
-    indicators["SCRAM_B5"] = trip_b
-    indicators["SCRAM_B6"] = trip_b
+    model.indicators["SCRAM_B1"] = not trip_b
+    model.indicators["SCRAM_B2"] = not trip_b
+    model.indicators["SCRAM_B3"] = not trip_b
+    model.indicators["SCRAM_B4"] = not trip_b
+    model.indicators["SCRAM_B5"] = trip_b
+    model.indicators["SCRAM_B6"] = trip_b
             
-    indicators["RMCS_WITHDRAW_BLOCK"] = withdraw_block
-    alarms["rod_out_block"]["alarm"] = withdraw_block
+    model.indicators["RMCS_WITHDRAW_BLOCK"] = withdraw_block
+    model.alarms["rod_out_block"]["alarm"] = withdraw_block
 
 def scram(reason):
 
@@ -219,28 +222,24 @@ def automatic_scram_signals():
             scram_trip["sealed_in"] = True
 
 def scram_trip_mode_switch_shutdown(info,system):
-    from simulation.models.control_room_columbia import model 
     if (not info["bypassed"]) and model.switches["reactor_mode_switch"]["position"] == 0 :
         return True
 
     return False
 
 def scram_trip_rpv_press_high(info,system):
-    from simulation.models.control_room_columbia.reactor_physics import pressure 
     if pressure.Pressures["Vessel"]/6895 > 1060:
         return True
 
     return False
 
 def scram_trip_rpv_level_low(info,system):
-    from simulation.models.control_room_columbia.reactor_physics import reactor_inventory 
     if reactor_inventory.rx_level_wr < 13:
         return True
     
     return False
 
 def scram_trip_neutron_monitor_system(info,system):
-    from simulation.models.control_room_columbia import neutron_monitoring 
 
     return neutron_monitoring.scram_reactor
 
