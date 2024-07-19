@@ -16,6 +16,8 @@ breakers = {
 		"running" : "1", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -28,6 +30,8 @@ breakers = {
 		"running" : "2", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -40,6 +44,8 @@ breakers = {
 		"running" : "3", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -53,6 +59,8 @@ breakers = {
 		"running" : "cb_7_1", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -65,6 +73,8 @@ breakers = {
 		"running" : "7", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -77,6 +87,8 @@ breakers = {
 		"running" : "cb_8_3", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -89,6 +101,8 @@ breakers = {
 		"running" : "8", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -104,6 +118,8 @@ breakers = {
 		"running" : "cb_7dg1", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -116,6 +132,8 @@ breakers = {
 		"running" : "7", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -131,6 +149,8 @@ breakers = {
 		"running" : "cb_8dg2", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -143,6 +163,8 @@ breakers = {
 		"running" : "8", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -158,6 +180,8 @@ breakers = {
 		"running" : "gen_bus", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -170,6 +194,8 @@ breakers = {
 		"running" : "gen_bus", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -182,6 +208,8 @@ breakers = {
 		"running" : "gen_bus", 
 		"lockout" : False, #Breaker lockout relay tripped
         "ptl" : False, #Pull To Lock
+        "sync_sel" : False, #Has a sync selector
+        "sync" : False, #Sync Selector in MAN
 	    "flag_position" : False,
 
         "current_limit" : 12.5, #amps
@@ -360,8 +388,6 @@ def run(switches,alarms,indicators,runs):
     indicators["cr_light_normal_2"] = get_bus_power("8",4000)
     indicators["cr_light_emergency"] = not (get_bus_power("7",4000) and get_bus_power("8",4000)) #TODO: divisional emergency lights
 
-    model.values["synchroscope"] = sources["GRID"]["phase"]-busses["gen_bus"]["phase"]
-
     #This loop is ONLY for logic!
     for bus_name in busses:
         bus = busses[bus_name]
@@ -373,16 +399,12 @@ def run(switches,alarms,indicators,runs):
             #TODO: Backup Transformer
 
             if bus_name == "7":
-                if diesel_generator.diesel_generators["DG1"]["state"] == EquipmentStates.STOPPED and not diesel_generator.diesel_generators["DG1"]["trip"]:
-                    diesel_generator.diesel_generators["DG1"]["state"] = EquipmentStates.STARTING
-                    diesel_generator.diesel_generators["DG1"]["auto_start"] = True
+                diesel_generator.dg1.start(auto = True)
 
                 open_breaker("cb_7_1")
 
             if bus_name == "8":
-                if diesel_generator.diesel_generators["DG2"]["state"] == EquipmentStates.STOPPED and not diesel_generator.diesel_generators["DG2"]["trip"]:
-                    diesel_generator.diesel_generators["DG2"]["state"] = EquipmentStates.STARTING
-                    diesel_generator.diesel_generators["DG2"]["auto_start"] = True
+                diesel_generator.dg2.start(auto = True)
 
                 open_breaker("cb_8_3")
 
@@ -398,16 +420,18 @@ def run(switches,alarms,indicators,runs):
         if bkr["control_switch"] in switches:
             if switches[bkr["control_switch"]]["position"] == 0: open_breaker(breaker_name)
 
-            if switches[bkr["control_switch"]]["position"] == 2: close_breaker(breaker_name)
+            if switches[bkr["control_switch"]]["position"] == 2 and (bkr["sync_sel"] == False or bkr["sync"] == True ): close_breaker(breaker_name)
 
             switches[bkr["control_switch"]]["lights"]["green"] = not bkr["closed"]
             switches[bkr["control_switch"]]["lights"]["red"] = bkr["closed"]
+
+            #TODO: Sync Permit
 
             if "lockout" in switches[bkr["control_switch"]]["lights"]:
                 switches[bkr["control_switch"]]["lights"]["lockout"] = not bkr["lockout"]
 
         
-
+        bkr["sync"] = False
 
         #TODO: find a way to resolve this minor pyramid
         if bkr["closed"]:
@@ -603,6 +627,15 @@ def get_bus_power(bus_name:str,undervoltage_setpoint:int):
 
     if busses[bus_name]["voltage"] < undervoltage_setpoint: return False
     return True
+
+def get_phase(name:str):
+    type = get_type(name)
+
+    type = type_check(type)
+
+    phase = type[name]["phase"]
+
+    return phase
 
 #physics related functions
 

@@ -1521,6 +1521,27 @@ switches = {
         },
         "flag" : "green",
     },
+
+    "sync_cb_4885": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+        "flag" : "green",
+    },
+    "sync_cb_4888": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+        "flag" : "green",
+    },
 }
 
 values = {
@@ -1590,7 +1611,7 @@ values = {
     "rhr_a_press" : 0,
 
     "bus_4_voltage" : 4160,
-    "synchroscope" : 0,
+    "main_generator_sync" : 0,
 
     "rwm_group" : -1,
     "rwm_insert_error_1" : -1,
@@ -2158,6 +2179,7 @@ from simulation.models.control_room_columbia.general_physics import main_generat
 
 
 from simulation.models.control_room_columbia.general_physics import diesel_generator
+diesel_generator.initialize()
 
 from simulation.models.control_room_columbia.systems import safety_relief
 from simulation.models.control_room_columbia.systems import irm_srm_positioner
@@ -2168,6 +2190,8 @@ from simulation.models.control_room_columbia.systems import lpcs
 from simulation.models.control_room_columbia.systems import deh
 from simulation.models.control_room_columbia.systems import pcis
 from simulation.models.control_room_columbia.systems import rod_worth_minimizer
+from simulation.models.control_room_columbia.systems import sync
+sync.initialize()
 deh.initialize()
 feedwater.initialize()
 
@@ -2182,6 +2206,7 @@ def model_run(delta):
     neutron_monitoring.run(alarms,buttons,indicators,rods,switches,values)
     ac_power.run(switches,alarms,indicators,runs)
     diesel_generator.run()
+    sync.run()
     fluid.run() 
     pump.run()
     gas.run()
