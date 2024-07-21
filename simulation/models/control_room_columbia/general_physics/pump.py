@@ -3,6 +3,7 @@ from simulation.constants.equipment_states import EquipmentStates
 from simulation.models.control_room_columbia.general_physics import ac_power
 from simulation.models.control_room_columbia import model
 import math
+import log
 
 def clamp(val, clamp_min, clamp_max):
     return min(max(val,clamp_min),clamp_max)
@@ -125,27 +126,39 @@ def run():
             model.switches[pump["motor_control_switch"]]["lights"]["green"] = not pump["motor_breaker_closed"]
             model.switches[pump["motor_control_switch"]]["lights"]["red"] = pump["motor_breaker_closed"]
 
+        #undervoltage breaker trip TODO: (this has load sequencing during a LOOP? verify this)
+
+        voltage = 0
+        try:
+            pump_bus = ac_power.busses[pump["bus"]]
+
+            voltage = pump_bus.voltage_at_bus()
+
+            if voltage < 120:
+                pump["motor_breaker_closed"] = False
+                continue
+
+            if not pump_name in pump_bus.info["loads"]:
+                pump_bus.register_load(pump["watts"],pump_name)
+            else:
+                pump_bus.modify_load(pump["watts"],pump_name)
+        except:
+            #log.warning("Pump does not have an available bus!")
+            voltage = 4160
+
         if pump["motor_breaker_closed"]:
             #first, verify that this breaker is allowed to be closed
 
             #TODO: overcurrent breaker trip
 
-            #undervoltage breaker trip TODO: (this has load sequencing during a LOOP? verify this)
-            try:
-                pump_bus = ac_power.busses[pump["bus"]]
-            except:
-                pump_bus = {"voltage" : 4160}
-
-            if pump_bus["voltage"] < 120:
-                pump["motor_breaker_closed"] = False
-                continue
+            
 
             Acceleration = (pump["rated_rpm"]-pump["rpm"])*0.1 #TODO: variable motor accel
             pump["rpm"] = clamp(pump["rpm"]+Acceleration,0,pump["rated_rpm"]+100)
             #full load amperes
-            AmpsFLA = (pump["horsepower"]*746)/(math.sqrt(3)*pump_bus["voltage"]*0.876*0.95) #TODO: variable motor efficiency and power factor
+            AmpsFLA = (pump["horsepower"]*746)/(math.sqrt(3)*voltage*0.876*0.95) #TODO: variable motor efficiency and power factor
             pump["amperes"] = (AmpsFLA*clamp(pump["actual_flow"]/pump["rated_flow"],0.48,1))+(AmpsFLA*5*(Acceleration/(pump["rated_rpm"]*0.1)))
-            pump["watts"] = pump_bus["voltage"]*pump["amperes"]*math.sqrt(3)
+            pump["watts"] = voltage*pump["amperes"]*math.sqrt(3)
 
 			#remember to make the loading process for the current (v.FLA*math.clamp(v.flow_with_fullsim etc)) more realistic, and instead make it based on distance from rated rpm (as when the pump is loaded more it will draw more current)
             #TODO: better flow calculation

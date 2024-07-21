@@ -30,14 +30,14 @@ def run():
     
    #TODO: Volts per hertz
 
-    Generator["Synchronized"] = ac_power.breakers["cb_4885"]["closed"] or ac_power.breakers["cb_4888"]["closed"]
+    Generator["Synchronized"] = ac_power.breakers["cb_4885"].info["closed"] or ac_power.breakers["cb_4888"].info["closed"]
 
     Volt, Amp, Power, Factor = getVoltageAmperesPower()
 
-    ac_power.sources["GEN"]["voltage"] = Volt
-    ac_power.sources["GEN"]["frequency"] = (main_turbine.Turbine["AngularVelocity"]/(math.pi))
+    ac_power.sources["GEN"].info["voltage"] = Volt
+    ac_power.sources["GEN"].info["frequency"] = (main_turbine.Turbine["AngularVelocity"]/(math.pi))
 
-    if Generator["Synchronized"] and (abs(ac_power.sources["GRID"]["phase"]-ac_power.busses["gen_bus"]["phase"]) > 10):
+    if Generator["Synchronized"] and (abs(ac_power.sources["GRID"].info["phase"]-ac_power.busses["gen_bus"].info["phase"]) > 10):
         #basically, when something is synchronized out of phase,
         #the bigger generator wins and forces the smaller one into phase,
         #violently...

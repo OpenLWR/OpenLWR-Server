@@ -50,14 +50,14 @@ def run():
     insert_block = insert_blocks != []
 
 
-    if not ac_power.get_bus_power("7",4000):
+    if not ac_power.busses["7"].is_voltage_at_bus(4000):
         reactor_protection_systems["A"]["channel_1_trip"] = True
         reactor_protection_systems["A"]["channel_2_trip"] = True
 
         for reason in rps_scram_trips["A"]:
             rps_scram_trips["A"][reason]["sealed_in"] = True
 
-    if not ac_power.get_bus_power("8",4000):
+    if not ac_power.busses["8"].is_voltage_at_bus(4000):
         reactor_protection_systems["B"]["channel_1_trip"] = True
         reactor_protection_systems["B"]["channel_2_trip"] = True
 

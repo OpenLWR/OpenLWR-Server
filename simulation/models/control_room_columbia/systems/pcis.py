@@ -140,12 +140,12 @@ def run():
     #TODO: use the actual RPS bus and whatnot
 
     #RPS A Powers A/C, so no isolations would result from a loss of RPS A.
-    if not ac_power.get_bus_power("7",4000):
+    if not ac_power.busses["7"].is_voltage_at_bus(4000):
         logic["A"] = True
         logic["C"] = True
 
     #an inboard and outboard isolation except MSIVs would result from a loss of RPS B
-    if not ac_power.get_bus_power("8",4000):
+    if not ac_power.busses["8"].is_voltage_at_bus(4000):
         logic["B"] = True
         logic["D"] = True
 

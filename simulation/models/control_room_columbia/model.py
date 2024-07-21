@@ -2065,7 +2065,7 @@ pumps = {
     "lpcs_p_1" : {
         "motor_breaker_closed" : False,
         "motor_control_switch" : "lpcs_p_1",
-        "bus" : "8",
+        "bus" : "7",
         "horsepower" : 1000,
         "rated_rpm" : 1800,
         "rated_discharge_press" : 250,
@@ -2079,7 +2079,7 @@ pumps = {
     "rhr_p_2a" : {
         "motor_breaker_closed" : False,
         "motor_control_switch" : "rhr_p_2a",
-        "bus" : "8",
+        "bus" : "7",
         "horsepower" : 1000,
         "rated_rpm" : 1800,
         "rated_discharge_press" : 250,
@@ -2162,6 +2162,8 @@ rods = {}
 
 reactor_water_temperature = 100
 
+ac_power.initialize()
+
 from simulation.models.control_room_columbia import rod_generation
 rod_generation.run(rods,buttons)
 
@@ -2204,7 +2206,7 @@ def model_run(delta):
     rod_position_information_system.run(rods,alarms,buttons)
     reactor_physics.run(rods)
     neutron_monitoring.run(alarms,buttons,indicators,rods,switches,values)
-    ac_power.run(switches,alarms,indicators,runs)
+    ac_power.run()
     diesel_generator.run()
     sync.run()
     fluid.run() 

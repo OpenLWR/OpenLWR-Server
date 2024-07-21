@@ -3,373 +3,7 @@ from simulation.constants.equipment_states import EquipmentStates
 from simulation.models.control_room_columbia.general_physics import diesel_generator
 from simulation.models.control_room_columbia import model
 import math
-
-def clamp(val, clamp_min, clamp_max):
-    return min(max(val,clamp_min),clamp_max)
-
-breakers = {
-	"cb_s1" : {
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "cb_s1",
-		"closed" : True,
-		"incoming" : "TRS",
-		"running" : "1", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-    "cb_s2" : {
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "cb_s2",
-		"closed" : True,
-		"incoming" : "TRS",
-		"running" : "2", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-    "cb_s3" : {
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "cb_s3",
-		"closed" : True,
-		"incoming" : "TRS",
-		"running" : "3", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-
-    "cb_1_7" : {
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "cb_1_7",
-		"closed" : True,
-		"incoming" : "1",
-		"running" : "cb_7_1", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-    "cb_7_1" : {
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "cb_7_1",
-		"closed" : True,
-		"incoming" : "cb_1_7",
-		"running" : "7", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-    "cb_3_8" : {
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "cb_3_8",
-		"closed" : True,
-		"incoming" : "3",
-		"running" : "cb_8_3", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-    "cb_8_3" : {
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "cb_8_3",
-		"closed" : True,
-		"incoming" : "cb_3_8",
-		"running" : "8", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-
-    #DG1
-
-    "cb_dg1_7" : {
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "cb_dg1_7",
-		"closed" : False,
-		"incoming" : "DG1",
-		"running" : "cb_7dg1", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-    "cb_7dg1" : {
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "cb_7dg1",
-		"closed" : True,
-		"incoming" : "cb_dg1_7",
-		"running" : "7", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-
-    #DG2
-
-    "cb_dg2_8" : {
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "cb_dg2_8",
-		"closed" : False,
-		"incoming" : "DG2",
-		"running" : "cb_8dg2", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-    "cb_8dg2" : {
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "cb_8dg2",
-		"closed" : True,
-		"incoming" : "cb_dg2_8",
-		"running" : "8", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-
-    #Normal System
-
-    "cb_gen_output" : { #this stays always closed?
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "",
-		"closed" : True,
-		"incoming" : "GEN",
-		"running" : "gen_bus", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-    "cb_4885" : { #Generator output to grid
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "cb_4885",
-		"closed" : False,
-		"incoming" : "GRID",
-		"running" : "gen_bus", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-    "cb_4888" : { #Generator output to grid
-        "type" : ElectricalType.BREAKER,
-        "control_switch" : "cb_4888",
-		"closed" : False,
-		"incoming" : "GRID",
-		"running" : "gen_bus", 
-		"lockout" : False, #Breaker lockout relay tripped
-        "ptl" : False, #Pull To Lock
-        "sync_sel" : False, #Has a sync selector
-        "sync" : False, #Sync Selector in MAN
-	    "flag_position" : False,
-
-        "current_limit" : 12.5, #amps
-    },
-
-}
-
-busses = {
-    "1" : { #SM-1
-        "type" : ElectricalType.BUS,
-        "voltage" : 4160,
-        "frequency" : 60,
-        "current" : 0,
-        "phase" : 0,
-        "loads" : [],
-        "feeders" : [],
-
-        "rated_voltage" : 4160,
-
-        "lockout" : False, #ANY source breaker is locked out (prevents re-energizing a faulted bus)
-        "source_breakers" : ["cb_s1"],
-
-        "annunciators" : {}
-    },
-    "2" : { #SM-2
-        "type" : ElectricalType.BUS,
-        "voltage" : 4160,
-        "frequency" : 60,
-        "current" : 0,
-        "phase" : 0,
-        "loads" : [],
-        "feeders" : [],
-
-        "rated_voltage" : 4160,
-
-        "lockout" : False, #ANY source breaker is locked out (prevents re-energizing a faulted bus)
-        "source_breakers" : ["cb_s2"],
-
-        "annunciators" : {}
-    },
-    "3" : { #SM-3
-        "type" : ElectricalType.BUS,
-        "voltage" : 4160,
-        "frequency" : 60,
-        "current" : 0,
-        "phase" : 0,
-        "loads" : [],
-        "feeders" : [],
-
-        "rated_voltage" : 4160,
-
-        "lockout" : False, #ANY source breaker is locked out (prevents re-energizing a faulted bus)
-        "source_breakers" : ["cb_s3"],
-
-        "annunciators" : {}
-    },
-
-    #Class 1E Busses
-
-    "7" : { #SM-7 (Division 1)
-        "type" : ElectricalType.BUS,
-        "voltage" : 4160,
-        "frequency" : 60,
-        "current" : 0,
-        "phase" : 0,
-        "loads" : [],
-        "feeders" : [],
-
-        "rated_voltage" : 4160,
-
-        "lockout" : False, #ANY source breaker is locked out (prevents re-energizing a faulted bus)
-        "source_breakers" : ["cb_7_1"],
-
-        "annunciators" : {}
-    },
-    "8" : { #SM-8 (Division 2)
-        "type" : ElectricalType.BUS,
-        "voltage" : 4160,
-        "frequency" : 60,
-        "current" : 0,
-        "phase" : 0,
-        "loads" : [],
-        "feeders" : [],
-
-        "rated_voltage" : 4160,
-
-        "lockout" : False, #ANY source breaker is locked out (prevents re-energizing a faulted bus)
-        "source_breakers" : ["cb_8_3"],
-
-        "annunciators" : {}
-    },
-
-    #Normal System
-
-    "gen_bus" : { #TR-N and TR-M Feed
-        "type" : ElectricalType.BUS,
-        "voltage" : 0,
-        "frequency" : 0,
-        "current" : 0,
-        "phase" : 0,
-        "loads" : [],
-        "feeders" : [],
-
-        "rated_voltage" : 25000,
-
-        "lockout" : False, #ANY source breaker is locked out (prevents re-energizing a faulted bus)
-        "source_breakers" : [],
-
-        "annunciators" : {}
-    },
-
-    
-}
-
-transformers = {
-	
-}
-
-sources = {
-    "TRS" : { #make this an actual transformer later
-        "type" : ElectricalType.SOURCE,
-        "voltage" : 4160,
-        "frequency" : 60,
-        "phase" : 0,
-
-        "annunciators" : {}
-    },
-    "DG1" : {
-        "type" : ElectricalType.SOURCE,
-        "voltage" : 4160,
-        "frequency" : 60,
-        "phase" : 0,
-
-        "annunciators" : {}
-    },
-    "DG2" : {
-        "type" : ElectricalType.SOURCE,
-        "voltage" : 4160,
-        "frequency" : 60,
-        "phase" : 0,
-
-        "annunciators" : {}
-    },
-    "GRID" : {
-        "type" : ElectricalType.SOURCE,
-        "voltage" : 25000, #change from 25 to 500 (or normal grid voltage?)
-        "frequency" : 60,
-        "phase" : 0,
-
-        "annunciators" : {}
-    },
-    "GEN" : {
-        "type" : ElectricalType.SOURCE,
-        "voltage" : 0, #Main generator, output is 25kv
-        "frequency" : 0,
-        "phase" : 0,
-
-        "annunciators" : {}
-    },
-}
+import log
 
 def calculate_phase(frequency,phase):
     #hertz is number of revolutions per second
@@ -382,285 +16,365 @@ def calculate_phase(frequency,phase):
 
     return phase
 
-def run(switches,alarms,indicators,runs):
+sources = {}
+busses = {}
+breakers = {}
 
-    indicators["cr_light_normal_1"] = get_bus_power("7",4000)
-    indicators["cr_light_normal_2"] = get_bus_power("8",4000)
-    indicators["cr_light_emergency"] = not (get_bus_power("7",4000) and get_bus_power("8",4000)) #TODO: divisional emergency lights
+class Source:
+    def __init__(self,name="",voltage=0,frequency=0,phase=0,annunciators={}):
+        self.name = name
+        self.info = {
+            "type" : ElectricalType.SOURCE,
+            "voltage" : voltage,
+            "frequency" : frequency,
+            "phase" : phase,
+            "loads" : {},
+
+            "annunciators" : annunciators
+        }
+        sources[name] = self
+
+    def whoami(self):
+        return self.__class__
+    
+    def get_source(self):
+        """bro its us"""
+        return self
+    
+    def calculate(self):
+        self.info["phase"] = calculate_phase(self.info["frequency"],self.info["phase"])
+
+    def register_load(self,load,name):
+        """Registers a load on this bus, with the specified load in watts."""
+        if not name in self.info["loads"]:
+            x = self.info["loads"].copy()
+            x[name] = load
+            y = x
+            self.info["loads"] = y
+
+    def modify_load(self,load,name):
+        """Modifies an existing load on this bus, with the new specified load in watts."""
+        if name in self.info["loads"]:
+            x = self.info["loads"].copy()
+            x[name] = load
+            y = x
+            self.info["loads"] = y
+
+    def remove_load(self,name):
+        """Removes an existing load on this bus."""
+        if name in self.info["loads"]:
+            x = self.info["loads"].copy()
+            x.pop(name)
+            y = x
+            self.info["loads"] = y
+
+class Bus:
+    def __init__(self,name="",voltage=0,frequency=0,current=0,phase=0,loads={},feeders=[],rated_voltage=0,lockout=False,source_breakers=[],annunciators={}):
+        self.name = name
+        self.info = {
+            "type" : ElectricalType.BUS, #TODO: Do we need this anymore?
+            "voltage" : voltage,
+            "frequency" : frequency,
+            "current" : current,
+            "phase" : phase,
+            "loads" : loads,
+            "feeders" : feeders,
+
+            "rated_voltage" : rated_voltage,
+
+            "lockout" : lockout, #ANY source breaker is locked out (prevents re-energizing a faulted bus)
+            "source_breakers" : source_breakers, #TODO: Re-implement this
+
+            "annunciators" : annunciators,
+        }
+        busses[name] = self
+
+    def whoami(self):
+        return self.__class__
+
+    def get_source(self):
+        """we are the source"""
+        return self
+    
+    def register_feeder(self,feeder):
+        if not feeder in self.info["feeders"]:
+            x = self.info["feeders"] #workaround for some random bug
+            y = x + [feeder]
+            self.info["feeders"] = y
+
+    def calculate(self):
+        all_feeder_info = []
+
+        total_load = 0
+
+        for load in self.info["loads"]:
+            total_load += self.info["loads"][load]
+
+        #TODO: Distribute loads properly while paralleling
+        for feeder in self.info["feeders"]:
+            if True:
+                source = feeder.get_source()
+
+                if feeder.get_source(closed_check = True) == False:
+                    self.info["feeders"].remove(feeder)
+                    source.remove_load(self.name)
+
+                all_feeder_info.append(source)
+
+                if not self.name in source.info["loads"]:
+                    source.register_load(total_load,self.name)
+                else:
+                    source.modify_load(total_load,self.name)
+
+            
+        voltage = 0
+        frequency = 0
+        phase = 0
+        for info in all_feeder_info:
+            voltage = max(voltage,info.info["voltage"])
+            if frequency < info.info["frequency"]:
+                frequency = info.info["frequency"]
+                phase = info.info["phase"]
+
+        self.info["voltage"] = voltage
+        self.info["frequency"] = frequency
+        self.info["phase"] = phase
+
+    def voltage_at_bus(self):
+        """Gets the current voltage at the bus. Will be a number."""
+        return self.info["voltage"]
+    
+    def is_voltage_at_bus(self,setpoint):
+        """Gets if voltage is present at the bus. Takes a undervoltage setpoint."""
+
+        return self.info["voltage"] > setpoint
+    
+    def register_load(self,load,name):
+        """Registers a load on this bus, with the specified load in watts."""
+        if not name in self.info["loads"]:
+            x = self.info["loads"].copy()
+            x[name] = load
+            y = x
+            self.info["loads"] = y
+
+    def modify_load(self,load,name):
+        """Modifies an existing load on this bus, with the new specified load in watts."""
+        if name in self.info["loads"]:
+            x = self.info["loads"].copy()
+            x[name] = load
+            y = x
+            self.info["loads"] = y
+
+    def remove_load(self,name):
+        """Removes an existing load on this bus."""
+        if name in self.info["loads"]:
+            x = self.info["loads"].copy()
+            x.pop(name)
+            y = x
+            self.info["loads"] = y
+            
+
+class Breaker:
+    def __init__(self,name="",cs="",closed=False,incoming=None,running=None,lockout=False,ptl=False,current_limit=12.5,custom=False):
+        self.name = name
+        if cs == "":
+            cs = name
+        self.info = {
+            "type" : ElectricalType.BREAKER, #TODO: Do we need this anymore?
+            "control_switch" : cs,
+		    "closed" : closed,
+		    "incoming" : incoming,
+		    "running" : running, 
+		    "lockout" : lockout, #Breaker lockout relay tripped
+            "ptl" : ptl, #Pull To Lock
+            "sync_sel" : False, #Has a sync selector
+            "sync" : False, #Sync Selector in MAN
+	        "flag_position" : False,
+            "custom" : custom,
+
+            "current_limit" : current_limit, #amps 
+        }
+        breakers[name] = self
+
+    def whoami(self):
+        return self.__class__
+    
+    def set_incoming(self,object):
+        self.info["incoming"] = object
+
+    def set_running(self,object):
+        self.info["running"] = object
+
+    def close(self):
+        """Closes the breaker."""
+        #TODO: breakers failing to close
+        self.info["closed"] = True and not self.info["lockout"]
+
+    def open(self):
+        """Opens the breaker."""
+        #TODO: breakers failing to open
+        self.info["closed"] = False
+
+    def get_source(self,closed_check = False):
+        """Gets the 'source' for the breaker.
+        This would either be an actual source type, a bus, or a transformer.
+        Returns the source object.
+        Optionally returns if all breakers on that path are closed."""
+        source = None
+        closed = self.info["closed"]
+        while True:
+            if source == None:
+                source = self.info["incoming"]
+
+            if source.whoami() == Breaker:
+                if not source.info["closed"]:
+                    closed = False
+
+            if source.whoami() == Bus:
+                break
+            elif source.whoami() == Source:
+                break
+            else:
+                source = source.info["incoming"]
+
+        value = source
+
+        if closed_check == True:
+            value = closed
+
+        return value
+    
+    def breaker_switch(self):
+        """Default behavior for breaker switches. Can be disabled by setting 'custom' on init"""
+        if self.info["custom"]: return
+
+        if self.info["control_switch"] != "":
+            if model.switches[self.info["control_switch"]]["position"] == 0: self.open()
+
+            if model.switches[self.info["control_switch"]]["position"] == 2 and (self.info["sync_sel"] == False or self.info["sync"] == True): self.close()
+
+            model.switches[self.info["control_switch"]]["lights"]["green"] = not self.info["closed"]
+            model.switches[self.info["control_switch"]]["lights"]["red"] = self.info["closed"]
+
+            #TODO: Sync Permit
+
+            if "lockout" in model.switches[self.info["control_switch"]]["lights"]:
+                model.switches[self.info["control_switch"]]["lights"]["lockout"] = not self.info["lockout"]
+
+    
+    def calculate(self):
+        self.breaker_switch()
+        if self.info["running"].whoami() == Bus:
+            if self.get_source(closed_check=True):
+                self.info["running"].register_feeder(self)
+
+
+
+
+
+#TODO: Transformers
+
+def initialize():
+    Source(name="TRS",voltage=4160,frequency=60) #TODO: Make this an actual transformer
+    Source(name="DG1",voltage=0,frequency=0)
+    Source(name="DG2",voltage=0,frequency=0)
+    Source(name="GRID",voltage=25000,frequency=60) #change from 25 to 500 (or normal grid voltage?)
+    Source(name="GEN",voltage=0,frequency=0)
+
+    Bus(name="gen_bus",voltage=0,frequency=0,rated_voltage=25000)
+
+    Bus(name="1",voltage=4160,frequency=60,rated_voltage=4160)
+    Bus(name="2",voltage=4160,frequency=60,rated_voltage=4160)
+    Bus(name="3",voltage=4160,frequency=60,rated_voltage=4160)
+
+    Bus(name="5",voltage=6900,frequency=60,rated_voltage=6900)
+    Bus(name="6",voltage=6900,frequency=60,rated_voltage=6900)
+
+    Bus(name="7",voltage=4160,frequency=60,rated_voltage=4160)
+    Bus(name="4",voltage=4160,frequency=60,rated_voltage=4160)
+    Bus(name="8",voltage=4160,frequency=60,rated_voltage=4160)
+    
+
+    Breaker(name="cb_s1",incoming=sources["TRS"],running=busses["1"],closed=True)
+    Breaker(name="cb_s2",incoming=sources["TRS"],running=busses["2"],closed=True)
+    Breaker(name="cb_s3",incoming=sources["TRS"],running=busses["3"],closed=True)
+
+    Breaker(name="cb_1_7",incoming=busses["1"],closed=True)
+    Breaker(name="cb_7_1",incoming=breakers["cb_1_7"],running=busses["7"],closed=True)
+
+    breakers["cb_1_7"].set_running(breakers["cb_7_1"])
+
+    #DG1
+
+    Breaker(name="cb_dg1_7",incoming=sources["DG1"])
+    Breaker(name="cb_7dg1",incoming=breakers["cb_dg1_7"],running=busses["7"],closed=True)
+
+    breakers["cb_dg1_7"].set_running(breakers["cb_7dg1"])
+
+    Breaker(name="cb_3_8",incoming=busses["3"],closed=True)
+    Breaker(name="cb_8_3",incoming=breakers["cb_3_8"],running=busses["8"],closed=True)
+
+    breakers["cb_3_8"].set_running(breakers["cb_8_3"])
+
+    #DG2
+
+    Breaker(name="cb_dg2_8",incoming=sources["DG2"])
+    Breaker(name="cb_8dg2",incoming=breakers["cb_dg2_8"],running=busses["8"],closed=True)
+
+    breakers["cb_dg2_8"].set_running(breakers["cb_8dg2"])
+
+    Breaker(name="gen_output",incoming=sources["GEN"],running=busses["gen_bus"],closed=True,custom=True)
+
+    Breaker(name="cb_4445",incoming=sources["GRID"],running=busses["gen_bus"],closed=True)
+
+    Breaker(name="cb_4448",incoming=sources["GRID"],running=busses["gen_bus"],closed=True)
+
+def run():
+
+    global graph
+
+    #TODO: Move elsewhere
+
+    model.indicators["cr_light_normal_1"] = busses["7"].is_voltage_at_bus(3000)
+    model.indicators["cr_light_normal_2"] = busses["8"].is_voltage_at_bus(3000)
+    model.indicators["cr_light_emergency"] = not (busses["7"].is_voltage_at_bus(3000) and busses["8"].is_voltage_at_bus(3000)) #TODO: divisional emergency lights
+
+    for source in sources:
+        source = sources[source]
+        source.calculate()
+
+    for breaker in breakers:
+        breaker = breakers[breaker]
+        breaker.calculate()
+
+    for bus in busses:
+        bus = busses[bus]
+        bus.calculate()
 
     #This loop is ONLY for logic!
-    for bus_name in busses:
-        bus = busses[bus_name]
-
+    for bus in busses:
+        bus = busses[bus]
         #Primary undervoltage 
-        if bus["voltage"]/bus["rated_voltage"] < 0.69:
+        if bus.info["voltage"]/bus.info["rated_voltage"] < 0.69:
             #TODO: load shedding
 
             #TODO: Backup Transformer
 
-            if bus_name == "7":
+            if bus.name == "7":
                 diesel_generator.dg1.start(auto = True)
 
-                open_breaker("cb_7_1")
+                if diesel_generator.dg1.dg["voltage"] >= 4160:
+                    breakers["cb_dg1_7"].close()
 
-            if bus_name == "8":
+                breakers["cb_7_1"].open()
+
+            if bus.name == "8":
                 diesel_generator.dg2.start(auto = True)
 
-                open_breaker("cb_8_3")
+                if diesel_generator.dg2.dg["voltage"] >= 4160:
+                    breakers["cb_dg2_8"].close()
+
+                breakers["cb_8_3"].open()
 
 
     #TODO: Secondary undervoltage
-
-
-
-
-
-    for breaker_name in breakers:
-        bkr = breakers[breaker_name]
-        if bkr["control_switch"] in switches:
-            if switches[bkr["control_switch"]]["position"] == 0: open_breaker(breaker_name)
-
-            if switches[bkr["control_switch"]]["position"] == 2 and (bkr["sync_sel"] == False or bkr["sync"] == True ): close_breaker(breaker_name)
-
-            switches[bkr["control_switch"]]["lights"]["green"] = not bkr["closed"]
-            switches[bkr["control_switch"]]["lights"]["red"] = bkr["closed"]
-
-            #TODO: Sync Permit
-
-            if "lockout" in switches[bkr["control_switch"]]["lights"]:
-                switches[bkr["control_switch"]]["lights"]["lockout"] = not bkr["lockout"]
-
-        
-        bkr["sync"] = False
-
-        #TODO: find a way to resolve this minor pyramid
-        if bkr["closed"]:
-            if bkr["lockout"]:
-                bkr["closed"] = False
-                continue
-
-            if not verify_path_closed(bkr):
-                continue
-
-            if get_type(bkr["running"]) == ElectricalType.BUS:
-                #add this breaker to that busses feeders, if it isnt already there
-                #TODO: clean this up
-                if not breaker_name in busses[bkr["running"]]["feeders"]:
-                    busses[bkr["running"]]["feeders"].append(breaker_name)
-                 
-
-    for bus_name in busses:
-        bus = busses[bus_name]
-		#handling for breaker interactions with the bus
-
-        #lockout the whole bus if any source is locked out
-        bus["lockout"] = False
-        for breaker in bus["source_breakers"]:
-            if breakers[breaker]["lockout"]:
-                bus["lockout"] = True
-        
-        for feeder in bus["feeders"]:
-                
-            #remove the feeder if its not supplying anything
-            match get_type(feeder):
-                case ElectricalType.BREAKER:
-                    component = breakers[feeder]
-                    if not verify_path_closed(feeder):
-                        bus["feeders"].remove(feeder)
-                        continue
-
-                    if bus["lockout"] and (feeder in bus["source_breakers"]):
-                        open_breaker(feeder)
-                        continue
-            
-                    #TODO: interactions between multiple feeders
-
-                    source = trace_source(component)
-
-                    bus["voltage"] = source["voltage"]
-                    bus["frequency"] = source["frequency"]
-                    bus["phase"] = source["phase"]
-                case ElectricalType.TRANSFORMER:
-                    component = transformers[feeder]
-                    if not component["breakers_closed"]:
-                        bus["feeders"].remove(feeder)
-                    
-                    source = component
-
-                    bus["voltage"] = source["voltage"]
-                    bus["frequency"] = source["frequency"]
-                    bus["phase"] = source["phase"]
-           
-
-        if len(bus["feeders"]) == 0:
-            bus["voltage"] = 0
-            bus["frequency"] = 0
-            bus["phase"] = 0
-        
-        if bus["voltage"] < 0:
-            if "UNDERVOLTAGE" in bus["annunciators"]:
-                alarms[bus["annunciators"]["UNDERVOLTAGE"]]["alarm"] = True
-
-    for transformer_name in transformers:
-        xfmr = transformers[transformer_name]
-        input_source = trace_source(xfmr["incoming"])
-        #TODO: remove this hardcoded stuff
-        incoming_voltage = 0
-        incoming_frequency = 0
-        if get_type(xfmr["incoming"]) == ElectricalType.BREAKER:
-            input_breaker = type_check(get_type(xfmr["incoming"]))[xfmr["incoming"]]
-            xfmr["breakers_closed"] = input_breaker["closed"]
-            if input_breaker["closed"]:
-                incoming_voltage = input_source["voltage"]
-                incoming_frequency = input_source["frequency"]
-                if get_type(xfmr["running"]) == ElectricalType.BUS:
-                    busses[xfmr["running"]]["feeders"].append(transformer_name)
-
-        xfmr["voltage"] = incoming_voltage
-        xfmr["frequency"] = incoming_frequency
-
-    for source in sources:
-        source = sources[source]
-        source["phase"] = calculate_phase(source["frequency"],source["phase"])
-
-
-
-def trace_source(incoming):
-    '''Traces the source that is currently supplying voltage. Can be a bus or source.'''
-    source = ""
-    if type(incoming) == str: incoming = type_check(get_type(incoming))[incoming]
-
-    if incoming["type"] == ElectricalType.BUS: return incoming #if the given trace is already a bus, just return that
-
-    while True:
-        if source == "":
-            source = incoming["incoming"]
-
-        if get_type(source) == ElectricalType.BUS:
-            source = busses[source]
-            break
-        elif get_type(source) == ElectricalType.SOURCE:
-            source = sources[source]
-            break
-        else:
-            #this is a bit messy
-            source = type_check(get_type(source))[source]["incoming"]
-
-    return source
-
-def verify_path_closed(incoming):
-    '''Traces the source that is currently supplying voltage and verifys all breakers are closed. Returns true if all are closed.'''
-    source = ""
-    if type(incoming) == str: incoming = type_check(get_type(incoming))[incoming]
-
-    if incoming["type"] == ElectricalType.BUS: return True #if the given trace is already a bus, just return true
-    available = True
-    while True:
-        if source == "":
-            if incoming["type"] == ElectricalType.BREAKER:
-                if not incoming["closed"]: 
-                    available = False
-                    break
-            source = incoming["incoming"]
-
-        if get_type(source) == ElectricalType.BUS:
-            break
-        elif get_type(source) == ElectricalType.SOURCE:
-            break
-        elif get_type(source) == ElectricalType.BREAKER:
-            if not type_check(get_type(source))[source]["closed"]: 
-                available = False
-                break
-
-        source = type_check(get_type(source))[source]["incoming"]
-
-    return available
-        
-
-def get_type(name):
-    #TODO: find a better way to do this
-    #NOTE: replace with a for loop?
-    if "cb" in name:
-        return ElectricalType.BREAKER
-    if "tr" in name:
-        return ElectricalType.TRANSFORMER
-    if name in sources:
-        return ElectricalType.SOURCE
-    else:
-        return ElectricalType.BUS
-        
-
-def type_check(component_type:int):
-    '''Checks the type of the component given. Returns the table that the type is in.'''
-    if component_type > len(ElectricalType) or component_type < 0: print(f"Invalid type : {component_type}")
-
-    match component_type: #TODO: is there a better way to do this?
-        case ElectricalType.BREAKER: return breakers
-        case ElectricalType.TRANSFORMER: return transformers
-        case ElectricalType.BUS: return busses
-        case ElectricalType.SOURCE: return sources
-
-    print("Could not match given type with any defined type : "+str(type))
-    return 
-		
-def open_breaker(breaker):
-    component = breakers[breaker]
-    #TODO: breakers failing to trip
-    component["closed"] = False
-	
-def close_breaker(breaker):
-    component = breakers[breaker]
-    #TODO: breakers failing to close
-    component["closed"] = True and not component["lockout"]
-	
-def set_lockout(component_type:int,name:str,state:bool):
-    type_table = type_check(component_type)
-    component = type_table[name]
-    component["lockout"] = state
-
-def get_bus_power(bus_name:str,undervoltage_setpoint:int):
-    """Gets if the bus is powered, according to a undervoltage setpoint.
-
-    Returns true if powered, else false."""
-    if not bus_name in busses:
-        return True
-
-    if busses[bus_name]["voltage"] < undervoltage_setpoint: return False
-    return True
-
-def get_phase(name:str):
-    type = get_type(name)
-
-    type = type_check(type)
-
-    phase = type[name]["phase"]
-
-    return phase
-
-#physics related functions
-
-def VoltAmperesAC(voltage:int,amps:int,pf:float):
-    """Gets the watts currently passing through an AC system.
-    This will get the watts for a single phase system. Use TF_VoltAmperesAC for three phase.
-    Voltage - Voltage, in volts.
-    Amps - Amperes, in amps. (duh)
-    pf - Power factor
-    
-    Returns the power, in watts."""
-
-    watts = voltage*amps*pf
-
-    return watts
-
-def TF_VoltAmperesAC(voltage:int,amps:int,pf:float):
-    """Gets the watts currently passing through an AC system.
-    This will get the watts for a three phase system. Use VoltAmperesAC for single phase.
-    Voltage - Voltage, in volts.
-    Amps - Current, in amps. (duh)
-    pf - Power factor
-    
-    Returns the power, in watts."""
-
-    watts = voltage*amps*pf*math.sqrt(3)
-
-    return watts

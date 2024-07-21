@@ -11,7 +11,7 @@ class SyncSelector():
         
         self.selectors[name] = {"incoming" : incoming, "running" : running, "breaker" : breaker}
 
-        ac_power.breakers[breaker]["sync_sel"] = True
+        ac_power.breakers[breaker].info["sync_sel"] = True
 
     def check_selectors(self):
 
@@ -29,7 +29,7 @@ class SyncSelector():
             model.values[self.synchroscope] = ac_power.get_phase(sel["incoming"])-ac_power.get_phase(sel["running"])
 
             if model.switches[active_selector]["position"] == 0:
-                ac_power.breakers[sel["breaker"]]["sync"] = True
+                ac_power.breakers[sel["breaker"]].info["sync"] = True
 
 
 
