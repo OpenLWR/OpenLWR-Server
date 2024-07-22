@@ -18,6 +18,7 @@ class PumpTypes(IntEnum):
 pump_1 = { #TODO: improve the accuracy of these calculations
     #this pump is motor driven
     "motor_breaker_closed" : False,
+    "was_closed" : False,
     "motor_control_switch" : "",
     "bus" : "",
     "horsepower" : 0,
@@ -34,6 +35,9 @@ pump_1 = { #TODO: improve the accuracy of these calculations
     "current_limit" : 0,
     "header" : "",
     "suct_header" : "",
+
+    "loop_seq" : False, # Has a LOOP Sequence (otherwise trips instantly)
+    "loop_avail" : False, # Loop Sequence has permitted loading of this equipment, if needed
     "type" : PumpTypes.Type1,
 }
 
@@ -134,8 +138,9 @@ def run():
 
             voltage = pump_bus.voltage_at_bus()
 
-            if voltage < 120:
+            if voltage < 120 and pump["motor_breaker_closed"]:
                 pump["motor_breaker_closed"] = False
+                pump["was_closed"] = True
                 continue
 
             if not pump_name in pump_bus.info["loads"]:
@@ -146,6 +151,10 @@ def run():
             #log.warning("Pump does not have an available bus!")
             voltage = 4160
 
+        if pump["loop_avail"] and pump["was_closed"]:
+            pump["motor_breaker_closed"] = True
+            pump["was_closed"] = False
+
         if pump["motor_breaker_closed"]:
             #first, verify that this breaker is allowed to be closed
 
@@ -153,7 +162,7 @@ def run():
 
             
 
-            Acceleration = (pump["rated_rpm"]-pump["rpm"])*0.1 #TODO: variable motor accel
+            Acceleration = (pump["rated_rpm"]-pump["rpm"])*0.1*(pump_bus.info["frequency"]/60) #TODO: Make acceleration and frequency realistic
             pump["rpm"] = clamp(pump["rpm"]+Acceleration,0,pump["rated_rpm"]+100)
             #full load amperes
             AmpsFLA = (pump["horsepower"]*746)/(math.sqrt(3)*voltage*0.876*0.95) #TODO: variable motor efficiency and power factor

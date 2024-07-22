@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
 
 class Transient:
-    def __init__(self):
+    def __init__(self,name):
         self.graphs = {}
         self.shown = False
+        self.name = name
 
     def add_graph(self,name):
         x = self.graphs.copy()
@@ -19,10 +20,14 @@ class Transient:
         self.shown = True
 
         fig, ax = plt.subplots()
+        ax.set_title(self.name)
         
-        for plot in self.graphs:
-            plot = self.graphs[plot]
+        for plot_name in self.graphs:
+            plot = self.graphs[plot_name]
 
-            ax.plot(plot)
+            ax.plot(plot,label=plot_name)
+
+        ax.legend()
+            
             
         plt.show()

@@ -1,6 +1,12 @@
 from simulation.models.control_room_columbia.general_physics import ac_power
 from simulation.models.control_room_columbia import model
 
+def get_phase(name):
+    if name in ac_power.sources:
+        return ac_power.sources[name].info["phase"]
+    
+    return ac_power.busses[name].info["phase"]
+
 class SyncSelector():
 
     def __init__(self,sync_name):
@@ -26,7 +32,7 @@ class SyncSelector():
 
         if active_selector != "":
             sel = self.selectors[active_selector]
-            model.values[self.synchroscope] = ac_power.get_phase(sel["incoming"])-ac_power.get_phase(sel["running"])
+            model.values[self.synchroscope] = get_phase(sel["incoming"])-get_phase(sel["running"])
 
             if model.switches[active_selector]["position"] == 0:
                 ac_power.breakers[sel["breaker"]].info["sync"] = True

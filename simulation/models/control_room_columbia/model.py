@@ -2193,6 +2193,8 @@ from simulation.models.control_room_columbia.systems import deh
 from simulation.models.control_room_columbia.systems import pcis
 from simulation.models.control_room_columbia.systems import rod_worth_minimizer
 from simulation.models.control_room_columbia.systems import sync
+from simulation.models.control_room_columbia.systems import loop_sequence
+loop_sequence.initialize()
 sync.initialize()
 deh.initialize()
 feedwater.initialize()
@@ -2209,6 +2211,7 @@ def model_run(delta):
     ac_power.run()
     diesel_generator.run()
     sync.run()
+    loop_sequence.run()
     fluid.run() 
     pump.run()
     gas.run()

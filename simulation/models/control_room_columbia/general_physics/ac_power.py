@@ -2,6 +2,7 @@ from simulation.constants.electrical_types import ElectricalType
 from simulation.constants.equipment_states import EquipmentStates
 from simulation.models.control_room_columbia.general_physics import diesel_generator
 from simulation.models.control_room_columbia import model
+from simulation.models.control_room_columbia.libraries import transient
 import math
 import log
 
@@ -192,6 +193,7 @@ class Breaker:
 	        "flag_position" : False,
             "custom" : custom,
 
+            "current" : 0, #amps
             "current_limit" : current_limit, #amps 
         }
         breakers[name] = self
@@ -261,16 +263,26 @@ class Breaker:
             if "lockout" in model.switches[self.info["control_switch"]]["lights"]:
                 model.switches[self.info["control_switch"]]["lights"]["lockout"] = not self.info["lockout"]
 
+            self.info["sync"] = False
+
     
     def calculate(self):
         self.breaker_switch()
         if self.info["running"].whoami() == Bus:
             if self.get_source(closed_check=True):
                 self.info["running"].register_feeder(self)
+                
+                total_load = 0
+                for load in self.info["running"].info["loads"]:
+                    total_load += self.info["running"].info["loads"][load]
+
+                self.info["current"] = total_load/(self.info["running"].info["voltage"]+0.1)
+
+        
 
 
 
-
+graph = None
 
 #TODO: Transformers
 
@@ -325,9 +337,17 @@ def initialize():
 
     Breaker(name="gen_output",incoming=sources["GEN"],running=busses["gen_bus"],closed=True,custom=True)
 
-    Breaker(name="cb_4445",incoming=sources["GRID"],running=busses["gen_bus"],closed=True)
+    Breaker(name="cb_4885",incoming=sources["GRID"],running=busses["gen_bus"])
 
-    Breaker(name="cb_4448",incoming=sources["GRID"],running=busses["gen_bus"],closed=True)
+    Breaker(name="cb_4888",incoming=sources["GRID"],running=busses["gen_bus"])
+    
+    global graph
+
+    #graph = transient.Transient("DG1/2 Transient Response - LOOP and LOCA")
+
+    #graph.add_graph("DG1 Voltage")
+    #graph.add_graph("DG1 Field Voltage")
+    #graph.add_graph("DG1 Frequency")
 
 def run():
 
@@ -338,6 +358,16 @@ def run():
     model.indicators["cr_light_normal_1"] = busses["7"].is_voltage_at_bus(3000)
     model.indicators["cr_light_normal_2"] = busses["8"].is_voltage_at_bus(3000)
     model.indicators["cr_light_emergency"] = not (busses["7"].is_voltage_at_bus(3000) and busses["8"].is_voltage_at_bus(3000)) #TODO: divisional emergency lights
+
+    #graph.add("DG1 Voltage",sources["DG1"].info["voltage"])
+    #graph.add("DG1 Field Voltage",diesel_generator.dg1.dg["field_voltage"])
+    #graph.add("DG1 Frequency",sources["DG1"].info["frequency"])
+
+    #log.info(str(busses["7"].voltage_at_bus()))
+
+    #if model.runs*0.1 > 8:
+        #graph.generate_plot()
+        #exit()
 
     for source in sources:
         source = sources[source]
