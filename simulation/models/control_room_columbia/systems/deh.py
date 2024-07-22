@@ -4,6 +4,7 @@ from simulation.models.control_room_columbia.general_physics import fluid
 from simulation.models.control_room_columbia.general_physics import main_turbine
 from simulation.models.control_room_columbia.reactor_physics import pressure
 from simulation.models.control_room_columbia.libraries.pid import PID
+import math
 
 setpoint = 950 #pressure drop is ~ 50 psig across the main steam system
 
@@ -29,6 +30,10 @@ AccelerationReference = {
     "ehc_fast" : 70,
 }
 
+line_speed = {
+    "on" : False, #TODO: Figure out how exactly the Line Speed Matcher works (works with the Desired Load Control?)
+}
+
 LoadSetpoint = 0
 
 SelectedAccelerationReference = 10
@@ -41,10 +46,10 @@ def initialize():
     PressureController = PID(Kp=0.05, Ki=0, Kd=0.2, minimum=0,maximum=100)
 
     global SpeedController
-    SpeedController = PID(Kp=0.05, Ki=0, Kd=0.2, minimum=-0.04,maximum=0.03)
+    SpeedController = PID(Kp=0.2, Ki=0.00000001, Kd=0.13, minimum=-0.04,maximum=0.03)
 
     global AccelerationController
-    AccelerationController = PID(Kp=0.05, Ki=0, Kd=0.2, minimum=-0.03,maximum=0.03)
+    AccelerationController = PID(Kp=0.02, Ki=0.000001, Kd=0.22, minimum=-0.03,maximum=0.03)
     #DT is DeltaTime (just use 1 for now)
 
 def run():
@@ -69,6 +74,24 @@ def run():
             for b in SpeedReference:
                 if b != button:
                     model.indicators[b] = False
+
+    if model.buttons["ehc_line_speed_off"]["state"]:
+        line_speed["on"] = False
+
+    if model.buttons["ehc_line_speed_selected"]["state"]:
+        line_speed["on"] = True
+
+    if line_speed["on"]:
+        target_rpm = 60.05*math.pi
+        target_rpm = target_rpm*(30/math.pi)
+
+        SelectedSpeedReference = target_rpm
+        model.indicators["ehc_line_speed_operating"] = True
+        model.indicators["ehc_line_speed_off"] = False
+    else:
+        model.indicators["ehc_line_speed_operating"] = False
+        model.indicators["ehc_line_speed_selected"] = False
+        model.indicators["ehc_line_speed_off"] = True
 
     speed_control_signal = SpeedController.update(SelectedSpeedReference,rpm,1)
 

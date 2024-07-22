@@ -1781,6 +1781,10 @@ indicators = {
     "ehc_slow": True,
     "ehc_med": False,
     "ehc_fast": False,
+
+    "ehc_line_speed_off": False,
+    "ehc_line_speed_selected": False,
+    "ehc_line_speed_operating": False,
 }
 
 buttons = {
@@ -2027,6 +2031,15 @@ buttons = {
         "armed" : False,
     },
     "ehc_fast": {
+        "state" : False,
+        "armed" : False,
+    },
+
+    "ehc_line_speed_off": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ehc_line_speed_selected": {
         "state" : False,
         "armed" : False,
     },

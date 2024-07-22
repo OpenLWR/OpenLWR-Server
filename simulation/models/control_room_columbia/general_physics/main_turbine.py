@@ -75,6 +75,7 @@ def run():
     
     Turbine["Torque"] = Q
     Turbine["RPM"] = Turbine["AngularVelocity"]*60/(2*math.pi)
+    #print(Turbine["RPM"])
     Turbine["Frequency"] = turbineFrequency
 
     model.values["mt_rpm"] = Turbine["RPM"] #TODO: move to DEH
