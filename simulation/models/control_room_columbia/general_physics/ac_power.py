@@ -263,6 +263,9 @@ class Breaker:
             if "lockout" in model.switches[self.info["control_switch"]]["lights"]:
                 model.switches[self.info["control_switch"]]["lights"]["lockout"] = not self.info["lockout"]
 
+            if "sync" in model.switches[self.info["control_switch"]]["lights"]:
+                model.switches[self.info["control_switch"]]["lights"]["sync"] = self.info["sync"] #TODO: Make this illuminate only from time of taking to close to breaker closure
+
             self.info["sync"] = False
 
     
@@ -318,7 +321,7 @@ def initialize():
 
     #DG1
 
-    Breaker(name="cb_dg1_7",incoming=sources["DG1"])
+    Breaker(name="cb_dg1_7",incoming=sources["DG1"],custom=True) #has a mode selector
     Breaker(name="cb_7dg1",incoming=breakers["cb_dg1_7"],running=busses["7"],closed=True)
 
     breakers["cb_dg1_7"].set_running(breakers["cb_7dg1"])

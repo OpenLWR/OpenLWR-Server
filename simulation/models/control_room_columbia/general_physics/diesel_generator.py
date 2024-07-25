@@ -36,7 +36,7 @@ class DieselGenerator():
             "horsepower" : horsepower,
             "inertia" : inertia,
         }
-        self.governor_pid = pid.PID(0.3,0.0001,0.001,-0.2,0.2)
+        self.governor_pid = pid.PIDExperimental(0.19,0,0.1,-0.05,0.05) #pid.PID(0.25,0.001,0.01,-0.2,0.2)
         self.accel_pid = pid.PID(0.3,0.0001,0.001,-0.3,0)
         #self.exciter_pid = pid.PID(0.05,0.0002,0.002,-0.5,0.5)
 

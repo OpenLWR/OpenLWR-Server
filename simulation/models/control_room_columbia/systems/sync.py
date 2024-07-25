@@ -47,6 +47,10 @@ def initialize():
     sync.add_selector("sync_cb_4888","gen_bus","GRID","cb_4888")
     synchroscopes.append(sync)
 
+    sync = SyncSelector("div_1_sync")
+    sync.add_selector("sync_cb_dg1_7","DG1","7","cb_dg1_7")
+    synchroscopes.append(sync)
+
 def run():
     for synchroscope in synchroscopes:
         synchroscope.check_selectors()

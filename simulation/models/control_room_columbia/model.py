@@ -1420,7 +1420,7 @@ switches = {
         "lights" : {
             "green" : True,
             "red" : False,
-            "lockout" : True,
+            "close_permit" : True,
         },
         "flag" : "green",
     },
@@ -1436,6 +1436,46 @@ switches = {
             "red" : False,
             "lockout" : True,
         },
+        "flag" : "green",
+    },
+    "dg1_voltreg": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+        "flag" : "green",
+    },
+    "cb_dg1_7_mode": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+        "flag" : "green",
+    },
+    "sync_cb_dg1_7": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+        "flag" : "green",
+    },
+    "dg1_gov": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
         "flag" : "green",
     },
     "diesel_gen_1": {
@@ -1463,7 +1503,7 @@ switches = {
         "lights" : {
             "green" : True,
             "red" : False,
-            "lockout" : True,
+            "close_permit" : True,
         },
         "flag" : "green",
     },
@@ -1612,6 +1652,7 @@ values = {
 
     "bus_4_voltage" : 4160,
     "main_generator_sync" : 0,
+    "div_1_sync" : 0,
 
     "rwm_group" : -1,
     "rwm_insert_error_1" : -1,
@@ -2196,6 +2237,7 @@ from simulation.models.control_room_columbia.general_physics import main_generat
 from simulation.models.control_room_columbia.general_physics import diesel_generator
 diesel_generator.initialize()
 
+from simulation.models.control_room_columbia.systems import diesels
 from simulation.models.control_room_columbia.systems import safety_relief
 from simulation.models.control_room_columbia.systems import irm_srm_positioner
 from simulation.models.control_room_columbia.systems import feedwater
@@ -2231,6 +2273,7 @@ def model_run(delta):
     turbine.run()
     main_turbine.run()
     main_generator.run()
+    diesels.run()
 
     safety_relief.run()
     irm_srm_positioner.run()
