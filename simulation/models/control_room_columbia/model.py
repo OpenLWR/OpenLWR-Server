@@ -1320,6 +1320,7 @@ switches = {
             "green" : True,
             "red" : False,
             "lockout" : True,
+            "sync" : False,
         },
         "flag" : "green",
     },
@@ -1334,6 +1335,7 @@ switches = {
             "green" : True,
             "red" : False,
             "lockout" : True,
+            "sync" : False,
         },
         "flag" : "green",
     },
@@ -1348,6 +1350,92 @@ switches = {
             "green" : True,
             "red" : False,
             "lockout" : True,
+            "sync" : False,
+        },
+        "flag" : "green",
+    },
+
+    #SL-11
+    "cb_1_11": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+    "cb_11_1": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    #SL-21
+    "cb_2_21": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+    "cb_21_2": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    #SL-31
+    "cb_3_31": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+    "cb_31_3": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
         },
         "flag" : "green",
     },

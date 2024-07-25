@@ -2,7 +2,7 @@ from simulation.constants.electrical_types import ElectricalType
 from simulation.constants.equipment_states import EquipmentStates
 from simulation.models.control_room_columbia.general_physics import diesel_generator
 from simulation.models.control_room_columbia import model
-from simulation.models.control_room_columbia.libraries import transient
+#from simulation.models.control_room_columbia.libraries import transient
 import math
 import log
 
@@ -20,6 +20,7 @@ def calculate_phase(frequency,phase):
 sources = {}
 busses = {}
 breakers = {}
+transformers = {}
 
 class Source:
     def __init__(self,name="",voltage=0,frequency=0,phase=0,annunciators={}):
@@ -249,7 +250,6 @@ class Breaker:
     def breaker_switch(self):
         """Default behavior for breaker switches. Can be disabled by setting 'custom' on init"""
         if self.info["custom"]: return
-
         if self.info["control_switch"] != "":
             if model.switches[self.info["control_switch"]]["position"] == 0: self.open()
 
@@ -281,15 +281,82 @@ class Breaker:
 
                 self.info["current"] = total_load/(self.info["running"].info["voltage"]+0.1)
 
-        
+class Transformer:
+    def __init__(self,name="",incoming=None,running=None,lockout=False,factor=1,voltage=0,frequency=0,current_limit=12.5):
+        self.name = name
+        self.info = {
+            "type" : ElectricalType.TRANSFORMER, #TODO: Do we need this anymore?
+		    "incoming" : incoming,
+		    "running" : running, 
+		    "lockout" : lockout, #Transformer lockout 
 
+            "voltage" : voltage,
+            "frequency" : frequency,
+            "phase" : 0,
+            "factor" : factor,
+            "current" : 0, #amps
+            "current_limit" : current_limit, #amps 
+        }
+        transformers[name] = self
+
+    def whoami(self):
+        return self.__class__
+    
+    def set_incoming(self,object):
+        self.info["incoming"] = object
+
+    def set_running(self,object):
+        self.info["running"] = object
+
+    def get_source(self,closed_check = False):
+        """Gets the 'source' for the transformer.
+        This would either be an actual source type, a bus, or a transformer.
+        Returns the source object.
+        Optionally returns if all breakers on that path are closed."""
+        source = None
+        closed = True
+        while True:
+            if source == None:
+                source = self.info["incoming"]
+
+            if source.whoami() == Breaker:
+                if not source.info["closed"]:
+                    closed = False
+
+            if source.whoami() == Bus:
+                break
+            elif source.whoami() == Source:
+                break
+            elif source.whoami() == Transformer:
+                break
+            else:
+                source = source.info["incoming"]
+
+        value = source
+
+        if closed_check == True:
+            value = closed
+
+        return value
+
+    def calculate(self):
+        source = self.get_source()
+        closed = self.get_source(True)
+
+        if closed:
+            self.info["voltage"] = source.info["voltage"]*self.info["factor"]
+            self.info["frequency"] = source.info["frequency"]
+            self.info["phase"] = source.info["phase"]
+        else:
+            self.info["voltage"] = 0
+            self.info["frequency"] = 0
+            self.info["phase"] = 0
 
 
 graph = None
 
-#TODO: Transformers
-
 def initialize():
+
     Source(name="TRS",voltage=4160,frequency=60) #TODO: Make this an actual transformer
     Source(name="DG1",voltage=0,frequency=0)
     Source(name="DG2",voltage=0,frequency=0)
@@ -302,6 +369,10 @@ def initialize():
     Bus(name="2",voltage=4160,frequency=60,rated_voltage=4160)
     Bus(name="3",voltage=4160,frequency=60,rated_voltage=4160)
 
+    Bus(name="11",voltage=480,frequency=60,rated_voltage=480)
+    Bus(name="21",voltage=480,frequency=60,rated_voltage=480)
+    Bus(name="31",voltage=480,frequency=60,rated_voltage=480)
+
     Bus(name="5",voltage=6900,frequency=60,rated_voltage=6900)
     Bus(name="6",voltage=6900,frequency=60,rated_voltage=6900)
 
@@ -309,7 +380,6 @@ def initialize():
     Bus(name="4",voltage=4160,frequency=60,rated_voltage=4160)
     Bus(name="8",voltage=4160,frequency=60,rated_voltage=4160)
     
-
     Breaker(name="cb_s1",incoming=sources["TRS"],running=busses["1"],closed=True)
     Breaker(name="cb_s2",incoming=sources["TRS"],running=busses["2"],closed=True)
     Breaker(name="cb_s3",incoming=sources["TRS"],running=busses["3"],closed=True)
@@ -318,6 +388,40 @@ def initialize():
     Breaker(name="cb_7_1",incoming=breakers["cb_1_7"],running=busses["7"],closed=True)
 
     breakers["cb_1_7"].set_running(breakers["cb_7_1"])
+
+    #SL-11
+
+    Breaker(name="cb_1_11",incoming=busses["1"],closed=True)
+    Breaker(name="cb_11_1",running=busses["11"],closed=True)
+
+    Transformer(name="tr_1_11",incoming=breakers["cb_1_11"],running=breakers["cb_11_1"],factor=0.1153846154)
+
+    breakers["cb_1_11"].set_running(transformers["tr_1_11"])
+    breakers["cb_11_1"].set_incoming(transformers["tr_1_11"])
+
+    #SL-21
+
+    Breaker(name="cb_2_21",incoming=busses["2"],closed=True)
+    Breaker(name="cb_21_2",running=busses["21"],closed=True)
+
+    Transformer(name="tr_2_21",incoming=breakers["cb_2_21"],running=breakers["cb_21_2"],factor=0.1153846154)
+
+    breakers["cb_2_21"].set_running(transformers["tr_2_21"])
+    breakers["cb_21_2"].set_incoming(transformers["tr_2_21"])
+
+    breakers["cb_1_7"].set_running(breakers["cb_7_1"])
+
+    #SL-31
+
+    Breaker(name="cb_3_31",incoming=busses["3"],closed=True)
+    Breaker(name="cb_31_3",running=busses["31"],closed=True)
+
+    Transformer(name="tr_3_31",incoming=breakers["cb_3_31"],running=breakers["cb_31_3"],factor=0.1153846154)
+
+    breakers["cb_3_31"].set_running(transformers["tr_3_31"])
+    breakers["cb_31_3"].set_incoming(transformers["tr_3_31"])
+
+    
 
     #DG1
 
@@ -343,6 +447,8 @@ def initialize():
     Breaker(name="cb_4885",incoming=sources["GRID"],running=busses["gen_bus"])
 
     Breaker(name="cb_4888",incoming=sources["GRID"],running=busses["gen_bus"])
+
+
     
     global graph
 
@@ -383,6 +489,10 @@ def run():
     for bus in busses:
         bus = busses[bus]
         bus.calculate()
+
+    for transformer in transformers:
+        transformer = transformers[transformer]
+        transformer.calculate()
 
     #This loop is ONLY for logic!
     for bus in busses:
