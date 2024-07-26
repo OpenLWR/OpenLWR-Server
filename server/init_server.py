@@ -20,6 +20,7 @@ import json
 
 def init_server(websocket):
     import log
+    import config
     for packet in websocket:
         try:
             token_str = str(uuid.uuid4())
@@ -28,10 +29,14 @@ def init_server(websocket):
             login_parameters = json.loads(packet_data)
 
             username = login_parameters["username"]
+            version = login_parameters["version"]
 
             # check the packet is the correct type and the username is valid
             assert packet_id == packets.ClientPackets.USER_LOGIN
             assert (len(username) <= 20 and len(username) >= 2)
+
+            # check to make sure the client has the same version as the server
+            assert version == config.config["version"]
 
             username = packet_data
             token_object = manager.connect(websocket, token_str)
