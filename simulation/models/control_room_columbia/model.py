@@ -1440,6 +1440,35 @@ switches = {
         "flag" : "green",
     },
 
+    "cb_2_4": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+            "sync" : False,
+        },
+        "flag" : "green",
+    },
+    "cb_4_2": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+
     "cb_7_1": {
         "positions": {
 			0: 45,
@@ -1452,6 +1481,16 @@ switches = {
             "red" : False,
             "lockout" : True,
         },
+        "flag" : "green",
+    },
+    "sync_cb_7_1": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
         "flag" : "green",
     },
     "cb_1_7": {
@@ -1482,6 +1521,16 @@ switches = {
         },
         "flag" : "green",
     },
+    "sync_cb_8_3": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+        "flag" : "green",
+    },
     "cb_3_8": {
         "positions": {
 			0: 45,
@@ -1494,6 +1543,64 @@ switches = {
             "red" : False,
             "lockout" : True,
         },
+        "flag" : "green",
+    },
+
+    #TR-B to SM-7
+
+    "cb_b7": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+            "sync" : False,
+            "xfer" : False,
+        },
+        "flag" : "green",
+    },
+    "sync_cb_b7": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+        "flag" : "green",
+    },
+
+    #TR-B to SM-8
+
+    "cb_b8": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+            "sync" : False,
+            "xfer" : False,
+        },
+        "flag" : "green",
+    },
+    "sync_cb_b8": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
         "flag" : "green",
     },
 
@@ -1609,6 +1716,46 @@ switches = {
         },
         "flag" : "green",
     },
+    "dg2_voltreg": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+        "flag" : "green",
+    },
+    "cb_dg2_8_mode": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+        "flag" : "green",
+    },
+    "sync_cb_dg2_8": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+        "flag" : "green",
+    },
+    "dg2_gov": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+        "flag" : "green",
+    },
     "diesel_gen_2": {
         "positions": {
 			0: 45,
@@ -1622,6 +1769,8 @@ switches = {
         },
         "flag" : "green",
     },
+
+
 
     "cb_4885": {
         "positions": {
@@ -1741,6 +1890,7 @@ values = {
     "bus_4_voltage" : 4160,
     "main_generator_sync" : 0,
     "div_1_sync" : 0,
+    "div_2_sync" : 0,
 
     "rwm_group" : -1,
     "rwm_insert_error_1" : -1,

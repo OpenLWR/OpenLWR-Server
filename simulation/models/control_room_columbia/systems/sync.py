@@ -43,12 +43,20 @@ synchroscopes = []
 
 def initialize():
     sync = SyncSelector("main_generator_sync")
-    sync.add_selector("sync_cb_4885","gen_bus","GRID","cb_4885")
-    sync.add_selector("sync_cb_4888","gen_bus","GRID","cb_4888")
+    sync.add_selector("sync_cb_4885","main_bus","ASHE500","cb_4885")
+    sync.add_selector("sync_cb_4888","main_bus","ASHE500","cb_4888")
     synchroscopes.append(sync)
 
     sync = SyncSelector("div_1_sync")
     sync.add_selector("sync_cb_dg1_7","DG1","7","cb_dg1_7")
+    sync.add_selector("sync_cb_b7","b_bus","7","cb_b7")
+    sync.add_selector("sync_cb_7_1","1","7","cb_1_7")
+    synchroscopes.append(sync)
+
+    sync = SyncSelector("div_2_sync")
+    sync.add_selector("sync_cb_dg2_8","DG2","8","cb_dg2_8")
+    sync.add_selector("sync_cb_b8","b_bus","8","cb_b8")
+    sync.add_selector("sync_cb_8_3","3","8","cb_3_8")
     synchroscopes.append(sync)
 
 def run():

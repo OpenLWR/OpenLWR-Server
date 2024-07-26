@@ -114,7 +114,7 @@ class Bus:
 
         #TODO: Distribute loads properly while paralleling
         for feeder in self.info["feeders"]:
-            if True:
+            if feeder.whoami() == Breaker:
                 source = feeder.get_source()
 
                 if feeder.get_source(closed_check = True) == False:
@@ -122,6 +122,20 @@ class Bus:
                     source.remove_load(self.name)
 
                 all_feeder_info.append(source)
+
+                if not self.name in source.info["loads"]:
+                    source.register_load(total_load,self.name)
+                else:
+                    source.modify_load(total_load,self.name)
+
+            elif feeder.whoami() == Transformer:
+                source = feeder.get_source()
+
+                if feeder.get_source(closed_check = True) == False:
+                    self.info["feeders"].remove(feeder)
+                    source.remove_load(self.name)
+
+                all_feeder_info.append(feeder)
 
                 if not self.name in source.info["loads"]:
                     source.register_load(total_load,self.name)
@@ -352,18 +366,43 @@ class Transformer:
             self.info["frequency"] = 0
             self.info["phase"] = 0
 
+        if self.info["running"].whoami() == Bus:
+            if closed:
+                self.info["running"].register_feeder(self)
+                
+                total_load = 0
+                for load in self.info["running"].info["loads"]:
+                    total_load += self.info["running"].info["loads"][load]
+
+                self.info["current"] = total_load/(self.info["running"].info["voltage"]+0.1)
+
+
 
 graph = None
 
 def initialize():
 
-    Source(name="TRS",voltage=4160,frequency=60) #TODO: Make this an actual transformer
+    Source(name="ASHE500",voltage=500000,frequency=60) #Ashe 500kv line
+    Source(name="ASHE230",voltage=230000,frequency=60) #Ashe 230kv line
+    Source(name="BPA115",voltage=115000,frequency=60) #Benton 115kv line
     Source(name="DG1",voltage=0,frequency=0)
     Source(name="DG2",voltage=0,frequency=0)
-    Source(name="GRID",voltage=25000,frequency=60) #change from 25 to 500 (or normal grid voltage?)
     Source(name="GEN",voltage=0,frequency=0)
 
+    Bus(name="s_bus_4160",voltage=4160,frequency=60,rated_voltage=4160)
+    Bus(name="s_bus_6900",voltage=6900,frequency=60,rated_voltage=6900)
+    Bus(name="b_bus",voltage=4160,frequency=60,rated_voltage=4160)
+
+    Transformer(name="tr_s",incoming=sources["ASHE230"],running=busses["s_bus_4160"],factor=0.01808695652,voltage=4160,frequency=60)
+    Transformer(name="tr_s_6900",incoming=sources["ASHE230"],running=busses["s_bus_6900"],factor=0.03,voltage=6900,frequency=60)
+
+    Breaker(name="cb_trb",running=busses["b_bus"],closed=True,custom=True) #Custom because i dont have a switch yet for it
+    Transformer(name="tr_b",incoming=sources["BPA115"],running=breakers["cb_trb"],factor=0.03617391304)
+
+    breakers["cb_trb"].set_incoming(transformers["tr_b"])
+
     Bus(name="gen_bus",voltage=0,frequency=0,rated_voltage=25000)
+    Bus(name="main_bus",voltage=0,frequency=0,rated_voltage=500000)
 
     Bus(name="1",voltage=4160,frequency=60,rated_voltage=4160)
     Bus(name="2",voltage=4160,frequency=60,rated_voltage=4160)
@@ -380,9 +419,9 @@ def initialize():
     Bus(name="4",voltage=4160,frequency=60,rated_voltage=4160)
     Bus(name="8",voltage=4160,frequency=60,rated_voltage=4160)
     
-    Breaker(name="cb_s1",incoming=sources["TRS"],running=busses["1"],closed=True)
-    Breaker(name="cb_s2",incoming=sources["TRS"],running=busses["2"],closed=True)
-    Breaker(name="cb_s3",incoming=sources["TRS"],running=busses["3"],closed=True)
+    Breaker(name="cb_s1",incoming=busses["s_bus_4160"],running=busses["1"],closed=True)
+    Breaker(name="cb_s2",incoming=busses["s_bus_4160"],running=busses["2"],closed=True)
+    Breaker(name="cb_s3",incoming=busses["s_bus_4160"],running=busses["3"],closed=True)
 
     Breaker(name="cb_1_7",incoming=busses["1"],closed=True)
     Breaker(name="cb_7_1",incoming=breakers["cb_1_7"],running=busses["7"],closed=True)
@@ -409,8 +448,6 @@ def initialize():
     breakers["cb_2_21"].set_running(transformers["tr_2_21"])
     breakers["cb_21_2"].set_incoming(transformers["tr_2_21"])
 
-    breakers["cb_1_7"].set_running(breakers["cb_7_1"])
-
     #SL-31
 
     Breaker(name="cb_3_31",incoming=busses["3"],closed=True)
@@ -421,7 +458,34 @@ def initialize():
     breakers["cb_3_31"].set_running(transformers["tr_3_31"])
     breakers["cb_31_3"].set_incoming(transformers["tr_3_31"])
 
-    
+    #SM-1 to 7
+
+    Breaker(name="cb_1_7",incoming=busses["1"],closed=True)
+    Breaker(name="cb_7_1",incoming=breakers["cb_1_7"],running=busses["7"],closed=True)
+
+    breakers["cb_1_7"].set_running(breakers["cb_7_1"])
+
+    #SM-2 to 4
+
+    Breaker(name="cb_2_4",incoming=busses["2"],closed=True)
+    Breaker(name="cb_4_2",incoming=breakers["cb_2_4"],running=busses["4"],closed=True)
+
+    breakers["cb_2_4"].set_running(breakers["cb_4_2"])
+
+    #SM-3 to 8
+
+    Breaker(name="cb_3_8",incoming=busses["3"],closed=True)
+    Breaker(name="cb_8_3",incoming=breakers["cb_3_8"],running=busses["8"],closed=True)
+
+    breakers["cb_3_8"].set_running(breakers["cb_8_3"])
+
+    #TR-B to SM-7
+
+    Breaker(name="cb_b7",incoming=busses["b_bus"],running=busses["7"])
+
+    #TR-B to SM-8
+
+    Breaker(name="cb_b8",incoming=busses["b_bus"],running=busses["8"])
 
     #DG1
 
@@ -430,23 +494,23 @@ def initialize():
 
     breakers["cb_dg1_7"].set_running(breakers["cb_7dg1"])
 
-    Breaker(name="cb_3_8",incoming=busses["3"],closed=True)
-    Breaker(name="cb_8_3",incoming=breakers["cb_3_8"],running=busses["8"],closed=True)
-
-    breakers["cb_3_8"].set_running(breakers["cb_8_3"])
-
     #DG2
 
-    Breaker(name="cb_dg2_8",incoming=sources["DG2"])
+    Breaker(name="cb_dg2_8",incoming=sources["DG2"],custom=True) #has a mode selector
     Breaker(name="cb_8dg2",incoming=breakers["cb_dg2_8"],running=busses["8"],closed=True)
 
     breakers["cb_dg2_8"].set_running(breakers["cb_8dg2"])
 
+
+    #Main Generator
+
     Breaker(name="gen_output",incoming=sources["GEN"],running=busses["gen_bus"],closed=True,custom=True)
 
-    Breaker(name="cb_4885",incoming=sources["GRID"],running=busses["gen_bus"])
+    Transformer(name="tr_m",incoming=busses["gen_bus"],running=busses["main_bus"],factor=20)
 
-    Breaker(name="cb_4888",incoming=sources["GRID"],running=busses["gen_bus"])
+    Breaker(name="cb_4885",incoming=sources["ASHE500"],running=busses["main_bus"])
+
+    Breaker(name="cb_4888",incoming=sources["ASHE500"],running=busses["main_bus"])
 
 
     
@@ -457,6 +521,9 @@ def initialize():
     #graph.add_graph("DG1 Voltage")
     #graph.add_graph("DG1 Field Voltage")
     #graph.add_graph("DG1 Frequency")
+
+time7 = 0 #Temporary, move to its own py file
+time8 = 0 #Temporary, move to its own py file
 
 def run():
 
@@ -482,6 +549,10 @@ def run():
         source = sources[source]
         source.calculate()
 
+    for transformer in transformers:
+        transformer = transformers[transformer]
+        transformer.calculate()
+
     for breaker in breakers:
         breaker = breakers[breaker]
         breaker.calculate()
@@ -490,11 +561,9 @@ def run():
         bus = busses[bus]
         bus.calculate()
 
-    for transformer in transformers:
-        transformer = transformers[transformer]
-        transformer.calculate()
-
     #This loop is ONLY for logic!
+    global time7
+    global time8
     for bus in busses:
         bus = busses[bus]
         #Primary undervoltage 
@@ -506,7 +575,13 @@ def run():
             if bus.name == "7":
                 diesel_generator.dg1.start(auto = True)
 
-                if diesel_generator.dg1.dg["voltage"] >= 4160:
+                time7 += 0.1
+
+                if time7 > 5.5 and busses["b_bus"].is_voltage_at_bus(2000):
+                    #Close the TRB breaker, if its available
+                    breakers["cb_b7"].close()
+
+                if diesel_generator.dg1.dg["voltage"] >= 4160 and time7 > 5.5 and not breakers["cb_b7"].info["closed"]:
                     breakers["cb_dg1_7"].close()
 
                 breakers["cb_7_1"].open()
@@ -514,10 +589,27 @@ def run():
             if bus.name == "8":
                 diesel_generator.dg2.start(auto = True)
 
-                if diesel_generator.dg2.dg["voltage"] >= 4160:
+                time8 += 0.1
+
+                if time8 > 5.5 and busses["b_bus"].is_voltage_at_bus(2000):
+                    #Close the TRB breaker, if its available
+                    breakers["cb_b8"].close()
+
+                if diesel_generator.dg2.dg["voltage"] >= 4160 and time8 > 5.5 and not breakers["cb_b8"].info["closed"]:
                     breakers["cb_dg2_8"].close()
 
                 breakers["cb_8_3"].open()
+
+        else:
+
+            if bus.name == "7":
+                time7 = 0
+
+            if bus.name == "8":
+                time8 = 0
+
+    model.switches["cb_b8"]["lights"]["xfer"] = busses["b_bus"].is_voltage_at_bus(2000) #TODO: Move these
+    model.switches["cb_b7"]["lights"]["xfer"] = busses["b_bus"].is_voltage_at_bus(2000)
 
 
     #TODO: Secondary undervoltage
