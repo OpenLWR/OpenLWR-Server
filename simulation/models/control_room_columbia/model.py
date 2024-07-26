@@ -19,42 +19,56 @@ class ReactorMode(IntEnum):
 alarms = {
     "reactor_scram_a1_and_b1_loss" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "1-2",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "1/2_scram_system_a" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "3-4",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "rpv_level_low_trip_a" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "2-3",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "rpv_press_high_trip_a" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "2-2",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "mode_switch_in_shutdown_position_a" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "5-2",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "neutron_monitor_system_trip_a" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "3-3",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "msiv_closure_trip_a" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "2-1",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
@@ -62,24 +76,32 @@ alarms = {
 
     "rod_accumulator_trouble" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "6-7",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "rpis_or_rwm_inop" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "1-7",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "rod_out_block" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "2-7",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "rod_drift" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "5-7",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
@@ -87,42 +109,56 @@ alarms = {
 
     "reactor_scram_a2_and_b2_loss" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "1-2",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "1/2_scram_system_b" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "3-4",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "rpv_level_low_trip_b" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "2-3",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "rpv_press_high_trip_b" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "2-2",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "mode_switch_in_shutdown_position_b" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "5-2",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "neutron_monitor_system_trip_b" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "3-3",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "msiv_closure_trip_b" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "2-1",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
@@ -130,6 +166,8 @@ alarms = {
 
     "irm_downscale" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "4-5",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
@@ -137,18 +175,24 @@ alarms = {
 
     "irm_upscale" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "3-5",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "irm_bdfh_upscl_trip_or_inop" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "1-5",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "irm_aceg_upscl_trip_or_inop" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "2-5",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
@@ -157,18 +201,24 @@ alarms = {
 
     "rbm_downscale" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "6-6",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "lprm_downscale" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "5-6",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "aprm_downscale" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "4-6",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
@@ -176,30 +226,40 @@ alarms = {
 
     "rbm_upscale_or_inop" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "3-5",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "lprm_upscale" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "2-5",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "aprm_upscale" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "2-6",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "aprm_ace_upscl_trip_or_inop" : {
         "alarm" : False,
+        "box": "Box1",
+		"window": "1-5",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
     },
     "aprm_bdf_upscl_trip_or_inop" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "1-6",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
@@ -207,6 +267,8 @@ alarms = {
 
     "setpoint_setdown_active" : {
         "alarm" : False,
+        "box": "Box2",
+		"window": "2-7",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "1",
         "silenced" : False,
@@ -215,12 +277,16 @@ alarms = {
     #P601.A11
     "msiv_half_trip_system_b" : {
         "alarm" : False,
+        "box": "P601_A11",
+		"window": "5-3",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "2",
         "silenced" : False,
     },
     "rc_2_half_trip" : {
         "alarm" : False,
+        "box": "P601_A11",
+		"window": "2-2",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "2",
         "silenced" : False,
@@ -229,12 +295,16 @@ alarms = {
     #P601.A12
     "msiv_half_trip_system_a" : {
         "alarm" : False,
+        "box": "P601_A12",
+		"window": "2-1",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "2",
         "silenced" : False,
     },
     "rc_1_half_trip" : {
         "alarm" : False,
+        "box": "P601_A12",
+		"window": "4-3",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "2",
         "silenced" : False,
@@ -243,12 +313,16 @@ alarms = {
     #RHR A/LPCS
     "lpcs_rhr_a_actuated" : {
         "alarm" : False,
+        "box": "P601_A3",
+		"window": "1-3",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "2",
         "silenced" : False,
     },
     "lpcs_rhr_a_init_rpv_level_low" : {
         "alarm" : False,
+        "box": "P601_A4",
+		"window": "6-2",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "2",
         "silenced" : False,
@@ -257,12 +331,16 @@ alarms = {
     #P601.A4 (RCIC)
     "rcic_actuated" : {
         "alarm" : False,
+        "box": "P601_A4",
+		"window": "1-2",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "2",
         "silenced" : False,
     },
     "rcic_turbine_trip" : {
         "alarm" : False,
+        "box": "P601_A4",
+		"window": "1-5",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "2",
         "silenced" : False,
@@ -271,6 +349,8 @@ alarms = {
     #HPCS
     "hpcs_actuated" : {
         "alarm" : False,
+        "box": "P601_A1",
+		"window": "1-6",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "3",
         "silenced" : False,

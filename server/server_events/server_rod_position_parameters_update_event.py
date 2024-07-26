@@ -22,5 +22,4 @@ def fire(rods): #TODO only send ones that need to be updated (were changed)
 
 # send initial state of indicators
 def fire_initial(token):
-    #manager.send_user_packet(packet_helper.build(packets.ServerPackets.ROD_POSITION_PARAMETERS_UPDATE, json.dumps(old_rods)), token)
-    manager.broadcast_packet(packet_helper.build(packets.ServerPackets.ROD_POSITION_PARAMETERS_UPDATE, json.dumps(old_rods)))
+    manager.send_user_packet(packet_helper.build(packets.ServerPackets.ROD_POSITION_PARAMETERS_UPDATE, json.dumps(old_rods)), token)
