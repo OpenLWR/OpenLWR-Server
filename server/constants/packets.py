@@ -21,3 +21,4 @@ class ServerPackets(IntEnum):
     USER_LOGIN_ACK = 13,
     CHAT = 16,
     DOWNLOAD_DATA = 17,
+    KICK = 18,

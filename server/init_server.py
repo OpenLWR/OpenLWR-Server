@@ -32,12 +32,14 @@ def init_server(websocket):
             username = login_parameters["username"]
             version = login_parameters["version"]
 
+            token_object = manager.connect(websocket, token_str)
+
             # check the packet is the correct type and the username is valid
-            assert packet_id == packets.ClientPackets.USER_LOGIN
-            assert (len(username) <= 20 and len(username) >= 2)
+            assert packet_id == packets.ClientPackets.USER_LOGIN, "Client sent an invalid packet while logging in."
+            assert (len(username) <= 20 and len(username) >= 2), "Client has an invalid username."
 
             # check to make sure the client has the same version as the server
-            assert version == config.config["version"]
+            assert version == config.config["version"], f"Version mismatch. Client has {version} - Server has {config.config["version"]}"
 
             #before logging in the client, we need to actually give them all the data
             #make a copy of the current state of model.py
@@ -51,10 +53,7 @@ def init_server(websocket):
                 "alarms" : model.alarms.copy(),
             }
 
-            #next, we have to connect the client so we can easily send the information
             username = packet_data
-
-            token_object = manager.connect(websocket, token_str)
             manager.set_username(token_str, username)
 
             for table_name in model_copy:
@@ -67,12 +66,13 @@ def init_server(websocket):
             #TODO: Checksum the client against the server
 
             #last, we finally broadcast the login packet
-            manager.send_user_packet(packet_helper.build(packets.ServerPackets.USER_LOGIN_ACK),token_object.token)
+            manager.send_user_packet(packet_helper.build(packets.ServerPackets.USER_LOGIN_ACK,"ok"),token_object.token)
             break
 
-        except AssertionError:
+        except AssertionError as msg:
             # login invalid
-            log.warning(f"User login failed.")
+            log.warning(f"User login failed for {msg}")
+            manager.send_user_packet(packet_helper.build(packets.ServerPackets.USER_LOGIN_ACK,str(msg)),token_object.token)
             manager.disconnect(token_str)
 
         except Exception:
