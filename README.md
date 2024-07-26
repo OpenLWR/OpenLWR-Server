@@ -79,6 +79,18 @@ cd into the directory where the server files are, then run the following command
 python3.12 -m pip install -r requirements.txt
 ```
 
+In some cases, pip may throw an error telling you to create a venv, if pip runs successfully, you may skip this step, however, if this occurrs, you can resolve this with the following:
+```
+python3.12 -m venv .
+
+# Please note that you will need to run this to activate the venv every time you want to start the server
+source bin/activate
+
+# Now run pip again
+python3.12 -m pip install -r requirements.txt
+```
+
+
 ## Running the server
 In the server directory, run the following command:
 ```
