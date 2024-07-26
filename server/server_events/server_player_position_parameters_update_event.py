@@ -3,10 +3,19 @@ from server.connection_manager import manager
 from server.constants import packets
 import json
 
-def fire(players):
-    manager.broadcast_packet(packet_helper.build(packets.ServerPackets.PLAYER_POSITION_PARAMETERS_UPDATE, players))
+def fire():
+    positions = {}
+    for tk in manager.tokens:
+        position = manager.tokens[tk].position
+        positions[manager.tokens[tk].username] = position
 
-# used when a client first connects to sync up switch positions
+    manager.broadcast_packet(packet_helper.build(packets.ServerPackets.PLAYER_POSITION_PARAMETERS_UPDATE, json.dumps(positions)))
+
 def fire_initial(token):
-    #TODO: we have no players stored, so we cant send the player's the positions.
+    positions = {}
+    for tk in manager.tokens:
+        position = manager.tokens[tk].position
+        positions[manager.tokens[tk].username] = position
+
+    manager.send_user_packet(packet_helper.build(packets.ServerPackets.PLAYER_POSITION_PARAMETERS_UPDATE, json.dumps(positions)),token)
     pass

@@ -6,6 +6,7 @@ class Token:
     def __init__(self, websocket, username, token):
         self.websocket = websocket
         self.username = username
+        self.position = {"x":0,"y":0,"z":0} #TODO: Move somewhere else?
         self.token = token
 
 class ConnectionManager:
@@ -17,8 +18,6 @@ class ConnectionManager:
         return self.tokens[token]
 
     def disconnect(self, token: str):
-        print(self.tokens)
-        print(token)
         if token in self.tokens:
             self.tokens.pop(token)
         else:
@@ -32,7 +31,8 @@ class ConnectionManager:
 
     def broadcast_packet(self, message: str):
         try:
-            for token in self.tokens:
+            token_list = self.tokens.copy() #prevents "dictionary changed size during iteration" error
+            for token in token_list:
                 try: 
                     self.tokens[token].websocket.send(message)
                 except websockets.exceptions.ConnectionClosedError:

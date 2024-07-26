@@ -33,6 +33,7 @@ def init_server(websocket):
             version = login_parameters["version"]
 
             token_object = manager.connect(websocket, token_str)
+            manager.set_username(token_str, username)
 
             # check the packet is the correct type and the username is valid
             assert packet_id == packets.ClientPackets.USER_LOGIN, "Client sent an invalid packet while logging in."
@@ -52,9 +53,6 @@ def init_server(websocket):
                 #"indicators" : model.indicators.copy(), #This will stay on the client
                 "alarms" : model.alarms.copy(),
             }
-
-            username = packet_data
-            manager.set_username(token_str, username)
 
             for table_name in model_copy:
                 info = model_copy[table_name]
@@ -92,7 +90,7 @@ def init_server(websocket):
                     log.blame(token_object.username,packet_data)
 
                 case packets.ClientPackets.PLAYER_POSITION_PARAMETERS_UPDATE:
-                    client_player_position_parameters_update_event.handle(packet_data,token_object.username)
+                    client_player_position_parameters_update_event.handle(packet_data,token_object)
 
                 case packets.ClientPackets.ROD_SELECT_UPDATE:
                     client_rod_select_update_event.handle(packet_data)
