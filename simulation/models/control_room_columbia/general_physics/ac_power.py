@@ -389,6 +389,9 @@ def initialize():
     Source(name="DG2",voltage=0,frequency=0)
     Source(name="GEN",voltage=0,frequency=0)
 
+    Source(name="ASDA",voltage=0,frequency=0)
+    Source(name="ASDB",voltage=0,frequency=0)
+
     Bus(name="s_bus_4160",voltage=4160,frequency=60,rated_voltage=4160)
     Bus(name="s_bus_6900",voltage=6900,frequency=60,rated_voltage=6900)
     Bus(name="b_bus",voltage=4160,frequency=60,rated_voltage=4160)
@@ -415,6 +418,19 @@ def initialize():
     Bus(name="5",voltage=6900,frequency=60,rated_voltage=6900)
     Bus(name="6",voltage=6900,frequency=60,rated_voltage=6900)
 
+    Bus(name="asda",voltage=0,frequency=0,rated_voltage=6900)
+    Bus(name="asdb",voltage=0,frequency=0,rated_voltage=6900)
+
+    Breaker(name="cb_rpt_4b",incoming=sources["ASDB"],closed=True)
+    Breaker(name="cb_rpt_3b",incoming=breakers["cb_rpt_4b"],running=busses["asdb"],closed=True)
+
+    breakers["cb_rpt_4b"].set_running(breakers["cb_rpt_3b"])
+
+    Breaker(name="cb_rpt_4a",incoming=sources["ASDA"],closed=True)
+    Breaker(name="cb_rpt_3a",incoming=breakers["cb_rpt_4a"],running=busses["asda"],closed=True)
+
+    breakers["cb_rpt_4a"].set_running(breakers["cb_rpt_3a"])
+
     Bus(name="7",voltage=4160,frequency=60,rated_voltage=4160)
     Bus(name="4",voltage=4160,frequency=60,rated_voltage=4160)
     Bus(name="8",voltage=4160,frequency=60,rated_voltage=4160)
@@ -422,6 +438,9 @@ def initialize():
     Breaker(name="cb_s1",incoming=busses["s_bus_4160"],running=busses["1"],closed=True)
     Breaker(name="cb_s2",incoming=busses["s_bus_4160"],running=busses["2"],closed=True)
     Breaker(name="cb_s3",incoming=busses["s_bus_4160"],running=busses["3"],closed=True)
+
+    Breaker(name="cb_s5",incoming=busses["s_bus_6900"],running=busses["5"],closed=True)
+    Breaker(name="cb_s6",incoming=busses["s_bus_6900"],running=busses["6"],closed=True)
 
     Breaker(name="cb_1_7",incoming=busses["1"],closed=True)
     Breaker(name="cb_7_1",incoming=breakers["cb_1_7"],running=busses["7"],closed=True)

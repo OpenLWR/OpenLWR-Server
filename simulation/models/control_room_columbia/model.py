@@ -1435,6 +1435,37 @@ switches = {
         "flag" : "green",
     },
 
+    "cb_s5": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+            "sync" : False,
+        },
+        "flag" : "green",
+    },
+    "cb_s6": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+            "lockout" : True,
+            "sync" : False,
+        },
+        "flag" : "green",
+    },
+
     #SL-11
     "cb_1_11": {
         "positions": {
@@ -1901,6 +1932,100 @@ switches = {
         "lights" : {},
         "flag" : "green",
     },
+
+
+
+    #Reactor Recirculation
+
+    #RR B
+    "cb_rrb": {
+        "positions": {
+            -1: 90,
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+            "lockout" : False,
+        },
+        "flag" : "green",
+    },
+    "cb_rpt_3b": {
+        "positions": {
+            -1: 90,
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "cb_rpt_4b": {
+        "positions": {
+            -1: 90,
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+
+    #RR A
+    "cb_rra": {
+        "positions": {
+            -1: 90,
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+            "lockout" : False,
+        },
+        "flag" : "green",
+    },
+    "cb_rpt_3a": {
+        "positions": {
+            -1: 90,
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "cb_rpt_4a": {
+        "positions": {
+            -1: 90,
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
 }
 
 values = {
@@ -1973,6 +2098,32 @@ values = {
     "main_generator_sync" : 0,
     "div_1_sync" : 0,
     "div_2_sync" : 0,
+
+    #Reactor Recirculation
+
+    #RR B
+
+    "rrc_p_1b_volts" : 0,
+    "rrc_p_1b_amps" : 0,
+    "rrc_p_1b_freq" : 0,
+    "rrc_p_1b_speed" : 0,
+
+    "station_1b_flow" : 0,
+    "station_1b_bias" : 0,
+    "station_1b_demand" : 0,
+    "station_1b_actual" : 0,
+
+    #RR A
+
+    "rrc_p_1a_volts" : 0,
+    "rrc_p_1a_amps" : 0,
+    "rrc_p_1a_freq" : 0,
+    "rrc_p_1a_speed" : 0,
+
+    "station_1a_flow" : 0,
+    "station_1a_bias" : 0,
+    "station_1a_demand" : 0,
+    "station_1a_actual" : 0,
 
     "rwm_group" : -1,
     "rwm_insert_error_1" : -1,
@@ -2336,6 +2487,49 @@ buttons = {
         "armed" : False,
     },
 
+    "rrc_a_start": {
+        "state" : False,
+        "armed" : False,
+    },
+    "rrc_b_start": {
+        "state" : False,
+        "armed" : False,
+    },
+
+    "station_1a_man": {
+        "state" : False,
+        "armed" : False,
+    },
+    "station_1a_auto": {
+        "state" : False,
+        "armed" : False,
+    },
+    "station_1a_lower": {
+        "state" : False,
+        "armed" : False,
+    },
+    "station_1a_raise": {
+        "state" : False,
+        "armed" : False,
+    },
+
+    "station_1b_man": {
+        "state" : False,
+        "armed" : False,
+    },
+    "station_1b_auto": {
+        "state" : False,
+        "armed" : False,
+    },
+    "station_1b_lower": {
+        "state" : False,
+        "armed" : False,
+    },
+    "station_1b_raise": {
+        "state" : False,
+        "armed" : False,
+    },
+
     "rwm_seq": {
         "state" : False,
         "armed" : False,
@@ -2504,6 +2698,35 @@ pumps = {
         "type" : pump.PumpTypes.Type1,
     },
 
+    "rrc_p_1b" : {
+        "motor_breaker_closed" : True,
+        "motor_control_switch" : "",
+        "bus" : "asdb",
+        "horsepower" : 8000,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 1500,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 50000,
+        "header" : "",
+        "suct_header" : "",
+        "custom" : True,
+        "type" : pump.PumpTypes.Type1,
+    },
+    "rrc_p_1a" : {
+        "motor_breaker_closed" : True,
+        "motor_control_switch" : "",
+        "bus" : "asda",
+        "horsepower" : 8000,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 1500,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 50000,
+        "header" : "",
+        "suct_header" : "",
+        "custom" : True,
+        "type" : pump.PumpTypes.Type1,
+    },
+
     "rcic_p_1" : { 
         "turbine" : "rcic_turbine",
         "discharge_press" : 0,
@@ -2569,6 +2792,7 @@ from simulation.models.control_room_columbia.systems import pcis
 from simulation.models.control_room_columbia.systems import rod_worth_minimizer
 from simulation.models.control_room_columbia.systems import sync
 from simulation.models.control_room_columbia.systems import loop_sequence
+from simulation.models.control_room_columbia.systems import rrc
 loop_sequence.initialize()
 sync.initialize()
 deh.initialize()
@@ -2595,6 +2819,7 @@ def model_run(delta):
     main_generator.run()
     diesels.run()
 
+    rrc.run()
     safety_relief.run()
     irm_srm_positioner.run()
     feedwater.run()

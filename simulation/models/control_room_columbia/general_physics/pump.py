@@ -35,6 +35,7 @@ pump_1 = { #TODO: improve the accuracy of these calculations
     "current_limit" : 0,
     "header" : "",
     "suct_header" : "",
+    "custom" : False,
 
     "loop_seq" : False, # Has a LOOP Sequence (otherwise trips instantly)
     "loop_avail" : False, # Loop Sequence has permitted loading of this equipment, if needed
@@ -75,6 +76,9 @@ def initialize_pumps():
 def calculate_suction(pump):
     pump = model.pumps[pump]
     from simulation.models.control_room_columbia.general_physics import fluid
+    if pump["suct_header"] == "":
+        return pump["flow"]
+    
     suct_header = fluid.headers[pump["suct_header"]]
     disch_header = fluid.headers[pump["header"]]
 
@@ -115,20 +119,20 @@ def run():
             pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
             continue
 
+        if not pump["custom"]:
+            if len(model.switches[pump["motor_control_switch"]]["positions"]) > 2:
+                if model.switches[pump["motor_control_switch"]]["position"] == 2:
+                    pump["motor_breaker_closed"] = True
+            else:
+                if model.switches[pump["motor_control_switch"]]["position"] == 1:
+                    pump["motor_breaker_closed"] = True
         
-        if len(model.switches[pump["motor_control_switch"]]["positions"]) > 2:
-            if model.switches[pump["motor_control_switch"]]["position"] == 2:
-                pump["motor_breaker_closed"] = True
-        else:
-            if model.switches[pump["motor_control_switch"]]["position"] == 1:
-                pump["motor_breaker_closed"] = True
-        
-        if model.switches[pump["motor_control_switch"]]["position"] == 0:
-            pump["motor_breaker_closed"] = False
+            if model.switches[pump["motor_control_switch"]]["position"] == 0:
+                pump["motor_breaker_closed"] = False
 
-        if model.switches[pump["motor_control_switch"]]["lights"] != {}:
-            model.switches[pump["motor_control_switch"]]["lights"]["green"] = not pump["motor_breaker_closed"]
-            model.switches[pump["motor_control_switch"]]["lights"]["red"] = pump["motor_breaker_closed"]
+            if model.switches[pump["motor_control_switch"]]["lights"] != {}:
+                model.switches[pump["motor_control_switch"]]["lights"]["green"] = not pump["motor_breaker_closed"]
+                model.switches[pump["motor_control_switch"]]["lights"]["red"] = pump["motor_breaker_closed"]
 
         #undervoltage breaker trip TODO: (this has load sequencing during a LOOP? verify this)
 
@@ -138,7 +142,7 @@ def run():
 
             voltage = pump_bus.voltage_at_bus()
 
-            if voltage < 120 and pump["motor_breaker_closed"]:
+            if voltage < 120 and pump["motor_breaker_closed"] and not pump["custom"]:
                 pump["motor_breaker_closed"] = False
                 pump["was_closed"] = True
                 continue
@@ -151,9 +155,11 @@ def run():
             #log.warning("Pump does not have an available bus!")
             voltage = 4160
 
-        if pump["loop_avail"] and pump["was_closed"]:
-            pump["motor_breaker_closed"] = True
-            pump["was_closed"] = False
+
+        if not pump["custom"]:
+            if pump["loop_avail"] and pump["was_closed"]:
+                pump["motor_breaker_closed"] = True
+                pump["was_closed"] = False
 
         if pump["motor_breaker_closed"]:
             #first, verify that this breaker is allowed to be closed
@@ -162,10 +168,10 @@ def run():
 
             
 
-            Acceleration = (pump["rated_rpm"]-pump["rpm"])*0.1*(pump_bus.info["frequency"]/60) #TODO: Make acceleration and frequency realistic
+            Acceleration = ((pump["rated_rpm"]*(pump_bus.info["frequency"]/60))-pump["rpm"])*0.1 #TODO: Make acceleration and frequency realistic
             pump["rpm"] = clamp(pump["rpm"]+Acceleration,0,pump["rated_rpm"]+100)
             #full load amperes
-            AmpsFLA = (pump["horsepower"]*746)/(math.sqrt(3)*voltage*0.876*0.95) #TODO: variable motor efficiency and power factor
+            AmpsFLA = (pump["horsepower"]*746)/((math.sqrt(3)*voltage*0.876*0.95)+0.1) #TODO: variable motor efficiency and power factor
             pump["amperes"] = (AmpsFLA*clamp(pump["actual_flow"]/pump["rated_flow"],0.48,1))+(AmpsFLA*5*(Acceleration/(pump["rated_rpm"]*0.1)))
             pump["watts"] = voltage*pump["amperes"]*math.sqrt(3)
 
@@ -175,8 +181,11 @@ def run():
             pump["flow"] = calculate_suction(pump_name)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
             
-            from simulation.models.control_room_columbia.general_physics import fluid
-            pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
+            if pump["header"] != "":
+                from simulation.models.control_room_columbia.general_physics import fluid
+                pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
+            else:
+                pump["actual_flow"] = pump["flow"]
         else:
             Acceleration = (pump["rpm"])*0.1 #TODO: variable motor accel
             pump["rpm"] = clamp(pump["rpm"]-Acceleration,0,pump["rated_rpm"]+100)
@@ -187,8 +196,11 @@ def run():
             pump["flow"] = calculate_suction(pump_name)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
 
-            from simulation.models.control_room_columbia.general_physics import fluid
-            pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
+            if pump["header"] != "":
+                from simulation.models.control_room_columbia.general_physics import fluid
+                pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
+            else:
+                pump["actual_flow"] = pump["flow"]
     
 
 
