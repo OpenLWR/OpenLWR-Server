@@ -7,6 +7,17 @@ asda = {
     "actual" : 0,
     "auto" : False,
     "started" : False,
+    
+    "master" : {
+        "select" : True,
+        "malfunction_high" : False,
+        "malfunction_low" : False,
+    },
+    "slave" : {
+        "select" : True,
+        "malfunction_high" : False,
+        "malfunction_low" : False,
+    },
 }
 
 asdb = {
@@ -14,26 +25,95 @@ asdb = {
     "actual" : 0,
     "auto" : False,
     "started" : False,
+
+    "master" : {
+        "select" : True,
+        "malfunction_high" : False,
+        "malfunction_low" : False,
+    },
+    "slave" : {
+        "select" : True,
+        "malfunction_high" : False,
+        "malfunction_low" : False,
+    },
 }
+
+def start_permissives_a():
+    if not asda["demand"] == 15:
+        return False
+        
+   # if not asda["demand"] == 15: #TODO: Suction/discharge valves
+       # return False
+    
+   # if not asda["demand"] == 15: #TODO: CB-RRB Lockout Relay Reset(?)
+      #  return False
+    
+    if asda["auto"]:
+        return False
+    
+    return True
+
+def start_permissives_b():
+    if not asdb["demand"] == 15:
+        return False
+        
+   # if not asdb["demand"] == 15: #TODO: Suction/discharge valves
+       # return False
+    
+   # if not asdb["demand"] == 15: #TODO: CB-RRB Lockout Relay Reset(?)
+      #  return False
+    
+    if asdb["auto"]:
+        return False
+    
+    return True
 
 def run():
     #Should we actually properly simulate the ASD?
-    if ac_power.busses["6"].is_voltage_at_bus(4160) and asdb["started"]: #TODO: Bus voltage/frequency effect on ASD
-        asdb["actual"] += min(asdb["demand"]-asdb["actual"],0.6)
+
+    if ac_power.busses["6"].is_voltage_at_bus(4160) and asdb["started"]:
+        #TODO: Actual effect of different channel selection
+        if asdb["master"]["select"] and not asdb["slave"]["select"]:
+            asdb["actual"] += min(asdb["demand"]-asdb["actual"],0.6)
+
+        elif not asdb["master"]["select"] and asdb["slave"]["select"]:
+            asdb["actual"] += min(asdb["demand"]-asdb["actual"],0.6)
+
+        elif asdb["master"]["select"] and asdb["slave"]["select"]:
+            asdb["actual"] += min(asdb["demand"]-asdb["actual"],0.6)
+
+        else:#Would this actually happen?
+            asdb["actual"] = 0
+            asdb["started"] = False
+
     else:
         asdb["actual"] = 0
         asdb["started"] = False
 
-    if ac_power.busses["5"].is_voltage_at_bus(4160) and asda["started"]: #TODO: Bus voltage/frequency effect on ASD
-        asda["actual"] += min(asda["demand"]-asda["actual"],0.6)
+    if ac_power.busses["5"].is_voltage_at_bus(4160) and asda["started"]:
+        #TODO: Actual effect of different channel selection
+        if asda["master"]["select"] and not asda["slave"]["select"]:
+            asda["actual"] += min(asda["demand"]-asda["actual"],0.6)
+
+        elif not asda["master"]["select"] and asda["slave"]["select"]:
+            asda["actual"] += min(asda["demand"]-asda["actual"],0.6)
+
+        elif asda["master"]["select"] and asda["slave"]["select"]:
+            asda["actual"] += min(asda["demand"]-asda["actual"],0.6)
+
+        else:#Would this actually happen?
+            asda["actual"] = 0
+            asda["started"] = False
+
     else:
         asda["actual"] = 0
         asda["started"] = False
 
-    if model.buttons["rrc_b_start"]["state"]:
+
+    if model.buttons["rrc_b_start"]["state"] and start_permissives_b():
         asdb["started"] = True
 
-    if model.buttons["rrc_a_start"]["state"]:
+    if model.buttons["rrc_a_start"]["state"] and start_permissives_a():
         asda["started"] = True
 
     if model.buttons["station_1b_lower"]["state"]:
