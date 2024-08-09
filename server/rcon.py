@@ -20,6 +20,7 @@ actions = {
 }
 
 def process_rcon(data):
+    #I havent got a chance to test this or implement it clientside
     try:
 
         assert config.config["debug"], "The server is not in debug mode."
