@@ -8,6 +8,7 @@ class ClientPackets(IntEnum):
     USER_LOGIN = 12,
     SYNCHRONIZE = 14,
     CHAT = 15,
+    RCON = 19,
 
 class ServerPackets(IntEnum):
     METER_PARAMETERS_UPDATE = 0

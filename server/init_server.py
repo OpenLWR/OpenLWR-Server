@@ -17,6 +17,7 @@ from server.server_events import server_chat_event
 from server.client_events import client_chat_event
 import json
 import importlib
+from server import rcon
 
 
 def init_server(websocket):
@@ -104,6 +105,10 @@ def init_server(websocket):
 
                 case packets.ClientPackets.CHAT:
                     client_chat_event.handle(packet_data, token_object.username)
+
+                case packets.ClientPackets.RCON:
+                    rcon.process_rcon(packet_data)
+
     except websockets.exceptions.ConnectionClosed:
         log.info(f"User {token_object.username} disconnected")
         manager.disconnect(token_str)
