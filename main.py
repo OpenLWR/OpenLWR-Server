@@ -7,7 +7,7 @@ from server import init_server
 import threading
 import json
 
-print("help")
+
 
 def main():
     with serve(init_server.init_server, config.config["server_ip"], 7001, process_request=process_request) as server:

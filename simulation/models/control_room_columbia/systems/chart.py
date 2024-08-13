@@ -1,6 +1,13 @@
 
 from simulation.models.control_room_columbia import model
 
+dx1000 = {
+    "pages" : {
+        1:["1_UNIT","2_UNIT","1_NAME","2_NAME","1_VALUE","2_VALUE"]
+    },
+    "buttons" : {},
+}
+
 class Recorder:
     def __init__(self,name):
         self.name = name
@@ -8,6 +15,9 @@ class Recorder:
         self.channel_alarms = {}
         self.allow_reprogram = True
         self.sampling_enabled = False #Disables drawing of graphs
+
+        self.page = 1
+        self.page_info = {}
 
         model.recorders[self.name] = self
 

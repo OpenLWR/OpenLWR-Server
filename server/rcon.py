@@ -1,6 +1,5 @@
 import config
 import importlib
-model = importlib.import_module(f"simulation.models.{config.config["model"]}.model")
 
 def getVal(cmd:str):
 
@@ -11,13 +10,20 @@ def getVal(cmd:str):
 
     return areas[cmd[1]][cmd[2]]
 
-areas = {
-    "switches" : model.switches,
-}
+areas = {}
+actions = {}
 
-actions = {
-    "getVal" : getVal
-}
+def init():
+    model = importlib.import_module(f"simulation.models.{config.config["model"]}.model")
+
+    areas = {
+        "switches" : model.switches,
+    }
+
+    actions = {
+        "getVal" : getVal
+    }
+
 
 def process_rcon(data):
     #I havent got a chance to test this or implement it clientside

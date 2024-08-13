@@ -15,14 +15,18 @@ from server.server_events import server_rod_position_parameters_update_event
 from server.client_events import client_rod_select_update_event
 from server.server_events import server_chat_event
 from server.client_events import client_chat_event
+from server.server_events import server_recorder_parameters_update_event
 import json
 import importlib
 from server import rcon
+rcon_init = False
 
 
 def init_server(websocket):
     import log
     import config
+    if not rcon_init:
+        rcon.init()
     for packet in websocket:
         try:
             token_str = str(uuid.uuid4())
@@ -47,13 +51,21 @@ def init_server(websocket):
             #make a copy of the current state of model.py
 
             model = importlib.import_module(f"simulation.models.{config.config["model"]}.model")
+
+            recorders = {}
+            model_recorders = model.recorders.copy()
+            for recorder in model_recorders:
+                recorders[recorder] = {
+                    "channels":model_recorders[recorder].channels,
+                }
+
             model_copy = {
                 "switches" : model.switches.copy(),
                 #"values" : model.values.copy(), #This will stay on the client
                 "buttons" : model.buttons.copy(),
                 #"indicators" : model.indicators.copy(), #This will stay on the client
                 "alarms" : model.alarms.copy(),
-                "recorders" : model.recorders.copy(),
+                "recorders" : recorders,
             }
 
             for table_name in model_copy:

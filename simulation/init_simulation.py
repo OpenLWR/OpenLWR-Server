@@ -5,6 +5,7 @@ from server.server_events import server_meter_parameters_update_event
 from server.server_events import server_indicator_parameters_update_event
 from server.server_events import server_switch_parameters_update_event
 from server.server_events import server_alarm_parameters_update_event
+from server.server_events import server_recorder_parameters_update_event
 import log
 import config
 
@@ -32,6 +33,7 @@ class Simulation:
                 server_indicator_parameters_update_event.fire(model.indicators)
                 server_switch_parameters_update_event.fire(model.switches)
                 server_alarm_parameters_update_event.fire(model.alarms)
+                server_recorder_parameters_update_event.fire(model.recorders)
             end = time.perf_counter()
             delta = end - start
             if self.timestep - delta < 0:
