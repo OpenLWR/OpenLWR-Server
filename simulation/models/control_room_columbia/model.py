@@ -2755,9 +2755,14 @@ turbines = {
     }
 }
 
+recorders = {}
+
 rods = {}
 
 reactor_water_temperature = 100
+
+from simulation.models.control_room_columbia.systems import chart
+chart.initialize()
 
 ac_power.initialize()
 
@@ -2801,6 +2806,7 @@ feedwater.initialize()
 runs = 0
 def model_run(delta):
     global runs
+    chart.run()
     annunciators.run()
     reactor_protection_system.run()
     rod_drive_control_system.run(rods,buttons)

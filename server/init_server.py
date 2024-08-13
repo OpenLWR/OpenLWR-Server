@@ -53,6 +53,7 @@ def init_server(websocket):
                 "buttons" : model.buttons.copy(),
                 #"indicators" : model.indicators.copy(), #This will stay on the client
                 "alarms" : model.alarms.copy(),
+                "recorders" : model.recorders.copy(),
             }
 
             for table_name in model_copy:
@@ -108,6 +109,9 @@ def init_server(websocket):
 
                 case packets.ClientPackets.RCON:
                     rcon.process_rcon(packet_data)
+
+                case packets.ClientPackets.RECORDER:
+                    log.info("Client tried to use a packet that is not handled yet.")
 
     except websockets.exceptions.ConnectionClosed:
         log.info(f"User {token_object.username} disconnected")

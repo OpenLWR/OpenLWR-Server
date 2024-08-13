@@ -9,6 +9,7 @@ class ClientPackets(IntEnum):
     SYNCHRONIZE = 14,
     CHAT = 15,
     RCON = 19,
+    RECORDER = 21,
 
 class ServerPackets(IntEnum):
     METER_PARAMETERS_UPDATE = 0
@@ -23,3 +24,4 @@ class ServerPackets(IntEnum):
     CHAT = 16,
     DOWNLOAD_DATA = 17,
     KICK = 18,
+    RECORDER = 20,
