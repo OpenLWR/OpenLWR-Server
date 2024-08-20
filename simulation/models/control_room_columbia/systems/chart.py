@@ -1,5 +1,6 @@
 
 from simulation.models.control_room_columbia import model
+from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
 
 dx1000 = {
     "pages" : {
@@ -57,5 +58,7 @@ def initialize():
 
 
 def run():
+    model.recorders["601RPV"].channels["RPV LEVEL WR"]["value"] = reactor_inventory.rx_level_wr
+
     for recorder in model.recorders:
         model.recorders[recorder].calculate()
