@@ -1,12 +1,5 @@
 import math
 
-# Modules
-from simulation.models.control_room_columbia.reactor_physics import fuel
-from simulation.models.control_room_columbia.reactor_physics import neutrons
-from simulation.models.control_room_columbia.reactor_physics import steam_functions
-
-
-
 waterMass = 390735 #normal water level
 steps = 0
 
@@ -14,11 +7,13 @@ Pressures = {
     "Drywell" : 0,
     "Wetwell" : 0,
     "Vessel" : 0, #pascals
+    "Condenser" : 0,
 }
 Volumes = {
     "Drywell" : 831430.47141*2,
     "Wetwell" : 831430.47141*3,
     "Vessel" : 928500.26, #liters
+    "Condenser" : 928500.26, #TODO: need actual size
 }
 
 def getPressure(steamMass, steamTemperature, volume):
@@ -59,5 +54,3 @@ def PartialPressure(GasType:int,Mass:int,Temperature:int,Volume:int):
     Pressure = ((MassGas*GasConstant*Temperature)/Volume)
 	
     return Pressure
-
-#TODO: add pressure removal
