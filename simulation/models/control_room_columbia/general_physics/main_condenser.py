@@ -1,6 +1,19 @@
 #import iapws
 from simulation.models.control_room_columbia.reactor_physics import pressure
+from simulation.models.control_room_columbia import model
 
+MainCondenserPressure = 0 #pa
+MainCondenserVolume = 928500.26 #liters #TODO: need actual size
+MainCondenserAtmosphere = {
+    "Nitrogen" : 850, #kg
+    "Oxygen" : 0,
+    "Hydrogen" : 0,
+}
+
+def initalize():
+    MainCondenserPressure = pressure.PartialPressure(pressure.GasTypes["Nitrogen"],MainCondenserAtmosphere["Nitrogen"],100,MainCondenserVolume)
+    #print(MainCondenserPressure/6895) #PSI
+    #print(MainCondenserPressure/3386) #In.Hg
 
 def run():
     #Condensation is:
@@ -41,10 +54,17 @@ def run():
 
     RxPress = pressure.Pressures["Vessel"] #TODO: Place this after the Main Steam Isolation Valves!!!!
 
-    if RxPress/6895 > 300:
-        #allow use of the Steam Jet Air Ejectors
+    MainCondenserPressure = pressure.PartialPressure(pressure.GasTypes["Nitrogen"],MainCondenserAtmosphere["Nitrogen"],100,MainCondenserVolume)
 
-        #TODO: So for right now these dont use any steam, fix this later with better code
+    #Pretend theres some amount of in-leakage
+    Atmospheres = MainCondenserPressure/101325 
+
+    if Atmospheres < 1:
+        MainCondenserAtmosphere["Nitrogen"] += 500*abs(Atmospheres-1) #Assume 500kg/s of in-leakage at 0 atm(randomize this later?)
+
+
+        
+
 
         
 

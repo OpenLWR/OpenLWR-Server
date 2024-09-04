@@ -2727,6 +2727,36 @@ pumps = {
         "type" : pump.PumpTypes.Type1,
     },
 
+    #Main Condenser
+    "car_p_1a" : { #TODO: Need accurate numbers here
+        "motor_breaker_closed" : True,
+        "motor_control_switch" : "",
+        "bus" : "1",
+        "horsepower" : 1000,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 20,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 100,
+        "header" : "",
+        "suct_header" : "",
+        "custom" : True,
+        "type" : pump.PumpTypes.Type1,
+    },
+    "car_p_1b" : { #TODO: Need accurate numbers here
+        "motor_breaker_closed" : True,
+        "motor_control_switch" : "",
+        "bus" : "3",
+        "horsepower" : 1000,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 20,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 100,
+        "header" : "",
+        "suct_header" : "",
+        "custom" : True,
+        "type" : pump.PumpTypes.Type1,
+    },
+
     "rcic_p_1" : { 
         "turbine" : "rcic_turbine",
         "discharge_press" : 0,
@@ -2778,8 +2808,10 @@ from simulation.models.control_room_columbia.general_physics import gas
 from simulation.models.control_room_columbia.general_physics import turbine
 turbine.initialize_pumps()
 
+from simulation.models.control_room_columbia.general_physics import main_condenser
 from simulation.models.control_room_columbia.general_physics import main_turbine
 from simulation.models.control_room_columbia.general_physics import main_generator
+main_condenser.initalize()
 
 
 from simulation.models.control_room_columbia.general_physics import diesel_generator
