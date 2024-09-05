@@ -56,11 +56,13 @@ def run():
 
     MainCondenserPressure = pressure.PartialPressure(pressure.GasTypes["Nitrogen"],MainCondenserAtmosphere["Nitrogen"],100,MainCondenserVolume)
 
+    print(MainCondenserPressure/3386) #In.Hg
+
     #Pretend theres some amount of in-leakage
     Atmospheres = MainCondenserPressure/101325 
 
     if Atmospheres < 1:
-        MainCondenserAtmosphere["Nitrogen"] += 500*abs(Atmospheres-1)*0.1 #Assume 500kg/s of in-leakage at 0 atm(randomize this later?)
+        MainCondenserAtmosphere["Nitrogen"] += 100*abs(Atmospheres-1)*0.1 #Assume 500kg/s of in-leakage at 0 atm(randomize this later?)
 
     #Condenser Air Removal Pumps
 
@@ -68,11 +70,11 @@ def run():
         model.pumps["car_p_1a"]["motor_breaker_closed"] = False
         model.pumps["car_p_1b"]["motor_breaker_closed"] = False
 
-    Car1RPM = model.pumps["car_p_1a"]
-    Car2RPM = model.pumps["car_p_1b"]
+    Car1RPM = model.pumps["car_p_1a"]["rpm"]
+    Car2RPM = model.pumps["car_p_1b"]["rpm"]
 
-    Car1Flow = (Car1RPM/1800)*200 #very very very bad very simplify
-    Car2Flow = (Car2RPM/1800)*200
+    Car1Flow = (Car1RPM/1800)*8.15 #very very very bad very simplify
+    Car2Flow = (Car2RPM/1800)*8.15
 
     TotalAirRemoved = Car1Flow+Car2Flow 
     TotalAirRemoved *= 0.1 #Deltatime
@@ -80,6 +82,15 @@ def run():
     #Discharged to the Turbine Building
 
     MainCondenserAtmosphere["Nitrogen"] -= TotalAirRemoved
+
+    #Steam Jet Air Ejectors
+
+    #Assume for now we are using the aux boilers to run the SJAEs
+
+    
+
+    MainCondenserAtmosphere["Nitrogen"] -= TotalAirRemovedSJAE
+
 
         
 
