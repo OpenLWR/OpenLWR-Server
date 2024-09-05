@@ -60,8 +60,26 @@ def run():
     Atmospheres = MainCondenserPressure/101325 
 
     if Atmospheres < 1:
-        MainCondenserAtmosphere["Nitrogen"] += 500*abs(Atmospheres-1) #Assume 500kg/s of in-leakage at 0 atm(randomize this later?)
+        MainCondenserAtmosphere["Nitrogen"] += 500*abs(Atmospheres-1)*0.1 #Assume 500kg/s of in-leakage at 0 atm(randomize this later?)
 
+    #Condenser Air Removal Pumps
+
+    if MainCondenserPressure/3386 <= 25: #CAR can only pull around 25 in.hg and will trip at 25 in.hg
+        model.pumps["car_p_1a"]["motor_breaker_closed"] = False
+        model.pumps["car_p_1b"]["motor_breaker_closed"] = False
+
+    Car1RPM = model.pumps["car_p_1a"]
+    Car2RPM = model.pumps["car_p_1b"]
+
+    Car1Flow = (Car1RPM/1800)*200 #very very very bad very simplify
+    Car2Flow = (Car2RPM/1800)*200
+
+    TotalAirRemoved = Car1Flow+Car2Flow 
+    TotalAirRemoved *= 0.1 #Deltatime
+
+    #Discharged to the Turbine Building
+
+    MainCondenserAtmosphere["Nitrogen"] -= TotalAirRemoved
 
         
 

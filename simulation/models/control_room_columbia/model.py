@@ -2853,6 +2853,7 @@ def model_run(delta):
     pump.run()
     gas.run()
     turbine.run()
+    main_condenser.run()
     main_turbine.run()
     main_generator.run()
     diesels.run()
