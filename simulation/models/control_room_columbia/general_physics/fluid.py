@@ -1232,6 +1232,13 @@ def get_static_tank(name:int):
             tank["mass"] = 10000
             tank["type"] = FluidTypes.Gas,
             return tank
+        case StaticTanks.Hotwell:
+            tank = {}
+            tank["pressure"] = 344738 #50 psi
+            from simulation.models.control_room_columbia.general_physics import main_condenser
+            tank["mass"] = main_condenser.MainCondenserHotwellMass
+            tank["type"] = FluidTypes.Liquid,
+            return tank
 
 def inject_to_static_tank(name:int,amount):
 

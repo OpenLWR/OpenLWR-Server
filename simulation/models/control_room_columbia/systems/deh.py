@@ -112,6 +112,9 @@ def run():
 
     gov_valve = max(min(gov_valve+acceleration_control_signal,100),0)
 
+    if SelectedAccelerationReference == -500:
+        gov_valve -= 0.5
+
     
 
     fluid.valves["ms_v_gv1"]["percent_open"] = gov_valve

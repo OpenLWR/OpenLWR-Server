@@ -9,11 +9,13 @@ MainCondenserAtmosphere = {
     "Oxygen" : 0,
     "Hydrogen" : 0,
 }
+MainCondenserHotwellMass = 308521 #about half full?
 
 def initalize():
     MainCondenserPressure = pressure.PartialPressure(pressure.GasTypes["Nitrogen"],MainCondenserAtmosphere["Nitrogen"],100,MainCondenserVolume)
     #print(MainCondenserPressure/6895) #PSI
     #print(MainCondenserPressure/3386) #In.Hg
+    #print(abs((MainCondenserPressure/3386)-29.9212)) #In.Hg, backpressure
 
 def run():
     #Condensation is:
@@ -56,13 +58,16 @@ def run():
 
     MainCondenserPressure = pressure.PartialPressure(pressure.GasTypes["Nitrogen"],MainCondenserAtmosphere["Nitrogen"],100,MainCondenserVolume)
 
-    print(MainCondenserPressure/3386) #In.Hg
+    #print(MainCondenserPressure/3386) #In.Hg
 
     #Pretend theres some amount of in-leakage
     Atmospheres = MainCondenserPressure/101325 
 
     if Atmospheres < 1:
         MainCondenserAtmosphere["Nitrogen"] += 100*abs(Atmospheres-1)*0.1 #Assume 500kg/s of in-leakage at 0 atm(randomize this later?)
+        #TODO: The rated limit is 50 scfm. That is 1.7 kg/s of in-leakage.
+
+        #TODO: Radiolytic decomposition of water, seperation of H2O into two hydrogens and one oxygen from radiation
 
     #Condenser Air Removal Pumps
 
@@ -83,16 +88,22 @@ def run():
 
     MainCondenserAtmosphere["Nitrogen"] -= TotalAirRemoved
 
+    print(MainCondenserHotwellMass)
+
     #Steam Jet Air Ejectors
 
     #Assume for now we are using the aux boilers to run the SJAEs
 
     
 
-    MainCondenserAtmosphere["Nitrogen"] -= TotalAirRemovedSJAE
+    #MainCondenserAtmosphere["Nitrogen"] -= TotalAirRemovedSJAE
+
+    #Hotwell storage capacity is 163,000 gal
 
 
-        
+def addHotwellWater(kg):
+    global MainCondenserHotwellMass
+    MainCondenserHotwellMass+=kg
 
 
         

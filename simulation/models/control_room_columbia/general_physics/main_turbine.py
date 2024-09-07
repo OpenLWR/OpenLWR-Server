@@ -3,6 +3,7 @@ from simulation.models.control_room_columbia.reactor_physics import pressure
 from simulation.models.control_room_columbia.reactor_physics import steam_functions
 from simulation.models.control_room_columbia.general_physics import fluid
 from simulation.models.control_room_columbia.general_physics import main_generator
+from simulation.models.control_room_columbia.general_physics import main_condenser
 import math
 
 Turbine = {
@@ -29,9 +30,11 @@ def run():
     Inertia = Turbine["Inertia"]
     # Steam Properties
     #TODO: Stop Valves
-    CVCombinedFlow = fluid.valves["ms_v_gv1"]["flow"]
-    steamInletMass = CVCombinedFlow*0.05*10
+    CVCombinedFlow = fluid.valves["ms_v_gv1"]["flow"]+fluid.valves["ms_v_gv2"]["flow"]+fluid.valves["ms_v_gv3"]["flow"]+fluid.valves["ms_v_gv4"]["flow"]
+    steamInletMass = (CVCombinedFlow*0.05*10)/4
     steamInletPressure = pressure.Pressures["Vessel"]
+
+    main_condenser.addHotwellWater(CVCombinedFlow)
 
     # Electrical Properties
     turbineFrequency = (Turbine["AngularVelocity"]/(math.pi))
