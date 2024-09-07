@@ -291,6 +291,14 @@ alarms = {
         "group" : "2",
         "silenced" : False,
     },
+    "nssss_isol_main_condenser_vac_low_b" : {
+        "alarm" : False,
+        "box": "P601_A11",
+		"window": "5-2",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
 
     #P601.A12
     "msiv_half_trip_system_a" : {
@@ -305,6 +313,14 @@ alarms = {
         "alarm" : False,
         "box": "P601_A12",
 		"window": "4-3",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "nssss_isol_main_condenser_vac_low_a" : {
+        "alarm" : False,
+        "box": "P601_A12",
+		"window": "3-1",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "2",
         "silenced" : False,

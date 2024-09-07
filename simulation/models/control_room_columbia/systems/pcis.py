@@ -3,6 +3,7 @@ from simulation.models.control_room_columbia.reactor_physics import reactor_inve
 from simulation.models.control_room_columbia.general_physics import fluid
 from simulation.models.control_room_columbia.general_physics import ac_power
 from simulation.models.control_room_columbia.systems import residual_heat_removal
+from simulation.models.control_room_columbia.general_physics import main_condenser
 
 isolation_groups = {
     "1" : { #Main isolation group. MSIVs, MSL drains
@@ -139,6 +140,16 @@ def run():
 
     #TODO: use the actual RPS bus and whatnot
 
+    if main_condenser.MainCondenserBackPressure < 8.5:
+        logic["C"] = True
+        logic["D"] = True
+        model.alarms["nssss_isol_main_condenser_vac_low_a"]["alarm"] = True
+        model.alarms["nssss_isol_main_condenser_vac_low_b"]["alarm"] = True
+    else:
+        model.alarms["nssss_isol_main_condenser_vac_low_a"]["alarm"] = False
+        model.alarms["nssss_isol_main_condenser_vac_low_b"]["alarm"] = False
+
+
     #RPS A Powers A/C, so no isolations would result from a loss of RPS A.
     if not ac_power.busses["7"].is_voltage_at_bus(4000):
         logic["A"] = True
@@ -188,3 +199,4 @@ def run():
         #MSIV Closure occurs
         for msiv in {"ms_v_22a","ms_v_22b","ms_v_22c","ms_v_22d","ms_v_28a","ms_v_28b","ms_v_28c","ms_v_28d"}:
             fluid.valves[msiv]["sealed_in"] = False
+

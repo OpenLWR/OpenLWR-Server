@@ -5,11 +5,12 @@ from simulation.models.control_room_columbia import model
 MainCondenserPressure = 0 #pa
 MainCondenserVolume = 928500.26 #liters #TODO: need actual size
 MainCondenserAtmosphere = {
-    "Nitrogen" : 850, #kg
+    "Nitrogen" : 580,#850, #kg
     "Oxygen" : 0,
     "Hydrogen" : 0,
 }
 MainCondenserHotwellMass = 308521 #about half full?
+MainCondenserBackPressure = 15
 
 def initalize():
     MainCondenserPressure = pressure.PartialPressure(pressure.GasTypes["Nitrogen"],MainCondenserAtmosphere["Nitrogen"],100,MainCondenserVolume)
@@ -59,6 +60,10 @@ def run():
     MainCondenserPressure = pressure.PartialPressure(pressure.GasTypes["Nitrogen"],MainCondenserAtmosphere["Nitrogen"],100,MainCondenserVolume)
 
     print(abs((MainCondenserPressure/3386)-29.9212)) #In.Hg vacuum
+
+    global MainCondenserBackPressure
+
+    MainCondenserBackPressure = abs((MainCondenserPressure/3386)-29.9212)
 
     #Pretend theres some amount of in-leakage
     Atmospheres = MainCondenserPressure/101325 
