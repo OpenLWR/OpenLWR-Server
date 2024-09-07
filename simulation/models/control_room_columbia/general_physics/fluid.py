@@ -377,6 +377,112 @@ headers = { #most lines have a common header that they discharge into
         "mass" : 0,
     },
 
+    #Condensate
+    "condensate_suction" : {
+        #48"COND(1)-1
+
+        "diameter" : 1219.20, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+
+    "condensate_discharge" : {
+        #36"COND(2)-1
+
+        "diameter" : 914.40, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+
+    #TODO: Condensate pumps do NOT take suction directly from condensate pumps, they pass through a few condensers first.
+
+    #TODO: Min flow
+
+    "condensate_booster_discharge" : {
+        #30"COND(4)-3
+
+        "diameter" : 1016, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+
+    #TODO: RFW Pumps do NOT take suction directly from condensate booster pumps, they pass through the LP heaters first (M504-1)
+
+    "rfw_p_1a_discharge" : {
+        #24"RFW(1)-5
+
+        "diameter" : 609.6, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+    "rfw_p_1b_discharge" : {
+        #24"RFW(1)-5
+
+        "diameter" : 609.6, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+    "rfw_discharge" : {
+        #30"RFW(1)-4
+
+        "diameter" : 762, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+
+    #HX
+
+    "rfw_hx_6a" : {
+        #24"RFW(1)-4
+
+        "diameter" : 609.6, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+    "rfw_hx_6b" : {
+        #24"RFW(1)-4
+
+        "diameter" : 609.6, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+
+    "rfw_outlet" : {
+        #30"RFW(1)-4
+
+        "diameter" : 762, #millimeters
+        "length" : 200000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+
+
 }
 
 from enum import IntEnum
@@ -385,6 +491,7 @@ class StaticTanks(IntEnum):
     Reactor = 1
     Wetwell = 2,
     SteamDome = 3,
+    Hotwell = 4,
 
 valves = {
     "hpcs_v_4" : { #The flow through a valve is not linear. Exponents?
@@ -1125,6 +1232,99 @@ valves = {
         "diameter" : 300, #mm, 28 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    #Condensate
+
+    "cond_nozzle_hotwell" : { 
+        "control_switch" : "",
+        "input" : "Hotwell",
+        "output" : "condensate_suction",
+        "percent_open" : 100,
+        "diameter" : 1219.20, #mm, 24 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    #RFW
+
+    "rfw_v_102a" : { 
+        "control_switch" : "rfw_v_102a",
+        "input" : "rfw_p_1a_discharge",
+        "output" : "rfw_discharge",
+        "percent_open" : 0,
+        "diameter" : 609.6, #mm, 24 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "rfw_v_102b" : { 
+        "control_switch" : "rfw_v_102b",
+        "input" : "rfw_p_1b_discharge",
+        "output" : "rfw_discharge",
+        "percent_open" : 0,
+        "diameter" : 609.6, #mm, 24 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    #HX
+    "rfw_v_108a" : { 
+        "control_switch" : "rfw_v_108a",
+        "input" : "rfw_discharge",
+        "output" : "rfw_hx_6a",
+        "percent_open" : 0,
+        "diameter" : 609.6, #mm, 24 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+     "rfw_v_108b" : { 
+        "control_switch" : "rfw_v_108b",
+        "input" : "rfw_discharge",
+        "output" : "rfw_hx_6b",
+        "percent_open" : 0,
+        "diameter" : 609.6, #mm, 24 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+     "rfw_v_112a" : { 
+        "control_switch" : "rfw_v_112a",
+        "input" : "rfw_hx_6a",
+        "output" : "rfw_outlet",
+        "percent_open" : 0,
+        "diameter" : 762, #mm, 30 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+     "rfw_v_112b" : { 
+        "control_switch" : "rfw_v_112b",
+        "input" : "rfw_hx_6b",
+        "output" : "rfw_outlet",
+        "percent_open" : 0,
+        "diameter" : 762, #mm, 30 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
         "sealed_in" : False,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
