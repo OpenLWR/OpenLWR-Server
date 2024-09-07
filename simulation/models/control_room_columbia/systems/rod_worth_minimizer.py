@@ -89,8 +89,6 @@ def run():
 
     model.indicators["rwm_rwm"] = model.indicators["rwm_comp"] or model.indicators["rwm_prog"] 
 
-    model.alarms["rpis_or_rwm_inop"]["alarm"] = model.indicators["rwm_comp"] or model.indicators["rwm_prog"] 
-
     rwm_buttons()
 
     if rwm["diagnostic_mode"]:

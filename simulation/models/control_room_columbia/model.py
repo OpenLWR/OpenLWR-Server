@@ -82,7 +82,7 @@ alarms = {
         "group" : "1",
         "silenced" : False,
     },
-    "rpis_or_rwm_inop" : {
+    "rpis_or_dmm_inop" : {
         "alarm" : False,
         "box": "Box1",
 		"window": "1-7",
