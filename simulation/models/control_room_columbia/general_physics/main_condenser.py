@@ -88,7 +88,7 @@ def run():
 
     MainCondenserAtmosphere["Nitrogen"] -= TotalAirRemoved
 
-    print(MainCondenserHotwellMass)
+    #print(MainCondenserHotwellMass)
 
     #Steam Jet Air Ejectors
 

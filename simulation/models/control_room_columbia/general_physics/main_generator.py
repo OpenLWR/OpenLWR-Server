@@ -6,6 +6,7 @@ import log
 
 Generator = {
     "Synchronized" : False,
+    "Output" : 0,
 }
 
 
@@ -33,6 +34,12 @@ def run():
     Generator["Synchronized"] = ac_power.breakers["cb_4885"].info["closed"] or ac_power.breakers["cb_4888"].info["closed"]
 
     Volt, Amp, Power, Factor = getVoltageAmperesPower()
+
+    
+    if Generator["Synchronized"]:
+        Generator["Output"] = Power
+    else:
+        Generator["Output"] = 0
 
     ac_power.sources["GEN"].info["voltage"] = Volt
     ac_power.sources["GEN"].info["frequency"] = (main_turbine.Turbine["AngularVelocity"]/(math.pi))
