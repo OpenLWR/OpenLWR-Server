@@ -53,7 +53,7 @@ def initialize():
     AccelerationController = PID(Kp=0.02, Ki=0.000001, Kd=0.22, minimum=-0.03,maximum=0.03)
 
     global LoadController
-    LoadController = PID(Kp=0.02, Ki=0.000001, Kd=0.22, minimum=-0.03,maximum=0.03)
+    LoadController = PID(Kp=0.2, Ki=0.00000001, Kd=0.13, minimum=0,maximum=0.04)
     #DT is DeltaTime (just use 1 for now)
 
 def run():
@@ -86,11 +86,12 @@ def run():
     if model.buttons["ehc_line_speed_selected"]["state"]:
         line_speed["on"] = True
 
+    target_rpm = SelectedSpeedReference
+
     if line_speed["on"]:
         target_rpm = 60.05*math.pi
         target_rpm = target_rpm*(30/math.pi)
 
-        SelectedSpeedReference = target_rpm
         model.indicators["ehc_line_speed_operating"] = True
         model.indicators["ehc_line_speed_off"] = False
     else:
@@ -98,7 +99,7 @@ def run():
         model.indicators["ehc_line_speed_selected"] = False
         model.indicators["ehc_line_speed_off"] = True
 
-    speed_control_signal = SpeedController.update(SelectedSpeedReference,rpm,1)
+    speed_control_signal = SpeedController.update(target_rpm,rpm,1)
 
     gov_valve = max(min(gov_valve+speed_control_signal,100),0)
 
@@ -112,11 +113,6 @@ def run():
             for b in AccelerationReference:
                 if b != button:
                     model.indicators[b] = False
-
-    acceleration_control_signal = AccelerationController.update(SelectedAccelerationReference,Acceleration,1)
-
-    gov_valve = max(min(gov_valve+acceleration_control_signal,100),0)
-
     if SelectedSpeedReference == -500:
         gov_valve = max(min(gov_valve-0.5,100),0)
 
@@ -124,9 +120,15 @@ def run():
         Load = main_generator.Generator["Output"]/1e6
         load_control_signal = LoadController.update(LoadSetpoint,Load,1)
 
-        gov_valve = max(min(gov_valve+load_control_signal,100),0)
+        gov_valve = max(min(gov_valve+load_control_signal-0.01,100),0)
 
-        print(Load)
+        #print(Load)
+    else:
+        acceleration_control_signal = AccelerationController.update(SelectedAccelerationReference,Acceleration,1)
+
+        gov_valve = max(min(gov_valve+acceleration_control_signal,100),0)
+
+        
 
     
 
