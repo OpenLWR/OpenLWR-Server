@@ -2026,6 +2026,36 @@ switches = {
         },
         "flag" : "green",
     },
+
+
+    #Condenser Vacuum Control (AR)
+
+    "ar_p_1a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "ar_p_1b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
 }
 
 values = {
@@ -2728,10 +2758,10 @@ pumps = {
     },
 
     #Main Condenser
-    "car_p_1a" : { #TODO: Need accurate numbers here
+    "ar_p_1a" : { #TODO: Need accurate numbers here
         "motor_breaker_closed" : True,
-        "motor_control_switch" : "",
-        "bus" : "1",
+        "motor_control_switch" : "ar_p_1a",
+        "bus" : "31", #TODO: Put on MC-3C
         "horsepower" : 1000,
         "rated_rpm" : 1800,
         "rated_discharge_press" : 20,
@@ -2742,10 +2772,10 @@ pumps = {
         "custom" : True,
         "type" : pump.PumpTypes.Type1,
     },
-    "car_p_1b" : { #TODO: Need accurate numbers here
+    "ar_p_1b" : { #TODO: Need accurate numbers here
         "motor_breaker_closed" : True,
-        "motor_control_switch" : "",
-        "bus" : "3",
+        "motor_control_switch" : "ar_p_1b",
+        "bus" : "21", #TODO: Put on MC-2D
         "horsepower" : 1000,
         "rated_rpm" : 1800,
         "rated_discharge_press" : 20,

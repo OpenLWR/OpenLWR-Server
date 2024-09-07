@@ -119,7 +119,7 @@ def run():
             pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
             continue
 
-        if not pump["custom"]:
+        if pump["motor_control_switch"] != "":
             if len(model.switches[pump["motor_control_switch"]]["positions"]) > 2:
                 if model.switches[pump["motor_control_switch"]]["position"] == 2:
                     pump["motor_breaker_closed"] = True

@@ -58,7 +58,7 @@ def run():
 
     MainCondenserPressure = pressure.PartialPressure(pressure.GasTypes["Nitrogen"],MainCondenserAtmosphere["Nitrogen"],100,MainCondenserVolume)
 
-    #print(MainCondenserPressure/3386) #In.Hg
+    print(abs((MainCondenserPressure/3386)-29.9212)) #In.Hg vacuum
 
     #Pretend theres some amount of in-leakage
     Atmospheres = MainCondenserPressure/101325 
@@ -71,15 +71,15 @@ def run():
 
     #Condenser Air Removal Pumps
 
-    if MainCondenserPressure/3386 <= 25: #CAR can only pull around 25 in.hg and will trip at 25 in.hg
-        model.pumps["car_p_1a"]["motor_breaker_closed"] = False
-        model.pumps["car_p_1b"]["motor_breaker_closed"] = False
+    if MainCondenserPressure/3386 <= 5: #CAR can only pull around 25 in.hg and will trip at 25 in.hg vacuum (5 in.hg absolute)
+        model.pumps["ar_p_1a"]["motor_breaker_closed"] = False
+        model.pumps["ar_p_1b"]["motor_breaker_closed"] = False
 
-    Car1RPM = model.pumps["car_p_1a"]["rpm"]
-    Car2RPM = model.pumps["car_p_1b"]["rpm"]
+    Car1RPM = model.pumps["ar_p_1a"]["rpm"]
+    Car2RPM = model.pumps["ar_p_1b"]["rpm"]
 
-    Car1Flow = (Car1RPM/1800)*8.15 #very very very bad very simplify
-    Car2Flow = (Car2RPM/1800)*8.15
+    Car1Flow = (Car1RPM/1800)*41 #very very very bad very simplify
+    Car2Flow = (Car2RPM/1800)*41
 
     TotalAirRemoved = Car1Flow+Car2Flow 
     TotalAirRemoved *= 0.1 #Deltatime
