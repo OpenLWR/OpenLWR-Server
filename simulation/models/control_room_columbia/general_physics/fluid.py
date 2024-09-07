@@ -1138,7 +1138,7 @@ valves = {
     #Bypass Valves
 
     "ms_v_160a" : { 
-        "control_switch" : "bypass_valve",
+        "control_switch" : "",
         "input" : "bypass_steam_header",
         "output" : "turbine_bypass_manifold",
         "percent_open" : 0,
@@ -1150,7 +1150,7 @@ valves = {
         #TODO: valve control power and motive power
     },
     "ms_v_160b" : { 
-        "control_switch" : "bypass_valve",
+        "control_switch" : "",
         "input" : "bypass_steam_header",
         "output" : "turbine_bypass_manifold",
         "percent_open" : 0,
@@ -1162,7 +1162,7 @@ valves = {
         #TODO: valve control power and motive power
     },
     "ms_v_160c" : { 
-        "control_switch" : "bypass_valve",
+        "control_switch" : "",
         "input" : "bypass_steam_header",
         "output" : "turbine_bypass_manifold",
         "percent_open" : 0,
@@ -1174,7 +1174,7 @@ valves = {
         #TODO: valve control power and motive power
     },
     "ms_v_160d" : { 
-        "control_switch" : "bypass_valve",
+        "control_switch" : "",
         "input" : "bypass_steam_header",
         "output" : "turbine_bypass_manifold",
         "percent_open" : 0,
@@ -1189,7 +1189,7 @@ valves = {
     #Governor valves
 
     "ms_v_gv1" : { 
-        "control_switch" : "turbine_valve",
+        "control_switch" : "",
         "input" : "main_steam_line_a_tunnel",
         "output" : "fake_turbine",
         "percent_open" : 0,
@@ -1201,7 +1201,7 @@ valves = {
         #TODO: valve control power and motive power
     },
     "ms_v_gv2" : { 
-        "control_switch" : "turbine_valve",
+        "control_switch" : "",
         "input" : "main_steam_line_b_tunnel",
         "output" : "fake_turbine",
         "percent_open" : 0,
@@ -1213,7 +1213,7 @@ valves = {
         #TODO: valve control power and motive power
     },
     "ms_v_gv3" : { 
-        "control_switch" : "turbine_valve",
+        "control_switch" : "",
         "input" : "main_steam_line_c_tunnel",
         "output" : "fake_turbine",
         "percent_open" : 0,
@@ -1225,7 +1225,7 @@ valves = {
         #TODO: valve control power and motive power
     },
     "ms_v_gv4" : { 
-        "control_switch" : "turbine_valve",
+        "control_switch" : "",
         "input" : "main_steam_line_d_tunnel",
         "output" : "fake_turbine",
         "percent_open" : 0,

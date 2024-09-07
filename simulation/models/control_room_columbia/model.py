@@ -1381,27 +1381,6 @@ switches = {
         "flag" : "green",
     },
 
-    "bypass_valve": {
-        "positions": {
-			0: 45,
-			1: 0,
-            2: -45,
-		},
-        "position": 1,
-        "lights" : {},
-        "flag" : "green",
-    },
-    "turbine_valve": {
-        "positions": {
-			0: 45,
-			1: 0,
-            2: -45,
-		},
-        "position": 1,
-        "lights" : {},
-        "flag" : "green",
-    },
-
 
     #P800 (BD. C)
 
