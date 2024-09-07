@@ -112,8 +112,8 @@ def run():
 
     gov_valve = max(min(gov_valve+acceleration_control_signal,100),0)
 
-    if SelectedAccelerationReference == -500:
-        gov_valve -= 0.5
+    if SelectedSpeedReference == -500:
+        gov_valve = max(min(gov_valve-0.5,100),0)
 
     
 
