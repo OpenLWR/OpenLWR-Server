@@ -3027,6 +3027,7 @@ diesel_generator.initialize()
 from simulation.models.control_room_columbia.systems import diesels
 from simulation.models.control_room_columbia.systems import safety_relief
 from simulation.models.control_room_columbia.systems import irm_srm_positioner
+from simulation.models.control_room_columbia.systems import condensate
 from simulation.models.control_room_columbia.systems import feedwater
 from simulation.models.control_room_columbia.systems import rcic
 from simulation.models.control_room_columbia.systems import hpcs
@@ -3068,6 +3069,7 @@ def model_run(delta):
     rrc.run()
     safety_relief.run()
     irm_srm_positioner.run()
+    condensate.run()
     feedwater.run()
     rcic.run()
     hpcs.run()
