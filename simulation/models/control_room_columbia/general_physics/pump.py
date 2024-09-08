@@ -94,15 +94,16 @@ def calculate_suction(pump):
 
     flow = flow/1000 #to liter/s
 
-    flow_suct = flow*0.1 #to liter/0.1s (or the sim time)
+    flow= flow*0.1 #to liter/0.1s (or the sim time)
 
-    flow_suct = min(flow_suct,pump["flow"])
+    flow_suct = min(flow,pump["flow"])
     #if suct_header["mass"] - flow_suct <= 0:
         #suct_header["mass"] = 0
         #return 0
 
-    suct_header["mass"] -= flow_suct
-    return (flow/3.785)*60
+    suct_header["mass"] -= flow_suct #TODO: Really need to investigate this. It is hella broken.
+    flow = min(pump["flow"],flow)
+    return (flow/3.785)*60 #TODO: This used flow instead of flow_suct. Intended?
 
 def run():
     for pump_name in model.pumps:

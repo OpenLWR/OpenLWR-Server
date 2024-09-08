@@ -69,7 +69,7 @@ class Turbine:
         self.info["Torque"] = Q
         self.info["RPM"] = self.info["AngularVelocity"]*60/(2*math.pi)
 
-        model.pumps[self.info["Pump"]]["rpm"] = self.info["RPM"] #TODO: Remove this, temporary!
+        model.pumps[self.info["Pump"]]["rpm"] = 5000#self.info["RPM"] #TODO: Remove this, temporary!
 
         #print(self.info["RPM"])
         #print("---")
@@ -78,6 +78,7 @@ turbines = {} #TODO: Move to model when done using regular turbine.py
 
 def initialize():
     Turbine("rfw_dt_1a","rft_dt_1a_stop","ms_v_172a","a","rfw_p_1a")
+    Turbine("rfw_dt_1b","rft_dt_1b_stop","ms_v_172b","a","rfw_p_1b")
 
 def run():
     for turbine in turbines:

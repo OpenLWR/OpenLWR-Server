@@ -24,7 +24,7 @@ headers = { #most lines have a common header that they discharge into
         #16" HPCS(1)-4-1
 
         "diameter" : 406.40, #millimeters
-        "length" : 20000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid, #Initialized on start. Is not changed again.
@@ -34,7 +34,7 @@ headers = { #most lines have a common header that they discharge into
         #24" HPCS(2)-1-1
 
         "diameter" : 609.60, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -45,7 +45,7 @@ headers = { #most lines have a common header that they discharge into
         #6"RCIC(1)-4-1
 
         "diameter" : 406.40, #millimeters
-        "length" : 20000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -55,7 +55,7 @@ headers = { #most lines have a common header that they discharge into
         #8"RCIC(2)-1-1
 
         "diameter" : 609.60, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -66,7 +66,7 @@ headers = { #most lines have a common header that they discharge into
         #18" RHR(1)-2-5
 
         "diameter" : 457.20, #millimeters
-        "length" : 20000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -76,7 +76,7 @@ headers = { #most lines have a common header that they discharge into
         #18" RHR(1)-2-4
 
         "diameter" : 457.20, #millimeters
-        "length" : 20000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -86,7 +86,7 @@ headers = { #most lines have a common header that they discharge into
         #24" RHR(2)-2-2
 
         "diameter" : 609.60, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -97,7 +97,7 @@ headers = { #most lines have a common header that they discharge into
         #18" RHR(1)-2-5
 
         "diameter" : 457.20, #millimeters
-        "length" : 20000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -107,7 +107,7 @@ headers = { #most lines have a common header that they discharge into
         #18" RHR(1)-2-4
 
         "diameter" : 457.20, #millimeters
-        "length" : 20000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -117,7 +117,7 @@ headers = { #most lines have a common header that they discharge into
         #24" RHR(2)-2-2
 
         "diameter" : 609.60, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -128,7 +128,7 @@ headers = { #most lines have a common header that they discharge into
         #18"
 
         "diameter" : 457.20, #millimeters
-        "length" : 20000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -138,7 +138,7 @@ headers = { #most lines have a common header that they discharge into
         #24"
 
         "diameter" : 609.60, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -149,7 +149,7 @@ headers = { #most lines have a common header that they discharge into
         #24"
 
         "diameter" : 609.60, #millimeters
-        "length" : 20000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -324,6 +324,16 @@ headers = { #most lines have a common header that they discharge into
         "type" : FluidTypes.Gas,
         "mass" : 0,
     },
+    "rft_dt_1b_stop" : {
+        #6" MS(5)-4
+
+        "diameter" : 152.4, #millimeters
+        "length" : 200000,
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
 
 
     "rcic_isolation_steam_line" : {
@@ -371,7 +381,7 @@ headers = { #most lines have a common header that they discharge into
         #6"RCIC(1)-4-1
 
         "diameter" : 152.40, #millimeters
-        "length" : 20000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -381,7 +391,7 @@ headers = { #most lines have a common header that they discharge into
         #8"RCIC(2)-1-1
 
         "diameter" : 203.20, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -393,7 +403,7 @@ headers = { #most lines have a common header that they discharge into
         #48"COND(1)-1
 
         "diameter" : 1219.20, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -404,7 +414,7 @@ headers = { #most lines have a common header that they discharge into
         #36"COND(2)-1
 
         "diameter" : 914.40, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 6000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -419,7 +429,7 @@ headers = { #most lines have a common header that they discharge into
         #30"COND(4)-3
 
         "diameter" : 1016, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 6000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -432,7 +442,7 @@ headers = { #most lines have a common header that they discharge into
         #24"RFW(1)-5
 
         "diameter" : 609.6, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -442,7 +452,7 @@ headers = { #most lines have a common header that they discharge into
         #24"RFW(1)-5
 
         "diameter" : 609.6, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -452,7 +462,7 @@ headers = { #most lines have a common header that they discharge into
         #30"RFW(1)-4
 
         "diameter" : 762, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 4000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -464,8 +474,8 @@ headers = { #most lines have a common header that they discharge into
     "rfw_hx_6a" : {
         #24"RFW(1)-4
 
-        "diameter" : 609.6, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "diameter" : 762, #millimeters
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -474,8 +484,8 @@ headers = { #most lines have a common header that they discharge into
     "rfw_hx_6b" : {
         #24"RFW(1)-4
 
-        "diameter" : 609.6, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "diameter" : 762, #millimeters
+        "length" : 2000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -486,7 +496,7 @@ headers = { #most lines have a common header that they discharge into
         #30"RFW(1)-4
 
         "diameter" : 762, #millimeters
-        "length" : 200000, #TODO : determine a good length
+        "length" : 4000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -1276,6 +1286,31 @@ valves = {
         #TODO: valve control power and motive power
     },
 
+    "ms_v_105b" : { 
+        "control_switch" : "ms_v_105b",
+        "input" : "bypass_steam_header",
+        "output" : "rft_dt_1b_stop",
+        "percent_open" : 100,
+        "diameter" : 200,#152.4, #mm, 6 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : True,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_172b" : { 
+        "control_switch" : "",
+        "input" : "rft_dt_1b_stop",
+        "output" : "magic",
+        "percent_open" : 100,
+        "diameter" : 152.4, #mm, 6 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
 
     #Condensate
 
@@ -1299,7 +1334,7 @@ valves = {
         "input" : "rfw_p_1a_discharge",
         "output" : "rfw_discharge",
         "percent_open" : 0,
-        "diameter" : 609.6, #mm, 24 inches
+        "diameter" : 762, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : False,
@@ -1311,7 +1346,7 @@ valves = {
         "input" : "rfw_p_1b_discharge",
         "output" : "rfw_discharge",
         "percent_open" : 0,
-        "diameter" : 609.6, #mm, 24 inches
+        "diameter" : 762, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : False,
@@ -1325,7 +1360,7 @@ valves = {
         "input" : "rfw_discharge",
         "output" : "rfw_hx_6a",
         "percent_open" : 100,
-        "diameter" : 609.6, #mm, 24 inches
+        "diameter" : 762, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
@@ -1337,7 +1372,7 @@ valves = {
         "input" : "rfw_discharge",
         "output" : "rfw_hx_6b",
         "percent_open" : 100,
-        "diameter" : 609.6, #mm, 24 inches
+        "diameter" : 762, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
@@ -1386,7 +1421,7 @@ valves = {
         "input" : "rfw_outlet",
         "output" : StaticTanks.Reactor,
         "percent_open" : 100,
-        "diameter" : 609.6, #mm, 24 inches
+        "diameter" : 762, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
@@ -1398,7 +1433,7 @@ valves = {
         "input" : "rfw_outlet",
         "output" : StaticTanks.Reactor,
         "percent_open" : 100,
-        "diameter" : 609.6, #mm, 24 inches
+        "diameter" : 762, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
@@ -1612,10 +1647,12 @@ def run():
         flow = flow/1000 #to liter/s
         valve["flow"] = flow
         flow = flow*0.1 #to liter/0.1s (or the sim time)
-        if inlet["pressure"] < outlet["pressure"]:
+        if inlet["pressure"] < outlet["pressure"] or inlet["mass"] < 0:
             #valve_inject_to_header(flow,valve["input"])
             #valve_inject_to_header(flow*-1,valve["output"])
             continue
         else:
             valve_inject_to_header(flow*-1,valve["input"])
             valve_inject_to_header(flow,valve["output"])
+
+        inlet["mass"] = max(0,inlet["mass"])

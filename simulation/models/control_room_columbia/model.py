@@ -2140,6 +2140,19 @@ switches = {
         },
         "flag" : "green",
     },
+    "ms_v_105b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
 
     "rfw_v_102a": {
         "positions": {
@@ -3021,6 +3034,20 @@ pumps = {
         "flow_from_rpm" : 0,
         "rated_flow" : 18520,
         "header" : "rfw_p_1a_discharge",
+        "suct_header" : "condensate_booster_discharge",
+        "shaft_driven" : True,
+        "type" : pump.PumpTypes.Type1,
+    },
+    "rfw_p_1b" : {
+        "motor_breaker_closed" : False,
+        "motor_control_switch" : "",
+        "bus" : "", 
+        "horsepower" : 0,
+        "rated_rpm" : 5000,
+        "rated_discharge_press" : 1400,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 18520,
+        "header" : "rfw_p_1b_discharge",
         "suct_header" : "condensate_booster_discharge",
         "shaft_driven" : True,
         "type" : pump.PumpTypes.Type1,
