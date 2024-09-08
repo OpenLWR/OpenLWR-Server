@@ -72,10 +72,7 @@ def run():
 
     #TODO: Actual steam-driven pumps
 
-    if model.switches["rfw_trip"]["position"] == 0:
-        total_flow = 0
-    else:
-        total_flow = 3600 #gpm
+    total_flow = 3600 #gpm
 
     global fw_valve
 

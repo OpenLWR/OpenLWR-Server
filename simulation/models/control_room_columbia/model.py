@@ -1090,17 +1090,6 @@ switches = {
         "flag" : "green",
     },
 
-    "rfw_trip": {
-        "positions": {
-			0: 45,
-			1: 0,
-            2: -45,
-		},
-        "position": 1,
-        "lights" : {},
-        "flag" : "green",
-    },
-
     #LPCS
 
     "lpcs_p_1": {
