@@ -1241,7 +1241,7 @@ valves = {
 
     "cond_nozzle_hotwell" : { 
         "control_switch" : "",
-        "input" : "Hotwell",
+        "input" : StaticTanks.Hotwell,
         "output" : "condensate_suction",
         "percent_open" : 100,
         "diameter" : 1219.20, #mm, 24 inches
@@ -1255,7 +1255,7 @@ valves = {
     #RFW
 
     "rfw_v_102a" : { 
-        "control_switch" : "rfw_v_102a",
+        "control_switch" : "",#"rfw_v_102a",
         "input" : "rfw_p_1a_discharge",
         "output" : "rfw_discharge",
         "percent_open" : 0,
@@ -1267,7 +1267,7 @@ valves = {
         #TODO: valve control power and motive power
     },
     "rfw_v_102b" : { 
-        "control_switch" : "rfw_v_102b",
+        "control_switch" : "",#"rfw_v_102b",
         "input" : "rfw_p_1b_discharge",
         "output" : "rfw_discharge",
         "percent_open" : 0,
@@ -1281,7 +1281,7 @@ valves = {
 
     #HX
     "rfw_v_108a" : { 
-        "control_switch" : "rfw_v_108a",
+        "control_switch" : "",#"rfw_v_108a",
         "input" : "rfw_discharge",
         "output" : "rfw_hx_6a",
         "percent_open" : 0,
@@ -1293,7 +1293,7 @@ valves = {
         #TODO: valve control power and motive power
     },
      "rfw_v_108b" : { 
-        "control_switch" : "rfw_v_108b",
+        "control_switch" : "",#"rfw_v_108b",
         "input" : "rfw_discharge",
         "output" : "rfw_hx_6b",
         "percent_open" : 0,
@@ -1306,7 +1306,7 @@ valves = {
     },
 
      "rfw_v_112a" : { 
-        "control_switch" : "rfw_v_112a",
+        "control_switch" : "",#"rfw_v_112a",
         "input" : "rfw_hx_6a",
         "output" : "rfw_outlet",
         "percent_open" : 0,
@@ -1318,7 +1318,7 @@ valves = {
         #TODO: valve control power and motive power
     },
      "rfw_v_112b" : { 
-        "control_switch" : "rfw_v_112b",
+        "control_switch" : "",#"rfw_v_112b",
         "input" : "rfw_hx_6b",
         "output" : "rfw_outlet",
         "percent_open" : 0,

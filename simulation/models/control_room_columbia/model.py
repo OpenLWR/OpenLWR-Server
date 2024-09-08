@@ -2051,6 +2051,91 @@ switches = {
         },
         "flag" : "green",
     },
+
+    #Condensate
+
+    "cond_p_1a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "cond_p_1b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "cond_p_1c": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+
+    "cond_p_2a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+    "cond_p_2b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
+    "cond_p_2c": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+            "lockout" : True,
+        },
+        "flag" : "green",
+    },
 }
 
 values = {
@@ -2158,6 +2243,19 @@ values = {
 
     #EHC
     "mt_rpm" : 0,
+
+    #Condensate
+    "cond_booster_discharge_press" : 0,
+    "cond_booster_discharge_temp" : 0,
+    "cond_p_2a_amps" : 0,
+    "cond_p_2b_amps" : 0,
+    "cond_p_2c_amps" : 0,
+
+    "cond_discharge_press" : 0,
+    "cond_discharge_temp" : 0,
+    "cond_p_1a_amps" : 0,
+    "cond_p_1b_amps" : 0,
+    "cond_p_1c_amps" : 0,
 }
 
 indicators = {
@@ -2787,7 +2885,7 @@ pumps = {
 
     "cond_p_1a" : {
         "motor_breaker_closed" : False,
-        "motor_control_switch" : "",
+        "motor_control_switch" : "cond_p_1a",
         "bus" : "1",
         "horsepower" : 1250,
         "rated_rpm" : 1800,
@@ -2800,7 +2898,7 @@ pumps = {
     },
     "cond_p_1b" : {
         "motor_breaker_closed" : False,
-        "motor_control_switch" : "",
+        "motor_control_switch" : "cond_p_1b",
         "bus" : "2",
         "horsepower" : 1250,
         "rated_rpm" : 1800,
@@ -2813,7 +2911,7 @@ pumps = {
     },
     "cond_p_1c" : {
         "motor_breaker_closed" : False,
-        "motor_control_switch" : "",
+        "motor_control_switch" : "cond_p_1c",
         "bus" : "3",
         "horsepower" : 1250,
         "rated_rpm" : 1800,
@@ -2827,7 +2925,7 @@ pumps = {
 
     "cond_p_2a" : {
         "motor_breaker_closed" : False,
-        "motor_control_switch" : "",
+        "motor_control_switch" : "cond_p_2a",
         "bus" : "1",
         "horsepower" : 3000,
         "rated_rpm" : 1800,
@@ -2840,7 +2938,7 @@ pumps = {
     },
     "cond_p_2b" : {
         "motor_breaker_closed" : False,
-        "motor_control_switch" : "",
+        "motor_control_switch" : "cond_p_2b",
         "bus" : "2",
         "horsepower" : 3000,
         "rated_rpm" : 1800,
@@ -2853,7 +2951,7 @@ pumps = {
     },
     "cond_p_2c" : {
         "motor_breaker_closed" : False,
-        "motor_control_switch" : "",
+        "motor_control_switch" : "cond_p_2c",
         "bus" : "3",
         "horsepower" : 3000,
         "rated_rpm" : 1800,
