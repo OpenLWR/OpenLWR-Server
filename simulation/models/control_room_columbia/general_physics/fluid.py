@@ -314,6 +314,17 @@ headers = { #most lines have a common header that they discharge into
         "type" : FluidTypes.Gas,
         "mass" : 0,
     },
+    "rft_dt_1a_stop" : {
+        #6" MS(5)-4
+
+        "diameter" : 152.4, #millimeters
+        "length" : 200000,
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+
 
     "rcic_isolation_steam_line" : {
         #4"RCIC(13)-4-1
@@ -1237,6 +1248,35 @@ valves = {
         #TODO: valve control power and motive power
     },
 
+
+    #RFT Steam
+
+    "ms_v_105a" : { 
+        "control_switch" : "ms_v_105a",
+        "input" : "bypass_steam_header",
+        "output" : "rft_dt_1a_stop",
+        "percent_open" : 100,
+        "diameter" : 200,#152.4, #mm, 6 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : True,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_172a" : { 
+        "control_switch" : "",
+        "input" : "rft_dt_1a_stop",
+        "output" : "magic",
+        "percent_open" : 100,
+        "diameter" : 152.4, #mm, 6 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+
     #Condensate
 
     "cond_nozzle_hotwell" : { 
@@ -1255,7 +1295,7 @@ valves = {
     #RFW
 
     "rfw_v_102a" : { 
-        "control_switch" : "",#"rfw_v_102a",
+        "control_switch" : "rfw_v_102a",
         "input" : "rfw_p_1a_discharge",
         "output" : "rfw_discharge",
         "percent_open" : 0,
@@ -1267,7 +1307,7 @@ valves = {
         #TODO: valve control power and motive power
     },
     "rfw_v_102b" : { 
-        "control_switch" : "",#"rfw_v_102b",
+        "control_switch" : "rfw_v_102b",
         "input" : "rfw_p_1b_discharge",
         "output" : "rfw_discharge",
         "percent_open" : 0,
@@ -1284,11 +1324,11 @@ valves = {
         "control_switch" : "",#"rfw_v_108a",
         "input" : "rfw_discharge",
         "output" : "rfw_hx_6a",
-        "percent_open" : 0,
+        "percent_open" : 100,
         "diameter" : 609.6, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -1296,11 +1336,11 @@ valves = {
         "control_switch" : "",#"rfw_v_108b",
         "input" : "rfw_discharge",
         "output" : "rfw_hx_6b",
-        "percent_open" : 0,
+        "percent_open" : 100,
         "diameter" : 609.6, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -1309,11 +1349,11 @@ valves = {
         "control_switch" : "",#"rfw_v_112a",
         "input" : "rfw_hx_6a",
         "output" : "rfw_outlet",
-        "percent_open" : 0,
+        "percent_open" : 100,
         "diameter" : 762, #mm, 30 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -1321,11 +1361,47 @@ valves = {
         "control_switch" : "",#"rfw_v_112b",
         "input" : "rfw_hx_6b",
         "output" : "rfw_outlet",
-        "percent_open" : 0,
+        "percent_open" : 100,
         "diameter" : 762, #mm, 30 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : False,
+        "sealed_in" : True,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "rfw_v_112b" : { 
+        "control_switch" : "",#"rfw_v_112b",
+        "input" : "rfw_hx_6b",
+        "output" : "rfw_outlet",
+        "percent_open" : 100,
+        "diameter" : 762, #mm, 30 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : True,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "rfw_v_65a" : { 
+        "control_switch" : "",#"rfv_v_65a",
+        "input" : "rfw_outlet",
+        "output" : StaticTanks.Reactor,
+        "percent_open" : 100,
+        "diameter" : 609.6, #mm, 24 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : True,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "rfw_v_65b" : { 
+        "control_switch" : "",#"rfv_v_65b",
+        "input" : "rfw_outlet",
+        "output" : StaticTanks.Reactor,
+        "percent_open" : 100,
+        "diameter" : 609.6, #mm, 24 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },

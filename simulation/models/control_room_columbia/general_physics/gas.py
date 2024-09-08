@@ -38,7 +38,7 @@ def run():
         radius = valve["diameter"]/2
         radius = radius*0.1 #to cm
         
-        flow_resistance = (8*1.1*2000)/(math.pi*(radius**4))
+        flow_resistance = (8*1.1*20000)/(math.pi*(radius**4))
 
         flow = (inlet["pressure"]-max(outlet["pressure"],0))/flow_resistance
 
@@ -52,12 +52,15 @@ def run():
         flow = flow*0.98
         #flow is in cubic centimeters per second
         flow = flow/1000 #to liter/s
-        valve["flow"] = flow
+        
         flow = flow*0.1 #to liter/0.1s (or the sim time)
        
         if inlet["pressure"] < outlet["pressure"]:
+            valve["flow"] = 0
             continue
         else:
             fluid.valve_inject_to_header(flow*-1,valve["input"])
             if valve["output"] != "magic":
                 fluid.valve_inject_to_header(flow,valve["output"])
+
+        valve["flow"] = flow

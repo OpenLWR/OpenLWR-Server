@@ -2125,6 +2125,50 @@ switches = {
         },
         "flag" : "green",
     },
+
+    #RFT
+    "ms_v_105a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+
+    "rfw_v_102a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+    "rfw_v_102b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+    },
+
+
 }
 
 values = {
@@ -2964,7 +3008,23 @@ pumps = {
         "header" : "rcic_discharge_header",
         "suct_header" : "rcic_suction_header",
         "type" : pump.PumpTypes.Type2,
-    }
+    },
+
+    #RFW
+    "rfw_p_1a" : {
+        "motor_breaker_closed" : False,
+        "motor_control_switch" : "",
+        "bus" : "", 
+        "horsepower" : 0,
+        "rated_rpm" : 5000,
+        "rated_discharge_press" : 1400,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 18520,
+        "header" : "rfw_p_1a_discharge",
+        "suct_header" : "condensate_booster_discharge",
+        "shaft_driven" : True,
+        "type" : pump.PumpTypes.Type1,
+    },
 }
 
 turbines = {
@@ -2978,7 +3038,7 @@ turbines = {
         "trip_valve" : "rcic_v_1",
         "steam_flow_valve" : "rcic_v_45",
         "governor_valve" : "rcic_v_2",
-    }
+    },
 }
 
 recorders = {}
@@ -3002,7 +3062,9 @@ fluid.initialize_headers()
 
 from simulation.models.control_room_columbia.general_physics import gas
 from simulation.models.control_room_columbia.general_physics import turbine
+from simulation.models.control_room_columbia.general_physics import turbine_new
 turbine.initialize_pumps()
+turbine_new.initialize()
 
 from simulation.models.control_room_columbia.general_physics import main_condenser
 from simulation.models.control_room_columbia.general_physics import main_turbine
@@ -3049,7 +3111,8 @@ def model_run(delta):
     fluid.run() 
     pump.run()
     gas.run()
-    turbine.run()
+    turbine.run() #TODO: Deprecate
+    turbine_new.run()
     main_condenser.run()
     main_turbine.run()
     main_generator.run()

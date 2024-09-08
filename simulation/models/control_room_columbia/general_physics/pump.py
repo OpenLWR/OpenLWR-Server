@@ -36,6 +36,7 @@ pump_1 = { #TODO: improve the accuracy of these calculations
     "header" : "",
     "suct_header" : "",
     "custom" : False,
+    "shaft_driven" : False,
 
     "loop_seq" : False, # Has a LOOP Sequence (otherwise trips instantly)
     "loop_avail" : False, # Loop Sequence has permitted loading of this equipment, if needed
@@ -160,6 +161,20 @@ def run():
             if pump["loop_avail"] and pump["was_closed"]:
                 pump["motor_breaker_closed"] = True
                 pump["was_closed"] = False
+
+        if pump["shaft_driven"]:
+            #TODO: better flow calculation
+            pump["flow"] = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
+            pump["flow"] = calculate_suction(pump_name)
+            pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
+            
+            if pump["header"] != "":
+                from simulation.models.control_room_columbia.general_physics import fluid
+                pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
+            else:
+                pump["actual_flow"] = pump["flow"]
+
+            continue
 
         if pump["motor_breaker_closed"]:
             #first, verify that this breaker is allowed to be closed

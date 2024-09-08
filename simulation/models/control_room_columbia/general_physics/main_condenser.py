@@ -59,7 +59,7 @@ def run():
 
     MainCondenserPressure = pressure.PartialPressure(pressure.GasTypes["Nitrogen"],MainCondenserAtmosphere["Nitrogen"],100,MainCondenserVolume)
 
-    print(abs((MainCondenserPressure/3386)-29.9212)) #In.Hg vacuum
+    #print(abs((MainCondenserPressure/3386)-29.9212)) #In.Hg vacuum
 
     global MainCondenserBackPressure
 
