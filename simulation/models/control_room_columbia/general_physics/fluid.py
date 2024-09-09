@@ -442,7 +442,7 @@ headers = { #most lines have a common header that they discharge into
         #24"RFW(1)-5
 
         "diameter" : 609.6, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 6000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -452,7 +452,7 @@ headers = { #most lines have a common header that they discharge into
         #24"RFW(1)-5
 
         "diameter" : 609.6, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 6000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -462,7 +462,7 @@ headers = { #most lines have a common header that they discharge into
         #30"RFW(1)-4
 
         "diameter" : 762, #millimeters
-        "length" : 4000, #TODO : determine a good length
+        "length" : 8000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -475,7 +475,7 @@ headers = { #most lines have a common header that they discharge into
         #24"RFW(1)-4
 
         "diameter" : 762, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -485,7 +485,7 @@ headers = { #most lines have a common header that they discharge into
         #24"RFW(1)-4
 
         "diameter" : 762, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -496,7 +496,7 @@ headers = { #most lines have a common header that they discharge into
         #30"RFW(1)-4
 
         "diameter" : 762, #millimeters
-        "length" : 4000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -1359,11 +1359,11 @@ valves = {
         "control_switch" : "",#"rfw_v_108a",
         "input" : "rfw_discharge",
         "output" : "rfw_hx_6a",
-        "percent_open" : 100,
+        "percent_open" : 0,
         "diameter" : 762, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : True,
+        "sealed_in" : False,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -1371,36 +1371,24 @@ valves = {
         "control_switch" : "",#"rfw_v_108b",
         "input" : "rfw_discharge",
         "output" : "rfw_hx_6b",
-        "percent_open" : 100,
+        "percent_open" : 0,
         "diameter" : 762, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : True,
+        "sealed_in" : False,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
 
-     "rfw_v_112a" : { 
+    "rfw_v_112a" : { 
         "control_switch" : "",#"rfw_v_112a",
         "input" : "rfw_hx_6a",
         "output" : "rfw_outlet",
-        "percent_open" : 100,
+        "percent_open" : 0,
         "diameter" : 762, #mm, 30 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : True,
-        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
-        #TODO: valve control power and motive power
-    },
-     "rfw_v_112b" : { 
-        "control_switch" : "",#"rfw_v_112b",
-        "input" : "rfw_hx_6b",
-        "output" : "rfw_outlet",
-        "percent_open" : 100,
-        "diameter" : 762, #mm, 30 inches
-        "open_speed" : 0.333, #30 seconds to full close to open
-        "seal_in" : True, 
-        "sealed_in" : True,
+        "sealed_in" : False,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -1408,20 +1396,20 @@ valves = {
         "control_switch" : "",#"rfw_v_112b",
         "input" : "rfw_hx_6b",
         "output" : "rfw_outlet",
-        "percent_open" : 100,
+        "percent_open" : 0,
         "diameter" : 762, #mm, 30 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : True,
+        "sealed_in" : False,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
-    "rfw_v_65a" : { 
+    "rfw_v_65a" : { #TODO: Change this to using the HX, bypassing for now to fix a few issues
         "control_switch" : "",#"rfv_v_65a",
-        "input" : "rfw_outlet",
+        "input" : "rfw_discharge",
         "output" : StaticTanks.Reactor,
         "percent_open" : 100,
-        "diameter" : 762, #mm, 24 inches
+        "diameter" : 609.6, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
@@ -1430,10 +1418,10 @@ valves = {
     },
     "rfw_v_65b" : { 
         "control_switch" : "",#"rfv_v_65b",
-        "input" : "rfw_outlet",
+        "input" : "rfw_discharge",
         "output" : StaticTanks.Reactor,
         "percent_open" : 100,
-        "diameter" : 762, #mm, 24 inches
+        "diameter" : 609.6, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
@@ -1635,7 +1623,8 @@ def run():
         radius = valve["diameter"]/2
         radius = radius*0.1 #to cm
 
-        flow_resistance = (8*33*2000)/(math.pi*(radius**4))
+        #flow_resistance = (8*33*1000)/(math.pi*(radius**4))
+        flow_resistance = (8*33*3.3*1000)/(math.pi*(radius**4))
 
         #flow = math.pi*((inlet["pressure"]*0.001)-(outlet["pressure"]*0.001))*(radius**4)/(8*0.01*200)
 
@@ -1645,11 +1634,18 @@ def run():
         flow = flow*(valve["percent_open"]/100) #TODO: Exponents? Flow is not linear.
         #flow is in cubic centimeters per second
         flow = flow/1000 #to liter/s
+        flow = flow*0.1
+
+        if type(valve["output"]) == str:
+                if outlet["mass"] + flow >= outlet["volume"]:
+                    flow = max(outlet["volume"]-(outlet["mass"] + flow),0)
+
         valve["flow"] = flow
-        flow = flow*0.1 #to liter/0.1s (or the sim time)
+
         if inlet["pressure"] < outlet["pressure"] or inlet["mass"] < 0:
             #valve_inject_to_header(flow,valve["input"])
             #valve_inject_to_header(flow*-1,valve["output"])
+            valve["flow"] = 0
             continue
         else:
             valve_inject_to_header(flow*-1,valve["input"])
