@@ -1560,6 +1560,9 @@ def get_header(header_name):
     
     return header
 
+#this code is garbage
+#increment the counter for hours wasted to warn the next guy
+#hours wasted = 48
 
 def run():
 
