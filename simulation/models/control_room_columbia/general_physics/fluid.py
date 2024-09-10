@@ -1431,19 +1431,29 @@ valves = {
 }
 
 def initialize_headers():
-
     for header_name in headers:
         header = headers[header_name]
-        #assume the header is a cylinder
-        #so we use pi*r^2
-        volume = header["diameter"]/2
-        volume = math.pi*(volume**2)
-        #then multiply by the height
-        volume = volume*header["length"]
-        #this stuff is 8th grade math, i hope you know it
-        volume = volume/1e6 #to liters
+
+
+        volume = header["diameter"] / 2
+        volume = math.pi * (volume ** 2)
+        volume = volume * header["length"]
+        volume = volume / 1e6  # convert liters
         header["volume"] = volume
-        header["mass"] = 1
+
+        header["mass"] = 1  # ex; starter mass
+
+        if header["type"] == FluidTypes.Liquid:
+
+            header["pressure"] = header["mass"] * 9.81 * header["volume"] / header["length"]  
+        elif header["type"] == FluidTypes.Gas:
+            R = 8.314 
+            T = 300  
+            MolarMass = 0.018  
+            n = header["mass"] / MolarMass 
+            header["pressure"] = (n * R * T) / (header["volume"] * 1e-3) 
+
+        print(f"Initialized header {header_name}: Pressure = {header['pressure']}, Volume = {header['volume']}, Type = {header['type']}")
 
 def valve_inject_to_header(mass:int,header_name):
 
@@ -1565,93 +1575,72 @@ def get_header(header_name):
 #hours wasted = 48
 
 def run():
-
+ 
+    flow_calculations = {}
     for valve_name in valves:
         valve = valves[valve_name]
 
-        if valve["control_switch"] != "":
-            if not valve["seal_in"]:
-                if model.switches[valve["control_switch"]]["position"] == 2:
-                    valve["percent_open"] = min(max(valve["percent_open"]+valve["open_speed"],0),100)
-                elif model.switches[valve["control_switch"]]["position"] == 0:
-                    valve["percent_open"] = min(max(valve["percent_open"]-valve["open_speed"],0),100)
-            elif valve["seal_in"]:
-                if len(model.switches[valve["control_switch"]]["positions"]) < 3:
-                    if model.switches[valve["control_switch"]]["position"] == 1:
-                        valve["sealed_in"] = True
-                    elif model.switches[valve["control_switch"]]["position"] == 0:
-                        valve["sealed_in"] = False
-                else:
-                    if model.switches[valve["control_switch"]]["position"] == 2:
-                        valve["sealed_in"] = True
-                    elif model.switches[valve["control_switch"]]["position"] == 0:
-                        valve["sealed_in"] = False
-                    
-                
-
-                if valve["sealed_in"]:
-                    valve["percent_open"] = min(max(valve["percent_open"]+valve["open_speed"],0),100)
-                else:
-                    valve["percent_open"] = min(max(valve["percent_open"]-valve["open_speed"],0),100)
-
-            if model.switches[valve["control_switch"]]["lights"] != {}:
-                model.switches[valve["control_switch"]]["lights"]["green"] = valve["percent_open"] < 100
-                model.switches[valve["control_switch"]]["lights"]["red"] = valve["percent_open"] > 0
-
-        if valve["input"] == None or valve["output"] == None or valve["output"] == "magic":
+      # somewhat same logic as before 
+        if valve["input"] is None or valve["output"] is None or valve["output"] == "magic":
             continue
 
         inlet = get_header(valve["input"])
         outlet = get_header(valve["output"])
 
         if inlet["type"] == FluidTypes.Gas or outlet["type"] == FluidTypes.Gas:
-            continue #this is handled by gas.py
+            continue  # this is handled by gas.py
 
+        print(f"Valve {valve_name} - Controlling flow from {valve['input']} to {valve['output']}")
+        print(f"Inlet Pressure: {inlet['pressure']}, Outlet Pressure: {outlet['pressure']}, Inlet Mass: {inlet['mass']}, Outlet Mass: {outlet['mass']}")
 
-        #Poiseuille's law
-        #Q = π(P₁ – P₂)r⁴ / 8μL.
-        #where,
-        #Q is the volumetric flow rate,
-        #P1 and P2 are the pressures at both ends of the pipe,
-        #r is the radius of the pipe,
-        #μ is the viscosity of the fluid,
-        #L is the length of the pipe.
-
-        #viscosity of water is 0.01 poise
-        #placeholder 20000 mm as length (so 20 cm)
-
-        if valve_name == "rhr_v_6b" or valve_name == "rhr_v_6a": #override the inlets for SDC to have more pressure so there is sufficient head
+        if valve_name in ["rhr_v_6b", "rhr_v_6a"]:
             inlet["pressure"] = 1.379e6
 
-        radius = valve["diameter"]/2
-        radius = radius*0.1 #to cm
+        radius = valve["diameter"] / 2
+        radius = radius * 0.1  # to cm
 
-        #flow_resistance = (8*33*1000)/(math.pi*(radius**4))
-        flow_resistance = (8*33*3.3*1000)/(math.pi*(radius**4))
+        flow_resistance = (8 * 33 * 3.3 * 1000) / (math.pi * (radius**4))
 
-        #flow = math.pi*((inlet["pressure"]*0.001)-(outlet["pressure"]*0.001))*(radius**4)/(8*0.01*200)
+     
+        flow_resistance = max(flow_resistance, 1e-5) 
+        flow = (inlet["pressure"] - outlet["pressure"]) / flow_resistance
+        flow *= valve["percent_open"] / 100
+        flow = abs(flow)  
 
-        flow = (inlet["pressure"]-outlet["pressure"])/flow_resistance
-        flow = abs(flow)
-
-        flow = flow*(valve["percent_open"]/100) #TODO: Exponents? Flow is not linear.
-        #flow is in cubic centimeters per second
-        flow = flow/1000 #to liter/s
-        flow = flow*0.1
-
-        if type(valve["output"]) == str:
-                if outlet["mass"] + flow >= outlet["volume"]:
-                    flow = max(outlet["volume"]-(outlet["mass"] + flow),0)
-
-        valve["flow"] = flow
 
         if inlet["pressure"] < outlet["pressure"] or inlet["mass"] < 0:
-            #valve_inject_to_header(flow,valve["input"])
-            #valve_inject_to_header(flow*-1,valve["output"])
-            valve["flow"] = 0
-            continue
-        else:
-            valve_inject_to_header(flow*-1,valve["input"])
-            valve_inject_to_header(flow,valve["output"])
 
-        inlet["mass"] = max(0,inlet["mass"])
+            flow = abs(inlet["pressure"] - outlet["pressure"]) / flow_resistance
+            flow *= valve["percent_open"] / 100
+            continue
+
+        flow = flow / 1000  # to liter/s
+        flow = flow * 0.1  
+
+        time_step = 0.005  
+        flow = flow * time_step 
+
+        print(f"Calculated flow for {valve_name}: {flow} liters/second")
+
+
+        if isinstance(valve["output"], str):
+            if outlet["mass"] + flow >= outlet["volume"]:
+                flow = max(outlet["volume"] - (outlet["mass"] + flow), 0)
+                print(f"Flow limited: Adjusted flow due to volume limits for {valve_name}: {flow} liters/second")
+
+       
+        flow_calculations[valve_name] = flow
+
+    # duo loopo 
+    for valve_name, flow in flow_calculations.items():
+        valve = valves[valve_name]
+        inlet = get_header(valve["input"])
+        outlet = get_header(valve["output"])
+
+        # flow logic
+        valve_inject_to_header(flow * -1, valve["input"])
+        valve_inject_to_header(flow, valve["output"])
+
+        print(f"New mass for {valve['input']}: {inlet['mass']}")
+        print(f"New mass for {valve['output']}: {outlet['mass']}")
+        print(f"New Pressure for {valve['input']}: {inlet['pressure']}, {valve['output']}: {outlet['pressure']}")
