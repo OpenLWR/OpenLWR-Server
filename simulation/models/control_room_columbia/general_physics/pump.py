@@ -74,7 +74,7 @@ def initialize_pumps():
 
         model.pumps[pump_name] = pump_created
 
-def calculate_suction(pump):
+def calculate_suction(pump,delta):
     pump = model.pumps[pump]
     from simulation.models.control_room_columbia.general_physics import fluid
     if pump["suct_header"] == "":
@@ -94,7 +94,7 @@ def calculate_suction(pump):
 
     flow = flow/1000 #to liter/s
 
-    flow= flow*0.1 #to liter/0.1s (or the sim time)
+    flow= flow*delta #to liter/0.1s (or the sim time)
 
     flow_suct = min(flow,pump["flow"])
     if suct_header["mass"] - flow_suct <= 0:
@@ -105,7 +105,7 @@ def calculate_suction(pump):
     flow = min(pump["flow"],flow)
     return (flow/3.785)*60 #TODO: This used flow instead of flow_suct. Intended?
 
-def run():
+def run(delta):
     for pump_name in model.pumps:
         pump = model.pumps[pump_name]
 
@@ -114,7 +114,7 @@ def run():
             pump["rpm"] = pump_turbine["rpm"]
 
             pump["flow"] = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
-            pump["flow"] = calculate_suction(pump_name)
+            pump["flow"] = calculate_suction(pump_name,delta)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
             
             from simulation.models.control_room_columbia.general_physics import fluid
@@ -166,7 +166,7 @@ def run():
         if pump["shaft_driven"]:
             #TODO: better flow calculation
             pump["flow"] = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
-            pump["flow"] = calculate_suction(pump_name)
+            pump["flow"] = calculate_suction(pump_name,delta)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
             
             if pump["header"] != "":
@@ -184,17 +184,17 @@ def run():
 
             
 
-            Acceleration = ((pump["rated_rpm"]*(pump_bus.info["frequency"]/60))-pump["rpm"])*0.1 #TODO: Make acceleration and frequency realistic
+            Acceleration = ((pump["rated_rpm"]*(pump_bus.info["frequency"]/60))-pump["rpm"])*1*delta #TODO: Make acceleration and frequency realistic
             pump["rpm"] = clamp(pump["rpm"]+Acceleration,0,pump["rated_rpm"]+100)
             #full load amperes
             AmpsFLA = (pump["horsepower"]*746)/((math.sqrt(3)*voltage*0.876*0.95)+0.1) #TODO: variable motor efficiency and power factor
-            pump["amperes"] = (AmpsFLA*clamp(pump["actual_flow"]/pump["rated_flow"],0.48,1))+(AmpsFLA*5*(Acceleration/(pump["rated_rpm"]*0.1)))
+            pump["amperes"] = (AmpsFLA*clamp(pump["actual_flow"]/pump["rated_flow"],0.48,1))+(AmpsFLA*5*(Acceleration/(pump["rated_rpm"]*1*delta)))
             pump["watts"] = voltage*pump["amperes"]*math.sqrt(3)
 
 			#remember to make the loading process for the current (v.FLA*math.clamp(v.flow_with_fullsim etc)) more realistic, and instead make it based on distance from rated rpm (as when the pump is loaded more it will draw more current)
             #TODO: better flow calculation
             pump["flow"] = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
-            pump["flow"] = calculate_suction(pump_name)
+            pump["flow"] = calculate_suction(pump_name,delta)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
             
             if pump["header"] != "":
@@ -203,13 +203,13 @@ def run():
             else:
                 pump["actual_flow"] = pump["flow"]
         else:
-            Acceleration = (pump["rpm"])*0.1 #TODO: variable motor accel
+            Acceleration = (pump["rpm"])*1*delta #TODO: variable motor accel
             pump["rpm"] = clamp(pump["rpm"]-Acceleration,0,pump["rated_rpm"]+100)
             pump["amperes"] = 0
             pump["watts"] = 0
 
             pump["flow"] = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
-            pump["flow"] = calculate_suction(pump_name)
+            pump["flow"] = calculate_suction(pump_name,delta)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
 
             if pump["header"] != "":

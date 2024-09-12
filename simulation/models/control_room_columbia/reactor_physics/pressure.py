@@ -9,7 +9,7 @@ Pressures = {
     "Vessel" : 0, #pascals
 }
 Volumes = {
-    "Drywell" : 831430.47141*2,
+    "Drywell" : (831430.47141),
     "Wetwell" : 831430.47141*3,
     "Vessel" : 928500.26, #liters
 }

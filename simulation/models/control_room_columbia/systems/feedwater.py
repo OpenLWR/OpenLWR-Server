@@ -1,6 +1,7 @@
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia import reactor_protection_system
 from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
+from simulation.models.control_room_columbia.general_physics import fluid
 
 requested_setpoint = 35
 actual_setpoint = 35
@@ -70,30 +71,17 @@ def run():
     else:
         actual_setpoint = requested_setpoint
 
-    
-
-
-
-
-
-
-
-
-
-
-    total_flow = 3600 #gpm
-
     global fw_valve
 
     control_signal = MasterLevelController.update(actual_setpoint,reactor_inventory.rx_level_wr,1)
 
-    #TODO: use actual fluid physics
-
     fw_valve = max(min(fw_valve+control_signal,100),0)
-    total_flow = total_flow*(fw_valve/100)
 
-    reactor_inventory.add_water(total_flow)
+    #TODO: Temporarily using the RFW Isolation valves as control valves
 
+    fluid.valves["rfw_v_65a"]["open_percent"] = fw_valve
+    fluid.valves["rfw_v_65b"]["open_percent"] = fw_valve
+    
 
 
     

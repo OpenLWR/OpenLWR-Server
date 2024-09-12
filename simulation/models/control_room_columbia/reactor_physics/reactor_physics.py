@@ -10,15 +10,16 @@ from simulation.models.control_room_columbia.reactor_physics import reactor_inve
 kgSteam = 10e2
 steps = 0
 
-def run(rods):
+def run(delta,rods):
     #TODO: Improve code quality, add comments, etc
     reactivityRate = 0
 
     CoreFlow = 100
     waterMass = reactor_inventory.waterMass
     from simulation.models.control_room_columbia import model
-    reactor_water_temperature = model.reactor_water_temperature
-    period = 1
+    old_temp = model.reactor_water_temperature
+    new_temp = model.reactor_water_temperature
+
     global steps
 
     steps = steps+1
@@ -28,13 +29,13 @@ def run(rods):
 
     energy = 50 # in mwt
 
-    calories = ((energy*1000000)*0.24) # divide by number of rods
+    calories = ((energy*1000000))
 				
     HeatC = calories/1000
 				
-    TempNow = (HeatC/waterMass)*0.1
+    TempNow = (HeatC/waterMass)*delta
 				
-    reactor_water_temperature += TempNow
+    new_temp += TempNow
 
 
 
@@ -63,15 +64,15 @@ def run(rods):
 		]
 
         energy = info["neutrons"]/(320e15*0.7*100)
-        energy = (energy*3486) # in mwt
+        energy = (energy*3486)*delta # in mwt
 
         calories = ((energy*1000000))/185 # divide by number of rods
 				
         HeatC = calories/1000
 				
-        TempNow = (HeatC/waterMass)*0.1
-				
-        reactor_water_temperature += TempNow
+        TempNow = (HeatC/waterMass)
+		
+        new_temp += TempNow
 
         for direction in directions:
 
@@ -95,10 +96,8 @@ def run(rods):
 
                 for neighbor in neighbors:
                     nextPosition = neighbor
-                    avgDepth = ((abs((neighbor["insertion"]/48)-1))+(abs((info["insertion"]/48)-1)))/2
                     kEffArgs = fuel.get(waterMass, abs((nextPosition["insertion"]/48)-1), NeutronFlux, 60 ,CoreFlow,info["neutrons"])
                     kStep = kEffArgs["kStep"]
-                    kEff = kEffArgs["kEff"]
 
                     def transport_equation():
                         return (info["neutrons"] - nextPosition["neutrons"])*mykStep*kStep
@@ -108,7 +107,6 @@ def run(rods):
             except:
                 continue
 
-    model.reactor_water_temperature = reactor_water_temperature
-    reactor_inventory.run()
+    model.reactor_water_temperature += new_temp-old_temp
 
     

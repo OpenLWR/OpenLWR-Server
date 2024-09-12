@@ -15,6 +15,7 @@ def calculate_level_cylinder(Diameter,Volume):
 
 	Radius = Diameter/2
 	Volume_Of_Vessel = (Radius*Radius)*math.pi
+	Volume_Of_Vessel = Volume_Of_Vessel*(1/3) #Equipment in the RPV takes up volume
 	#volume = 2D Area * Height, so
 	#Height = volume/2D Area
 	#Because this uses volume, we can simulate water expansion.
@@ -24,16 +25,17 @@ def mm_to_inches(value):
 	return value/25.4
 
 rx_level_wr = 35
-waterMass = 928500.26
+waterMass = 928500.26*(1/3)#Equipment in the RPV takes up volume
 limit_press = True
 
-def run():
+def run(delta):
 		
 	from simulation.models.control_room_columbia.reactor_physics import reactor_physics
 	from simulation.models.control_room_columbia.reactor_physics  import steam_functions
 	from simulation.models.control_room_columbia.reactor_physics  import pressure
 	global rx_level_wr
 	global waterMass
+	global limit_press
 	boilingPoint = steam_functions.getBoilingPointForWater(pressure.Pressures["Vessel"])
 	vapMass = 0
 
@@ -47,7 +49,7 @@ def run():
 		waterMass = 1
 
 	if waterMass>0:
-		vapMass = steam_functions.vaporize(waterMass, water_temperature, pressure.Pressures["Vessel"])
+		vapMass = steam_functions.vaporize(waterMass, water_temperature, pressure.Pressures["Vessel"],delta)
 		reactor_physics.kgSteam = reactor_physics.kgSteam+max(vapMass["vm"],0)
 		
 		if limit_press and pressure.Pressures["Vessel"]/6895 >= 900:

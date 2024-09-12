@@ -4,6 +4,7 @@ from simulation.models.control_room_columbia import reactor_protection_system
 from simulation.models.control_room_columbia import rod_position_information_system
 from simulation.models.control_room_columbia import rod_drive_control_system
 from simulation.models.control_room_columbia.reactor_physics import reactor_physics
+from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
 from simulation.models.control_room_columbia import neutron_monitoring
 from simulation.models.control_room_columbia.general_physics import ac_power
 import math
@@ -3030,7 +3031,7 @@ pumps = {
         "bus" : "", 
         "horsepower" : 0,
         "rated_rpm" : 5000,
-        "rated_discharge_press" : 1400,
+        "rated_discharge_press" : 1800,
         "flow_from_rpm" : 0,
         "rated_flow" : 18520,
         "header" : "rfw_p_1a_discharge",
@@ -3044,7 +3045,7 @@ pumps = {
         "bus" : "", 
         "horsepower" : 0,
         "rated_rpm" : 5000,
-        "rated_discharge_press" : 1400,
+        "rated_discharge_press" : 1800,
         "flow_from_rpm" : 0,
         "rated_flow" : 18520,
         "header" : "rfw_p_1b_discharge",
@@ -3121,22 +3122,25 @@ sync.initialize()
 deh.initialize()
 feedwater.initialize()
 
+def model_run_fast(delta):
+    fluid.run(delta) 
+    pump.run(delta)
+    reactor_inventory.run(delta)
+
 runs = 0
 def model_run(delta):
     global runs
+    reactor_physics.run(delta,rods)
     chart.run()
     annunciators.run()
     reactor_protection_system.run()
     rod_drive_control_system.run(rods,buttons)
     rod_position_information_system.run(rods,alarms,buttons)
-    reactor_physics.run(rods)
     neutron_monitoring.run(alarms,buttons,indicators,rods,switches,values)
     ac_power.run()
     diesel_generator.run()
     sync.run()
     loop_sequence.run()
-    fluid.run() 
-    pump.run()
     gas.run()
     turbine.run() #TODO: Deprecate
     turbine_new.run()

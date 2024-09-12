@@ -1411,7 +1411,7 @@ valves = {
         "percent_open" : 100,
         "diameter" : 609.6, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
-        "seal_in" : True, 
+        "seal_in" : False, 
         "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
@@ -1423,7 +1423,7 @@ valves = {
         "percent_open" : 100,
         "diameter" : 609.6, #mm, 24 inches
         "open_speed" : 0.333, #30 seconds to full close to open
-        "seal_in" : True, 
+        "seal_in" : False, 
         "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
@@ -1453,7 +1453,7 @@ def initialize_headers():
             n = header["mass"] / MolarMass 
             header["pressure"] = (n * R * T) / (header["volume"] * 1e-3) 
 
-        print(f"Initialized header {header_name}: Pressure = {header['pressure']}, Volume = {header['volume']}, Type = {header['type']}")
+        #print(f"Initialized header {header_name}: Pressure = {header['pressure']}, Volume = {header['volume']}, Type = {header['type']}")
 
 def valve_inject_to_header(mass:int,header_name):
 
@@ -1574,11 +1574,40 @@ def get_header(header_name):
 #increment the counter for hours wasted to warn the next guy
 #hours wasted = 48
 
-def run():
+def run(delta):
  
     flow_calculations = {}
     for valve_name in valves:
         valve = valves[valve_name]
+
+        if valve["control_switch"] != "":
+            if not valve["seal_in"]:
+                if model.switches[valve["control_switch"]]["position"] == 2:
+                    valve["percent_open"] = min(max(valve["percent_open"]+valve["open_speed"],0),100)
+                elif model.switches[valve["control_switch"]]["position"] == 0:
+                    valve["percent_open"] = min(max(valve["percent_open"]-valve["open_speed"],0),100)
+            elif valve["seal_in"]:
+                if len(model.switches[valve["control_switch"]]["positions"]) < 3:
+                    if model.switches[valve["control_switch"]]["position"] == 1:
+                        valve["sealed_in"] = True
+                    elif model.switches[valve["control_switch"]]["position"] == 0:
+                        valve["sealed_in"] = False
+                else:
+                    if model.switches[valve["control_switch"]]["position"] == 2:
+                        valve["sealed_in"] = True
+                    elif model.switches[valve["control_switch"]]["position"] == 0:
+                        valve["sealed_in"] = False
+
+
+
+                if valve["sealed_in"]:
+                    valve["percent_open"] = min(max(valve["percent_open"]+valve["open_speed"],0),100)
+                else:
+                    valve["percent_open"] = min(max(valve["percent_open"]-valve["open_speed"],0),100)
+
+            if model.switches[valve["control_switch"]]["lights"] != {}:
+                model.switches[valve["control_switch"]]["lights"]["green"] = valve["percent_open"] < 100
+                model.switches[valve["control_switch"]]["lights"]["red"] = valve["percent_open"] > 0
 
       # somewhat same logic as before 
         if valve["input"] is None or valve["output"] is None or valve["output"] == "magic":
@@ -1590,8 +1619,8 @@ def run():
         if inlet["type"] == FluidTypes.Gas or outlet["type"] == FluidTypes.Gas:
             continue  # this is handled by gas.py
 
-        print(f"Valve {valve_name} - Controlling flow from {valve['input']} to {valve['output']}")
-        print(f"Inlet Pressure: {inlet['pressure']}, Outlet Pressure: {outlet['pressure']}, Inlet Mass: {inlet['mass']}, Outlet Mass: {outlet['mass']}")
+        #print(f"Valve {valve_name} - Controlling flow from {valve['input']} to {valve['output']}")
+        #print(f"Inlet Pressure: {inlet['pressure']}, Outlet Pressure: {outlet['pressure']}, Inlet Mass: {inlet['mass']}, Outlet Mass: {outlet['mass']}")
 
         if valve_name in ["rhr_v_6b", "rhr_v_6a"]:
             inlet["pressure"] = 1.379e6
@@ -1599,7 +1628,7 @@ def run():
         radius = valve["diameter"] / 2
         radius = radius * 0.1  # to cm
 
-        flow_resistance = (8 * 33 * 3.3 * 1000) / (math.pi * (radius**4))
+        flow_resistance = (8 * 33 * 2000) / (math.pi * (radius**4))
 
      
         flow_resistance = max(flow_resistance, 1e-5) 
@@ -1615,18 +1644,17 @@ def run():
             continue
 
         flow = flow / 1000  # to liter/s
-        flow = flow * 0.1  
+        flow = flow * delta
 
-        time_step = 0.005  
-        flow = flow * time_step 
+        flow = flow * 0.1
 
-        print(f"Calculated flow for {valve_name}: {flow} liters/second")
+        #print(f"Calculated flow for {valve_name}: {flow} liters/second")
 
 
         if isinstance(valve["output"], str):
             if outlet["mass"] + flow >= outlet["volume"]:
                 flow = max(outlet["volume"] - (outlet["mass"] + flow), 0)
-                print(f"Flow limited: Adjusted flow due to volume limits for {valve_name}: {flow} liters/second")
+                #print(f"Flow limited: Adjusted flow due to volume limits for {valve_name}: {flow} liters/second")
 
        
         flow_calculations[valve_name] = flow
@@ -1641,6 +1669,6 @@ def run():
         valve_inject_to_header(flow * -1, valve["input"])
         valve_inject_to_header(flow, valve["output"])
 
-        print(f"New mass for {valve['input']}: {inlet['mass']}")
-        print(f"New mass for {valve['output']}: {outlet['mass']}")
-        print(f"New Pressure for {valve['input']}: {inlet['pressure']}, {valve['output']}: {outlet['pressure']}")
+        #print(f"New mass for {valve['input']}: {inlet['mass']}")
+        #print(f"New mass for {valve['output']}: {outlet['mass']}")
+        #print(f"New Pressure for {valve['input']}: {inlet['pressure']}, {valve['output']}: {outlet['pressure']}")
