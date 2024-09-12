@@ -3,18 +3,19 @@ import websockets
 import log
 
 class Token:
-    def __init__(self, websocket, username, token):
+    def __init__(self, websocket, username, room, token):
         self.websocket = websocket
         self.username = username
         self.position = {"x":0,"y":0,"z":0} #TODO: Move somewhere else?
+        self.room = room
         self.token = token
 
 class ConnectionManager:
     def __init__(self):
         self.tokens = {}
 
-    def connect(self, websocket, token: str):
-        self.tokens[token] = Token(websocket, "No Username", token)
+    def connect(self, websocket, room, token: str):
+        self.tokens[token] = Token(websocket, "No Username", room, token)
         return self.tokens[token]
 
     def disconnect(self, token: str):

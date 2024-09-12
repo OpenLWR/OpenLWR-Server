@@ -35,9 +35,10 @@ def init_server(websocket):
             login_parameters = json.loads(packet_data)
 
             username = login_parameters["username"]
+            room = login_parameters["room"]
             version = login_parameters["version"]
 
-            token_object = manager.connect(websocket, token_str)
+            token_object = manager.connect(websocket, room, token_str)
             manager.set_username(token_str, username)
 
             # check the packet is the correct type and the username is valid
