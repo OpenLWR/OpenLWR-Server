@@ -1,6 +1,7 @@
 import math
 
 # Modules
+from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.reactor_physics import fuel
 from simulation.models.control_room_columbia.reactor_physics import neutrons
 from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
@@ -14,9 +15,8 @@ def run(delta,rods):
     #TODO: Improve code quality, add comments, etc
     reactivityRate = 0
 
-    CoreFlow = 100
+    CoreFlow = ((model.pumps["rrc_p_1a"]["flow"] + model.pumps["rrc_p_1b"]["flow"]) / 100000) * 100
     waterMass = reactor_inventory.waterMass
-    from simulation.models.control_room_columbia import model
     old_temp = model.reactor_water_temperature
     new_temp = model.reactor_water_temperature
 
@@ -27,7 +27,7 @@ def run(delta,rods):
 
     rod_num = 0
 
-    energy = 50 # in mwt
+    energy = 1200 # in mwt
 
     calories = ((energy*1000000))
 				

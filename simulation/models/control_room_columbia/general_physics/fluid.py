@@ -324,7 +324,27 @@ headers = { #most lines have a common header that they discharge into
         "type" : FluidTypes.Gas,
         "mass" : 0,
     },
+    "rft_dt_1a_gov" : {
+        #6" MS(5)-4
+
+        "diameter" : 152.4, #millimeters
+        "length" : 200000,
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
     "rft_dt_1b_stop" : {
+        #6" MS(5)-4
+
+        "diameter" : 152.4, #millimeters
+        "length" : 200000,
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "rft_dt_1b_gov" : {
         #6" MS(5)-4
 
         "diameter" : 152.4, #millimeters
@@ -414,7 +434,7 @@ headers = { #most lines have a common header that they discharge into
         #36"COND(2)-1
 
         "diameter" : 914.40, #millimeters
-        "length" : 6000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -429,7 +449,7 @@ headers = { #most lines have a common header that they discharge into
         #30"COND(4)-3
 
         "diameter" : 1016, #millimeters
-        "length" : 6000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -1276,8 +1296,20 @@ valves = {
     "ms_v_172a" : { 
         "control_switch" : "",
         "input" : "rft_dt_1a_stop",
-        "output" : "magic",
+        "output" : "rft_dt_1a_gov",
         "percent_open" : 100,
+        "diameter" : 152.4, #mm, 6 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "rft_gov_1a" : { 
+        "control_switch" : "",
+        "input" : "rft_dt_1a_gov",
+        "output" : "magic",
+        "percent_open" : 0,
         "diameter" : 152.4, #mm, 6 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : False, 
@@ -1301,8 +1333,20 @@ valves = {
     "ms_v_172b" : { 
         "control_switch" : "",
         "input" : "rft_dt_1b_stop",
-        "output" : "magic",
+        "output" : "rft_dt_1b_gov",
         "percent_open" : 100,
+        "diameter" : 152.4, #mm, 6 inches
+        "open_speed" : 2, #5 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "rft_gov_1b" : { 
+        "control_switch" : "",
+        "input" : "rft_dt_1b_gov",
+        "output" : "magic",
+        "percent_open" : 0,
         "diameter" : 152.4, #mm, 6 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : False, 
@@ -1665,5 +1709,3 @@ def run(delta):
         # flow logic
         valve_inject_to_header(flow * -1, valve["input"])
         valve_inject_to_header(flow, valve["output"])
-
-

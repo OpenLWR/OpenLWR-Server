@@ -2329,6 +2329,9 @@ values = {
     "cond_p_1a_amps" : 0,
     "cond_p_1b_amps" : 0,
     "cond_p_1c_amps" : 0,
+
+    "rft_dt_1a_rpm" : 0,
+    "rft_dt_1b_rpm" : 0,
 }
 
 indicators = {

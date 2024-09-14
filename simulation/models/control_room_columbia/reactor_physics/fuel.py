@@ -29,7 +29,7 @@ def get(waterMass, controlDepth, neutronFlux, temperatureFuel,CoreFlow,NeutronPo
 	
     voids = NeutronPopulation/(320e15*0.7*100)
 
-    CoreFlow = CoreFlow*0.87
+    CoreFlow = CoreFlow
 
     CoreFlow = clamp(abs((CoreFlow/100)-1),0,1)
 

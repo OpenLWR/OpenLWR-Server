@@ -2,6 +2,7 @@ from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia import reactor_protection_system
 from simulation.models.control_room_columbia import neutron_monitoring
 from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
+from simulation.models.control_room_columbia.reactor_physics import pressure
 from simulation.models.control_room_columbia.general_physics import fluid
 from simulation.models.control_room_columbia.libraries import transient
 
@@ -28,7 +29,11 @@ class PID:
         return output
 
 MasterLevelController = None
-fw_valve = 30
+FeedA = None
+FeedB = None
+fw_valve = 0
+FeedAValve = 0
+FeedBValve = 0
 setpoint_setdown_mode = 0 #-2 Inactive | -1 Active | >= 0 Timing 
 monitoring = None
 
@@ -37,10 +42,17 @@ def initialize():
     global MasterLevelController
     MasterLevelController = PID(Kp=0.12, Ki=0, Kd=0.5)
     #DT is DeltaTime (just use 1 for now)
+    global FeedA
+    FeedA = PID(Kp=0.12, Ki=0, Kd=0.5)
+
+    global FeedB
+    FeedB = PID(Kp=0.12, Ki=0, Kd=0.5)
+
     global monitoring
     monitoring = transient.Transient("Reactor Parameters")
     monitoring.add_graph("RX POWER")
     monitoring.add_graph("RX LEVEL")
+    monitoring.add_graph("RX PRESSURE")
 
 def run():
 
@@ -88,7 +100,50 @@ def run():
     fluid.valves["rfw_v_65a"]["percent_open"] = fw_valve
     fluid.valves["rfw_v_65b"]["percent_open"] = fw_valve
 
+    global FeedAValve
+    global FeedBValve
+
+    #RFT Governors
+    control_signal_rfta = FeedA.update(5000,model.pumps["rfw_p_1a"]["rpm"],1)
+
+    FeedAValve = max(min(FeedAValve+control_signal_rfta,100),0)
+
+    control_signal_rftb = FeedB.update(5000,model.pumps["rfw_p_1b"]["rpm"],1)
+
+    FeedBValve = max(min(FeedBValve+control_signal_rftb,100),0)
+
+    fluid.valves["rft_gov_1a"]["percent_open"] = FeedAValve
+    fluid.valves["rft_gov_1b"]["percent_open"] = FeedBValve
+
+    model.values["rft_dt_1a_rpm"] = model.pumps["rfw_p_1a"]["rpm"]
+    model.values["rft_dt_1b_rpm"] = model.pumps["rfw_p_1b"]["rpm"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     monitoring.add("RX LEVEL",reactor_inventory.rx_level_wr)
+    monitoring.add("RX PRESSURE",pressure.Pressures["Vessel"]/6895)
     monitoring.add("RX POWER",neutron_monitoring.average_power_range_monitors["A"]["power"])
 
     valueee = False

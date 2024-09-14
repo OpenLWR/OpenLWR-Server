@@ -87,7 +87,7 @@ def calculate_suction(pump,delta):
     radius = suct_header["diameter"]/2
     radius = radius*0.1 #to cm
 
-    flow_resistance = (8*33*2000)/(math.pi*(radius**4))
+    flow_resistance = (8*33*20000)/(math.pi*(radius**4))
 
     flow = (suct_header["pressure"])/flow_resistance
 
