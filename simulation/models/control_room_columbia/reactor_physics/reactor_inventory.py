@@ -62,7 +62,7 @@ def run(delta):
 		boilingPoint = steam_functions.getBoilingPointForWater(pressure.Pressures["Vessel"])
 
 		if water_temperature > boilingPoint:
-			water_temperature = boilingPoint
+			water_temperature -= (water_temperature - boilingPoint) * (delta+0.15)
 
 	else:
 		NewPress = pressure.getPressure(reactor_physics.kgSteam, water_temperature,pressure.Volumes["Vessel"])
@@ -74,11 +74,8 @@ def run(delta):
 
 	model.reactor_water_temperature = water_temperature
 
-	#print("RX Press %s" % str(pressure.Pressures["Vessel"]/6895)) #Print pressure in PSI
 	raw_level = mm_to_inches(calculate_level_cylinder(Vessel_Diameter,waterMass))
 	rx_level_wr = raw_level-528.55
-	#print("RX Level, WR %s" % str(rx_level_wr))
-	#print("RX Level %s" % str(raw_level))
 
 	model.values["rpv_level_recorder_1"] = round(rx_level_wr,1)
 	model.values["rpv_pressure_recorder_1"] = round(pressure.Pressures["Vessel"]/6895,1)

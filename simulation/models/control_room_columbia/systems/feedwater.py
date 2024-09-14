@@ -1,7 +1,9 @@
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia import reactor_protection_system
+from simulation.models.control_room_columbia import neutron_monitoring
 from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
 from simulation.models.control_room_columbia.general_physics import fluid
+from simulation.models.control_room_columbia.libraries import transient
 
 requested_setpoint = 35
 actual_setpoint = 35
@@ -28,12 +30,17 @@ class PID:
 MasterLevelController = None
 fw_valve = 30
 setpoint_setdown_mode = 0 #-2 Inactive | -1 Active | >= 0 Timing 
+monitoring = None
 
 def initialize():
     #initialize our PIDs:
     global MasterLevelController
     MasterLevelController = PID(Kp=0.12, Ki=0, Kd=0.5)
     #DT is DeltaTime (just use 1 for now)
+    global monitoring
+    monitoring = transient.Transient("Reactor Parameters")
+    monitoring.add_graph("RX POWER")
+    monitoring.add_graph("RX LEVEL")
 
 def run():
 
@@ -78,9 +85,16 @@ def run():
     fw_valve = max(min(fw_valve+control_signal,100),0)
 
     #TODO: Temporarily using the RFW Isolation valves as control valves
+    fluid.valves["rfw_v_65a"]["percent_open"] = fw_valve
+    fluid.valves["rfw_v_65b"]["percent_open"] = fw_valve
 
-    fluid.valves["rfw_v_65a"]["open_percent"] = fw_valve
-    fluid.valves["rfw_v_65b"]["open_percent"] = fw_valve
+    monitoring.add("RX LEVEL",reactor_inventory.rx_level_wr)
+    monitoring.add("RX POWER",neutron_monitoring.average_power_range_monitors["A"]["power"])
+
+    valueee = False
+    a = 1
+    if valueee == True:
+        monitoring.generate_plot()
     
 
 

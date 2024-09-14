@@ -462,7 +462,7 @@ headers = { #most lines have a common header that they discharge into
         #30"RFW(1)-4
 
         "diameter" : 762, #millimeters
-        "length" : 8000, #TODO : determine a good length
+        "length" : 6000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -1330,7 +1330,7 @@ valves = {
     #RFW
 
     "rfw_v_102a" : { 
-        "control_switch" : "rfw_v_102a",
+        "control_switch" : "",
         "input" : "rfw_p_1a_discharge",
         "output" : "rfw_discharge",
         "percent_open" : 0,
@@ -1342,7 +1342,7 @@ valves = {
         #TODO: valve control power and motive power
     },
     "rfw_v_102b" : { 
-        "control_switch" : "rfw_v_102b",
+        "control_switch" : "",
         "input" : "rfw_p_1b_discharge",
         "output" : "rfw_discharge",
         "percent_open" : 0,
@@ -1453,6 +1453,12 @@ def initialize_headers():
             n = header["mass"] / MolarMass 
             header["pressure"] = (n * R * T) / (header["volume"] * 1e-3) 
 
+        header["outlets"] = 0
+        for valve_name in valves:
+            valve = valves[valve_name]
+            if valve["output"] == header_name:
+                header["outlets"] += 1
+
         #print(f"Initialized header {header_name}: Pressure = {header['pressure']}, Volume = {header['volume']}, Type = {header['type']}")
 
 def valve_inject_to_header(mass:int,header_name):
@@ -1482,15 +1488,12 @@ def inject_to_header(flow:int,press:int,header_name:str):
     if press > header["pressure"]:
         fluid_flow = calculate_differential_pressure(press,header["pressure"],flow)
         #keep in mind this is in gallons per minute
-        mass = fluid_flow*3.785 #to liters per minute
-        mass = mass/60 #to per second
+        mass = fluid_flow*0.06309019640344 #to liters per second
         mass = mass*0.1 # sim time
         header["mass"] += mass
 
-        #TODO: change this, we are using the ideal gas law to calculate water, a *liquid* in a pipe.
-        from simulation.models.control_room_columbia.reactor_physics import pressure
-        header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],24.8,60,header["volume"]-header["mass"])
-        header["pressure"] = header_press
+        calculate_header_pressure(header_name)
+        
         return fluid_flow
     else:
         return 0
@@ -1500,7 +1503,9 @@ def calculate_header_pressure(header_name:str):
     header = headers[header_name]
 
     from simulation.models.control_room_columbia.reactor_physics import pressure
-    header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],24.8,60,header["volume"]-header["mass"])
+    preferred_mass = header["volume"]*9/2800
+    header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],9,60,header["volume"]-header["mass"])
+    #header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],40,60,header["volume"]-header["mass"])
     header["pressure"] = header_press
 
 def calculate_differential_pressure(pressure_1:int,pressure_2:int,flow:int):
@@ -1510,7 +1515,7 @@ def calculate_differential_pressure(pressure_1:int,pressure_2:int,flow:int):
     if pressure_2 == 0: pressure_2 = 1
 
     if pressure_1 > pressure_2:
-        pressure_differential = clamp(abs(((pressure_1/pressure_2)-0.3)-1),0,1)
+        pressure_differential = clamp(abs(((pressure_1/pressure_2)-0.1)-1),0,1)
         fluid_flow = pressure_differential*flow
 
         return fluid_flow
@@ -1576,7 +1581,6 @@ def get_header(header_name):
 
 def run(delta):
  
-    flow_calculations = {}
     for valve_name in valves:
         valve = valves[valve_name]
 
@@ -1628,12 +1632,12 @@ def run(delta):
         radius = valve["diameter"] / 2
         radius = radius * 0.1  # to cm
 
-        flow_resistance = (8 * 33 * 2000) / (math.pi * (radius**4))
+        flow_resistance = (8 * 33 * 6000) / (math.pi * (radius**4))
 
      
         flow_resistance = max(flow_resistance, 1e-5) 
         flow = (inlet["pressure"] - outlet["pressure"]) / flow_resistance
-        flow *= valve["percent_open"] / 100
+        flow = flow*(valve["percent_open"] / 100)
         flow = abs(flow)  
 
 
@@ -1646,29 +1650,20 @@ def run(delta):
         flow = flow / 1000  # to liter/s
         flow = flow * delta
 
-        flow = flow * 0.1
-
         #print(f"Calculated flow for {valve_name}: {flow} liters/second")
-
 
         if isinstance(valve["output"], str):
             if outlet["mass"] + flow >= outlet["volume"]:
-                flow = max(outlet["volume"] - (outlet["mass"] + flow), 0)
-                #print(f"Flow limited: Adjusted flow due to volume limits for {valve_name}: {flow} liters/second")
 
-       
-        flow_calculations[valve_name] = flow
+               flow = max((outlet["volume"]-1)-outlet["mass"],0)
 
-    # duo loopo 
-    for valve_name, flow in flow_calculations.items():
-        valve = valves[valve_name]
-        inlet = get_header(valve["input"])
-        outlet = get_header(valve["output"])
+        if isinstance(valve["input"], str):
+            if inlet["mass"] - flow <= 0:
+
+               flow = inlet["mass"]
 
         # flow logic
         valve_inject_to_header(flow * -1, valve["input"])
         valve_inject_to_header(flow, valve["output"])
 
-        #print(f"New mass for {valve['input']}: {inlet['mass']}")
-        #print(f"New mass for {valve['output']}: {outlet['mass']}")
-        #print(f"New Pressure for {valve['input']}: {inlet['pressure']}, {valve['output']}: {outlet['pressure']}")
+

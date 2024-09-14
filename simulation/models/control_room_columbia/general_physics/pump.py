@@ -2,6 +2,7 @@ from simulation.constants.electrical_types import ElectricalType
 from simulation.constants.equipment_states import EquipmentStates
 from simulation.models.control_room_columbia.general_physics import ac_power
 from simulation.models.control_room_columbia import model
+from simulation.models.control_room_columbia.general_physics import fluid
 import math
 import log
 
@@ -76,7 +77,7 @@ def initialize_pumps():
 
 def calculate_suction(pump,delta):
     pump = model.pumps[pump]
-    from simulation.models.control_room_columbia.general_physics import fluid
+
     if pump["suct_header"] == "":
         return pump["flow"]
     
@@ -94,17 +95,11 @@ def calculate_suction(pump,delta):
 
     flow = flow/1000 #to liter/s
 
-    flow= flow*delta #to liter/0.1s (or the sim time)
+    flow = flow*15.850323140625 #to gpm
 
-    flow_suct = min(flow,pump["flow"])
-    if suct_header["mass"] - flow_suct <= 0:
-        suct_header["mass"] = 0
-    else:
-        suct_header["mass"] -= flow_suct #TODO: Really need to investigate this. It is hella broken.
+    flow = min(flow,pump["flow"])
         
-    flow = min(pump["flow"],flow)
-    return (flow/3.785)*60 #TODO: This used flow instead of flow_suct. Intended?
-
+    return flow
 def run(delta):
     for pump_name in model.pumps:
         pump = model.pumps[pump_name]
@@ -117,7 +112,6 @@ def run(delta):
             pump["flow"] = calculate_suction(pump_name,delta)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
             
-            from simulation.models.control_room_columbia.general_physics import fluid
             pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
             continue
 
@@ -164,14 +158,16 @@ def run(delta):
                 pump["was_closed"] = False
 
         if pump["shaft_driven"]:
-            #TODO: better flow calculation
             pump["flow"] = pump["rated_flow"]*(pump["rpm"]/pump["rated_rpm"])
             pump["flow"] = calculate_suction(pump_name,delta)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
             
             if pump["header"] != "":
-                from simulation.models.control_room_columbia.general_physics import fluid
                 pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
+                if pump["suct_header"] != "":
+                    fluid.headers[pump["suct_header"]]["mass"] -= pump["actual_flow"]
+                    fluid.headers[pump["suct_header"]]["mass"] = max(fluid.headers[pump["suct_header"]]["mass"],0)
+                    fluid.calculate_header_pressure(pump["suct_header"])
             else:
                 pump["actual_flow"] = pump["flow"]
 
@@ -187,7 +183,10 @@ def run(delta):
             Acceleration = ((pump["rated_rpm"]*(pump_bus.info["frequency"]/60))-pump["rpm"])*1*delta #TODO: Make acceleration and frequency realistic
             pump["rpm"] = clamp(pump["rpm"]+Acceleration,0,pump["rated_rpm"]+100)
             #full load amperes
-            AmpsFLA = (pump["horsepower"]*746)/((math.sqrt(3)*voltage*0.876*0.95)+0.1) #TODO: variable motor efficiency and power factor
+            if voltage > 0:
+                AmpsFLA = (pump["horsepower"]*746)/((math.sqrt(3)*voltage*0.876*0.95)) #TODO: variable motor efficiency and power factor
+            else:
+                AmpsFLA = 0
             pump["amperes"] = (AmpsFLA*clamp(pump["actual_flow"]/pump["rated_flow"],0.48,1))+(AmpsFLA*5*(Acceleration/(pump["rated_rpm"]*1*delta)))
             pump["watts"] = voltage*pump["amperes"]*math.sqrt(3)
 
@@ -198,8 +197,11 @@ def run(delta):
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
             
             if pump["header"] != "":
-                from simulation.models.control_room_columbia.general_physics import fluid
                 pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
+                if pump["suct_header"] != "":
+                    fluid.headers[pump["suct_header"]]["mass"] -= pump["actual_flow"]
+                    fluid.headers[pump["suct_header"]]["mass"] = max(fluid.headers[pump["suct_header"]]["mass"],1)
+                    fluid.calculate_header_pressure(pump["suct_header"])
             else:
                 pump["actual_flow"] = pump["flow"]
         else:
@@ -213,8 +215,11 @@ def run(delta):
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
 
             if pump["header"] != "":
-                from simulation.models.control_room_columbia.general_physics import fluid
                 pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
+                if pump["suct_header"] != "":
+                    fluid.headers[pump["suct_header"]]["mass"] -= pump["actual_flow"]
+                    fluid.headers[pump["suct_header"]]["mass"] = max(fluid.headers[pump["suct_header"]]["mass"],1)
+                    fluid.calculate_header_pressure(pump["suct_header"])
             else:
                 pump["actual_flow"] = pump["flow"]
     

@@ -23,7 +23,7 @@ class Simulation:
         self.simulation_normal = Thread(target=self.timer)
         self.simulation_normal.start()
 
-        self.fast_timestep = 1/10 # time between model steps #TODO: temporarily set to 10 because yeah
+        self.fast_timestep = 1/20 # time between model steps
         self.fast_timesteps = 0 # how many timesteps did we take
         self.fast_prev_delta = self.fast_timestep
         self.simulation_fast = Thread(target=self.timer_fast)
