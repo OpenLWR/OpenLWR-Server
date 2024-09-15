@@ -4,7 +4,7 @@ from simulation.models.control_room_columbia import neutron_monitoring
 from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
 from simulation.models.control_room_columbia.reactor_physics import pressure
 from simulation.models.control_room_columbia.general_physics import fluid
-from simulation.models.control_room_columbia.libraries import transient
+#from simulation.models.control_room_columbia.libraries import transient
 
 requested_setpoint = 35
 actual_setpoint = 35
@@ -35,7 +35,7 @@ fw_valve = 0
 FeedAValve = 0
 FeedBValve = 0
 setpoint_setdown_mode = 0 #-2 Inactive | -1 Active | >= 0 Timing 
-monitoring = None
+#monitoring = None
 
 def initialize():
     #initialize our PIDs:
@@ -48,11 +48,11 @@ def initialize():
     global FeedB
     FeedB = PID(Kp=0.12, Ki=0, Kd=0.5)
 
-    global monitoring
-    monitoring = transient.Transient("Reactor Parameters")
-    monitoring.add_graph("RX POWER")
-    monitoring.add_graph("RX LEVEL")
-    monitoring.add_graph("RX PRESSURE")
+    #global monitoring
+    #monitoring = transient.Transient("Reactor Parameters")
+    #monitoring.add_graph("RX POWER")
+    #monitoring.add_graph("RX LEVEL")
+    #monitoring.add_graph("RX PRESSURE")
 
 def run():
 
@@ -142,14 +142,14 @@ def run():
 
 
 
-    monitoring.add("RX LEVEL",reactor_inventory.rx_level_wr)
-    monitoring.add("RX PRESSURE",pressure.Pressures["Vessel"]/6895)
-    monitoring.add("RX POWER",neutron_monitoring.average_power_range_monitors["A"]["power"])
+    #monitoring.add("RX LEVEL",reactor_inventory.rx_level_wr)
+    #monitoring.add("RX PRESSURE",pressure.Pressures["Vessel"]/6895)
+    #monitoring.add("RX POWER",neutron_monitoring.average_power_range_monitors["A"]["power"])
 
-    valueee = False
-    a = 1
-    if valueee == True:
-        monitoring.generate_plot()
+    #valueee = False
+    #a = 1
+    #if valueee == True:
+        #monitoring.generate_plot()
     
 
 
