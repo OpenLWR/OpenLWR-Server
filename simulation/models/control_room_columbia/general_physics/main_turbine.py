@@ -34,7 +34,7 @@ def run():
     if not "flow" in fluid.valves["ms_v_gv1"] or not "flow" in fluid.valves["ms_v_gv2"] or not "flow" in fluid.valves["ms_v_gv3"] or not "flow" in fluid.valves["ms_v_gv4"]:
         return
     CVCombinedFlow = fluid.valves["ms_v_gv1"]["flow"]+fluid.valves["ms_v_gv2"]["flow"]+fluid.valves["ms_v_gv3"]["flow"]+fluid.valves["ms_v_gv4"]["flow"]
-    steamInletMass = (CVCombinedFlow*25)/4
+    steamInletMass = (CVCombinedFlow*50)/4
     steamInletPressure = pressure.Pressures["Vessel"]
 
     main_condenser.addHotwellWater(CVCombinedFlow)

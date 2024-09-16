@@ -3015,7 +3015,7 @@ pumps = {
     #Condensate
 
     "cond_p_1a" : {
-        "motor_breaker_closed" : False,
+        "motor_breaker_closed" : True,
         "motor_control_switch" : "cond_p_1a",
         "bus" : "1",
         "horsepower" : 1250,
@@ -3028,7 +3028,7 @@ pumps = {
         "type" : pump.PumpTypes.Type1,
     },
     "cond_p_1b" : {
-        "motor_breaker_closed" : False,
+        "motor_breaker_closed" : True,
         "motor_control_switch" : "cond_p_1b",
         "bus" : "2",
         "horsepower" : 1250,
@@ -3041,7 +3041,7 @@ pumps = {
         "type" : pump.PumpTypes.Type1,
     },
     "cond_p_1c" : {
-        "motor_breaker_closed" : False,
+        "motor_breaker_closed" : True,
         "motor_control_switch" : "cond_p_1c",
         "bus" : "3",
         "horsepower" : 1250,
@@ -3055,7 +3055,7 @@ pumps = {
     },
 
     "cond_p_2a" : {
-        "motor_breaker_closed" : False,
+        "motor_breaker_closed" : True,
         "motor_control_switch" : "cond_p_2a",
         "bus" : "1",
         "horsepower" : 3000,
@@ -3068,7 +3068,7 @@ pumps = {
         "type" : pump.PumpTypes.Type1,
     },
     "cond_p_2b" : {
-        "motor_breaker_closed" : False,
+        "motor_breaker_closed" : True,
         "motor_control_switch" : "cond_p_2b",
         "bus" : "2",
         "horsepower" : 3000,
@@ -3081,7 +3081,7 @@ pumps = {
         "type" : pump.PumpTypes.Type1,
     },
     "cond_p_2c" : {
-        "motor_breaker_closed" : False,
+        "motor_breaker_closed" : True,
         "motor_control_switch" : "cond_p_2c",
         "bus" : "3",
         "horsepower" : 3000,
