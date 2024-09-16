@@ -27,6 +27,8 @@ class Turbine:
         # Calculate the acceleration
         Inertia = self.info["Inertia"]
         # Steam Properties
+        if not "flow" in fluid.valves[self.info["InletNozzle"]]:
+            return
 
         Flow = fluid.valves[self.info["InletNozzle"]]["flow"]
         steamInletMass = Flow*150

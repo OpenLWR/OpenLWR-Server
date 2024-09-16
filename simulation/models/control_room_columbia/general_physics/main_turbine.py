@@ -31,7 +31,7 @@ def run():
     # Steam Properties
     #TODO: Stop Valves
     CVCombinedFlow = fluid.valves["ms_v_gv1"]["flow"]+fluid.valves["ms_v_gv2"]["flow"]+fluid.valves["ms_v_gv3"]["flow"]+fluid.valves["ms_v_gv4"]["flow"]
-    steamInletMass = (CVCombinedFlow*10)/4
+    steamInletMass = (CVCombinedFlow*25)/4
     steamInletPressure = pressure.Pressures["Vessel"]
 
     main_condenser.addHotwellWater(CVCombinedFlow)

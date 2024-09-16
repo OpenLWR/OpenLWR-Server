@@ -45,7 +45,7 @@ SelectedSpeedReference = -500
 def initialize():
     #initialize our PIDs:
     global PressureController
-    PressureController = PID(Kp=0.02, Ki=0.000001, Kd=0.13, minimum=0.02,maximum=0.02)
+    PressureController = PID(Kp=0.2, Ki=0.000001, Kd=0.13, minimum=0.04,maximum=0.04)
 
     global SpeedController
     SpeedController = PID(Kp=0.2, Ki=0.00000001, Kd=0.13, minimum=-0.04,maximum=0.03)
