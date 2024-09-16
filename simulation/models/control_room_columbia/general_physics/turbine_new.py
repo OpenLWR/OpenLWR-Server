@@ -71,10 +71,6 @@ class Turbine:
 
         model.pumps[self.info["Pump"]]["rpm"] = self.info["RPM"]
 
-        print(self.name)
-        print(self.info["RPM"])
-        print("---")
-
 turbines = {} #TODO: Move to model when done using regular turbine.py
 
 def initialize():

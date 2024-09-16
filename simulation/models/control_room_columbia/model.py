@@ -399,6 +399,61 @@ alarms = {
         "silenced" : False,
     },
 
+
+    #FCP-1
+
+    "tg_bldg_471_elect_swgr_bay" : {
+        "alarm" : False,
+        "box": "FCP1_A",
+		"window": "1-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "4",
+        "silenced" : False,
+    },
+    "tg_bldg_471_elect_swgr_bay_trouble" : {
+        "alarm" : False,
+        "box": "FCP1_A",
+		"window": "2-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "4",
+        "silenced" : False,
+    },
+    "tg_bldg_471_elect_swgr_bay_fire" : {
+        "alarm" : False,
+        "box": "FCP1_A",
+		"window": "3-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "4",
+        "silenced" : False,
+    },
+
+    #FCP-2
+
+    "sys_7_wet_pipe_tg_bldg_471_elect_swgr_bay" : {
+        "alarm" : False,
+        "box": "FCP2_A",
+		"window": "1-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "4",
+        "silenced" : False,
+    },
+    "sys_7_wet_pipe_tg_bldg_471_elect_swgr_bay_trouble" : {
+        "alarm" : False,
+        "box": "FCP2_A",
+		"window": "2-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "4",
+        "silenced" : False,
+    },
+    "sys_7_wet_pipe_tg_bldg_471_elect_swgr_bay_fire" : {
+        "alarm" : False,
+        "box": "FCP2_A",
+		"window": "3-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "4",
+        "silenced" : False,
+    },
+
 }
 
 switches = {
@@ -3146,10 +3201,13 @@ from simulation.models.control_room_columbia.systems import rod_worth_minimizer
 from simulation.models.control_room_columbia.systems import sync
 from simulation.models.control_room_columbia.systems import loop_sequence
 from simulation.models.control_room_columbia.systems import rrc
+from simulation.models.control_room_columbia.systems import fire
+from simulation.models.control_room_columbia.systems import fire_control_panel
 loop_sequence.initialize()
 sync.initialize()
 deh.initialize()
 feedwater.initialize()
+fire.initialize()
 
 def model_run_fast(delta):
     fluid.run(delta) 
@@ -3189,6 +3247,8 @@ def model_run(delta):
     deh.run()
     pcis.run()
     rod_worth_minimizer.run()
+    fire.run(delta)
+    fire_control_panel.run(delta)
     #from simulation.models.control_room_columbia.systems import fukushima
     #fukushima.run(runs)
     runs += 1
