@@ -15,7 +15,7 @@ def calculate_header_pressure(header_name:str):
     header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],header["mass"],60,header["volume"])
     header["pressure"] = header_press
 
-def run():
+def run(delta):
 
     for valve_name in fluid.valves:
         valve = fluid.valves[valve_name]
@@ -38,7 +38,7 @@ def run():
         radius = valve["diameter"]/2
         radius = radius*0.1 #to cm
         
-        flow_resistance = (8*1.1*20000)/(math.pi*(radius**4))
+        flow_resistance = (8*3.3*10000)/(math.pi*(radius**4))
 
         flow = (inlet["pressure"]-max(outlet["pressure"],0))/flow_resistance
 
@@ -48,12 +48,11 @@ def run():
 
         flow = abs(flow)
 
-        flow = flow*(valve["percent_open"]/100) #TODO: Exponents? Flow is not linear.
-        flow = flow*0.98
+        flow = flow*(valve["percent_open"]/100)
         #flow is in cubic centimeters per second
         flow = flow/1000 #to liter/s
         
-        flow = flow*0.1 #to liter/0.1s (or the sim time)
+        flow = flow*delta #to liter/0.1s (or the sim time)
        
         if inlet["pressure"] < outlet["pressure"]:
             valve["flow"] = 0
@@ -64,3 +63,5 @@ def run():
                 fluid.valve_inject_to_header(flow,valve["output"])
 
         valve["flow"] = flow
+
+    print(fluid.headers["bypass_steam_header"]["pressure"]/6895)

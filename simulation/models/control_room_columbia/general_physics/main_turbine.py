@@ -31,7 +31,7 @@ def run():
     # Steam Properties
     #TODO: Stop Valves
     CVCombinedFlow = fluid.valves["ms_v_gv1"]["flow"]+fluid.valves["ms_v_gv2"]["flow"]+fluid.valves["ms_v_gv3"]["flow"]+fluid.valves["ms_v_gv4"]["flow"]
-    steamInletMass = (CVCombinedFlow*0.05)/4
+    steamInletMass = (CVCombinedFlow*10)/4
     steamInletPressure = pressure.Pressures["Vessel"]
 
     main_condenser.addHotwellWater(CVCombinedFlow)
@@ -47,6 +47,8 @@ def run():
     T1 = model.reactor_water_temperature # °C
     m_dot = steamInletMass # kg/s
     P1 = steamInletPressure
+    if P1 == 0:
+        P1 = 1
     # Calculate inlet enthalpy
     h1 = 2.512 + R*(T1+273) # kJ/kg (from steam tables)
     # Estimate isentropic efficiency

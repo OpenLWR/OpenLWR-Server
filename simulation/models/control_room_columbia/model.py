@@ -3211,6 +3211,7 @@ fire.initialize()
 
 def model_run_fast(delta):
     fluid.run(delta) 
+    gas.run(delta)
     pump.run(delta)
     reactor_inventory.run(delta)
 
@@ -3228,7 +3229,6 @@ def model_run(delta):
     diesel_generator.run()
     sync.run()
     loop_sequence.run()
-    gas.run()
     turbine.run() #TODO: Deprecate
     turbine_new.run()
     main_condenser.run()

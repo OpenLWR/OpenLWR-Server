@@ -165,7 +165,7 @@ def run(delta):
             if pump["header"] != "":
                 pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
                 if pump["suct_header"] != "":
-                    fluid.headers[pump["suct_header"]]["mass"] -= pump["actual_flow"]
+                    fluid.headers[pump["suct_header"]]["mass"] -= pump["actual_flow"]*delta*(1/60)
                     fluid.headers[pump["suct_header"]]["mass"] = max(fluid.headers[pump["suct_header"]]["mass"],0)
                     fluid.calculate_header_pressure(pump["suct_header"])
             else:
@@ -199,7 +199,7 @@ def run(delta):
             if pump["header"] != "":
                 pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
                 if pump["suct_header"] != "":
-                    fluid.headers[pump["suct_header"]]["mass"] -= pump["actual_flow"]
+                    fluid.headers[pump["suct_header"]]["mass"] -= pump["actual_flow"]*delta*(1/60)
                     fluid.headers[pump["suct_header"]]["mass"] = max(fluid.headers[pump["suct_header"]]["mass"],1)
                     fluid.calculate_header_pressure(pump["suct_header"])
             else:
@@ -217,7 +217,7 @@ def run(delta):
             if pump["header"] != "":
                 pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
                 if pump["suct_header"] != "":
-                    fluid.headers[pump["suct_header"]]["mass"] -= pump["actual_flow"]
+                    fluid.headers[pump["suct_header"]]["mass"] -= pump["actual_flow"]*delta*(1/60)
                     fluid.headers[pump["suct_header"]]["mass"] = max(fluid.headers[pump["suct_header"]]["mass"],1)
                     fluid.calculate_header_pressure(pump["suct_header"])
             else:

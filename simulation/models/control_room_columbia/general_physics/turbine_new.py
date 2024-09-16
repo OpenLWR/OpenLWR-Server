@@ -15,7 +15,7 @@ class Turbine:
             "Torque": 0,
             "Mass": 150000,
             "Radius": 2.5,
-            "Inertia": 500 * 6.25,
+            "Inertia": 300 * 6.25,
             "InletHeader": inlet_header,
             "InletNozzle": inlet_nozzle,
             "OutletHeader": outlet_header,
@@ -29,7 +29,7 @@ class Turbine:
         # Steam Properties
 
         Flow = fluid.valves[self.info["InletNozzle"]]["flow"]
-        steamInletMass = Flow*25
+        steamInletMass = Flow*150
         steamInletPressure = fluid.headers[self.info["InletHeader"]]["pressure"]
         #print(steamInletPressure/6895)
 

@@ -1003,7 +1003,7 @@ valves = {
         "input" : "main_steam_line_a_drywell",
         "output" : "main_steam_line_a_penetration",
         "percent_open" : 100,
-        "diameter" : 203.20, #mm, 8 inches
+        "diameter" : 660.4, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
@@ -1015,7 +1015,7 @@ valves = {
         "input" : "main_steam_line_b_drywell",
         "output" : "main_steam_line_b_penetration",
         "percent_open" : 100,
-        "diameter" : 203.20, #mm, 8 inches
+        "diameter" : 660.4, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
@@ -1027,7 +1027,7 @@ valves = {
         "input" : "main_steam_line_c_drywell",
         "output" : "main_steam_line_c_penetration",
         "percent_open" : 100,
-        "diameter" : 203.20, #mm, 8 inches
+        "diameter" : 660.4, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
@@ -1039,7 +1039,7 @@ valves = {
         "input" : "main_steam_line_d_drywell",
         "output" : "main_steam_line_d_penetration",
         "percent_open" : 100,
-        "diameter" : 203.20, #mm, 8 inches
+        "diameter" : 660.4, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
@@ -1053,7 +1053,7 @@ valves = {
         "input" : "main_steam_line_a_penetration",
         "output" : "main_steam_line_a_tunnel",
         "percent_open" : 100,
-        "diameter" : 203.20, #mm, 8 inches
+        "diameter" : 660.4, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
@@ -1065,7 +1065,7 @@ valves = {
         "input" : "main_steam_line_b_penetration",
         "output" : "main_steam_line_b_tunnel",
         "percent_open" : 100,
-        "diameter" : 203.20, #mm, 8 inches
+        "diameter" : 660.4, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
@@ -1077,7 +1077,7 @@ valves = {
         "input" : "main_steam_line_c_penetration",
         "output" : "main_steam_line_c_tunnel",
         "percent_open" : 100,
-        "diameter" : 203.20, #mm, 8 inches
+        "diameter" : 660.4, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,
@@ -1089,7 +1089,7 @@ valves = {
         "input" : "main_steam_line_d_penetration",
         "output" : "main_steam_line_d_tunnel",
         "percent_open" : 100,
-        "diameter" : 203.20, #mm, 8 inches
+        "diameter" : 660.4, #mm, 8 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
         "sealed_in" : True,

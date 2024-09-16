@@ -26,7 +26,7 @@ def mm_to_inches(value):
 
 rx_level_wr = 35
 waterMass = 928500.26*(1/3)#Equipment in the RPV takes up volume
-limit_press = True
+limit_press = False
 
 def run(delta):
         
