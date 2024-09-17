@@ -54,6 +54,15 @@ def initialize():
     #monitoring.add_graph("RX LEVEL")
     #monitoring.add_graph("RX PRESSURE")
 
+rft_a_trip = False
+rft_b_trip = False
+rft_a_reset_timer = -1
+rft_b_reset_timer = -1
+tng_timer_a = -1
+tnga = False #Turning gear A
+tng_timer_b = -1
+tngb = False #Turning gear B
+
 def run():
 
     global requested_setpoint
@@ -102,6 +111,94 @@ def run():
 
     global FeedAValve
     global FeedBValve
+
+    #RFT Stop & Trip system
+
+    global rft_a_trip
+    global rft_b_trip
+    global rft_a_reset_timer
+    global rft_b_reset_timer
+
+    if model.switches["rft_dt_1a_trip"]["position"] == 0:
+        rft_a_trip = True
+    elif model.switches["rft_dt_1a_trip"]["position"] == 2 and rft_a_reset_timer == -1:
+        rft_a_reset_timer = 600 #TODO: Actually simulate this?
+    elif model.switches["rft_dt_1a_trip"]["position"] == 2 and rft_a_reset_timer > 0:
+        rft_a_reset_timer -= 1
+    elif model.switches["rft_dt_1a_trip"]["position"] == 2 and rft_a_reset_timer <= 0:
+        rft_a_trip = False
+        rft_a_reset_timer = -1
+
+    if model.switches["rft_dt_1b_trip"]["position"] == 0:
+        rft_b_trip = True
+    elif model.switches["rft_dt_1b_trip"]["position"] == 2 and rft_b_reset_timer == -1:
+        rft_b_reset_timer = 600 #TODO: Actually simulate this?
+    elif model.switches["rft_dt_1b_trip"]["position"] == 2 and rft_b_reset_timer > 0:
+        rft_b_reset_timer -= 1
+    elif model.switches["rft_dt_1b_trip"]["position"] == 2 and rft_b_reset_timer <= 0:
+        rft_b_trip = False
+        rft_b_reset_timer = -1
+
+    #set the state of the tripe!!!!
+    if rft_a_trip:
+        fluid.valves["ms_v_172a"]["percent_open"] = min(max(fluid.valves["ms_v_172a"]["percent_open"]-25,0),100)
+    else:
+        fluid.valves["ms_v_172a"]["percent_open"] = min(max(fluid.valves["ms_v_172a"]["percent_open"]+25,0),100)
+    if rft_b_trip:
+        fluid.valves["ms_v_172b"]["percent_open"] = min(max(fluid.valves["ms_v_172b"]["percent_open"]-25,0),100)
+    else:
+        fluid.valves["ms_v_172b"]["percent_open"] = min(max(fluid.valves["ms_v_172b"]["percent_open"]+25,0),100)
+
+    #Turning gears come on 10 seconds after HP and LPs come closed, RFT speed is LT 1 rpm, switch is in AUTO, and bearing lube oil GT 5 psig
+    #Switches maintained in OFF during operation to prevent actuation during operation, and put in AUTO after RFT trip
+
+    global tng_timer_a
+    global tng_timer_b
+    global tnga
+    global tngb
+
+    if fluid.valves["ms_v_172a"]["percent_open"] <= 0: #TODO: LP system
+        if tng_timer_a == -1:
+            tng_timer_a = 100
+        elif tng_timer_a > 0:
+            tng_timer_a -= 1
+    else:
+        tng_timer_a = -1
+
+    if model.switches["rft_tng_1a"]["position"] == 1 and tng_timer_a <= 0 and model.pumps["rfw_p_1a"]["rpm"] < 1: #sw in auto
+        tnga = True
+
+    if model.switches["rft_tng_1a"]["position"] == 0:
+        tnga = False
+
+    if tnga:
+        model.pumps["rfw_p_1a"]["rpm"] = 20
+    
+    model.switches["rft_tng_1a"]["lights"]["green"] = not tnga
+    model.switches["rft_tng_1a"]["lights"]["red"] = tnga
+
+    if fluid.valves["ms_v_172b"]["percent_open"] <= 0: #TODO: LP system
+        if tng_timer_b == -1:
+            tng_timer_b = 100
+        elif tng_timer_b > 0:
+            tng_timer_b -= 1
+    else:
+        tng_timer_b = -1
+
+    if model.switches["rft_tng_1b"]["position"] == 1 and tng_timer_b <= 0 and model.pumps["rfw_p_1b"]["rpm"] < 1: #sw in auto
+        tngb = True
+
+    if model.switches["rft_tng_1b"]["position"] == 0:
+        tngb = False
+
+    if tngb:
+        model.pumps["rfw_p_1b"]["rpm"] = 20
+    
+    model.switches["rft_tng_1b"]["lights"]["green"] = not tngb
+    model.switches["rft_tng_1b"]["lights"]["red"] = tngb
+
+
+
 
     #RFT Governors
     control_signal_rfta = FeedA.update(5000,model.pumps["rfw_p_1a"]["rpm"],1)

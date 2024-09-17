@@ -2349,7 +2349,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
-        "momentary" : False,
+        "momentary" : True,
     },
     "ms_v_105b": {
         "positions": {
@@ -2363,7 +2363,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
-        "momentary" : False,
+        "momentary" : True,
     },
 
     "rfw_v_102a": {
@@ -2378,7 +2378,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
-        "momentary" : False,
+        "momentary" : True,
     },
     "rfw_v_102b": {
         "positions": {
@@ -2387,6 +2387,60 @@ switches = {
 			2: -45,
 		},
         "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    },
+
+    "rft_dt_1a_trip": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "tripckt" : True,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    },
+    "rft_tng_1a": {
+        "positions": {
+			0: 0,
+			1: -45,
+		},
+        "position": 0,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : False,
+    },
+
+    "rft_dt_1b_trip": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "tripckt" : True,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    },
+    "rft_tng_1b": {
+        "positions": {
+			0: 0,
+			1: -45,
+		},
+        "position": 0,
         "lights" : {
             "green" : False,
             "red" : False,

@@ -1299,9 +1299,9 @@ valves = {
         "output" : "rft_dt_1a_gov",
         "percent_open" : 100,
         "diameter" : 152.4, #mm, 6 inches
-        "open_speed" : 2, #5 seconds to full close to open
-        "seal_in" : False, 
-        "sealed_in" : False,
+        "open_speed" : 25, #5 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -1336,9 +1336,9 @@ valves = {
         "output" : "rft_dt_1b_gov",
         "percent_open" : 100,
         "diameter" : 152.4, #mm, 6 inches
-        "open_speed" : 2, #5 seconds to full close to open
-        "seal_in" : False, 
-        "sealed_in" : False,
+        "open_speed" : 25, #5 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
