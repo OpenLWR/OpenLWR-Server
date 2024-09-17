@@ -65,6 +65,7 @@ def init_server(websocket):
                 "buttons" : model.buttons.copy(),
                 #"indicators" : model.indicators.copy(), #This will stay on the client
                 "alarms" : model.alarms.copy(),
+                "rods" : server_rod_position_parameters_update_event.old_rods.copy(),
                 "recorders" : recorders,
             }
 
