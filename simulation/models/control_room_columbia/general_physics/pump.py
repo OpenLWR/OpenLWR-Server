@@ -130,7 +130,7 @@ def run(delta):
                 model.switches[pump["motor_control_switch"]]["lights"]["green"] = not pump["motor_breaker_closed"]
                 model.switches[pump["motor_control_switch"]]["lights"]["red"] = pump["motor_breaker_closed"]
 
-        #undervoltage breaker trip TODO: (this has load sequencing during a LOOP? verify this)
+        #undervoltage breaker trip
 
         voltage = 0
         try:

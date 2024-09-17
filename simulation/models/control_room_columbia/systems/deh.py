@@ -45,7 +45,7 @@ SelectedSpeedReference = -500
 def initialize():
     #initialize our PIDs:
     global PressureController
-    PressureController = PID(Kp=0.2, Ki=0.000001, Kd=0.13, minimum=0.04,maximum=0.04)
+    PressureController = PID(Kp=0.1, Ki=0.00000001, Kd=0.15, minimum=-0.3,maximum=0.3)
 
     global SpeedController
     SpeedController = PID(Kp=0.2, Ki=0.00000001, Kd=0.13, minimum=-0.04,maximum=0.03)
@@ -124,7 +124,9 @@ def run():
 
         pressure_control_signal = PressureController.update(setpoint,pressure.Pressures["Vessel"]/6895,1)
 
-        gov_valve = max(min(gov_valve+load_control_signal+pressure_control_signal-0.01,100),0)
+        gov_valve = max(min(gov_valve+(load_control_signal-pressure_control_signal)-0.01,100),0)
+
+        bypass_valve = max(bypass_valve - 0.2,0)
 
         #print(Load)
     else:
@@ -132,13 +134,10 @@ def run():
 
         gov_valve = max(min(gov_valve+acceleration_control_signal,100),0)
 
-        pressure_control_signal = PressureController.update(setpoint,pressure.Pressures["Vessel"]/6895,1)
+        pressure_control_signal = PressureController.update(setpoint,pressure.Pressures["Vessel"]/6895,0.1)
 
-        bypass_valve = max(min(bypass_valve+pressure_control_signal,100),0)
+        bypass_valve = max(min(bypass_valve-pressure_control_signal,100),0)
 
-        
-
-    
 
     fluid.valves["ms_v_gv1"]["percent_open"] = gov_valve
     fluid.valves["ms_v_gv2"]["percent_open"] = gov_valve

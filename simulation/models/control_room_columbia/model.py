@@ -467,6 +467,7 @@ switches = {
         "position": 3,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
 
     "irm_a_range": {
@@ -485,6 +486,7 @@ switches = {
         "position": 0,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "irm_c_range": {
         "positions": {
@@ -502,6 +504,7 @@ switches = {
         "position": 0,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "irm_g_range": {
         "positions": {
@@ -519,6 +522,7 @@ switches = {
         "position": 0,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "irm_e_range": {
         "positions": {
@@ -536,6 +540,7 @@ switches = {
         "position": 0,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
 
     "irm_b_range": {
@@ -554,6 +559,7 @@ switches = {
         "position": 0,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "irm_d_range": {
         "positions": {
@@ -571,6 +577,7 @@ switches = {
         "position": 0,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "irm_h_range": {
         "positions": {
@@ -588,6 +595,7 @@ switches = {
         "position": 0,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "irm_f_range": {
         "positions": {
@@ -605,6 +613,7 @@ switches = {
         "position": 0,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
 
 
@@ -621,6 +630,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "hpcs_p_3": {
         "positions": {
@@ -633,6 +643,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "hpcs_v_4": {
         "positions": {
@@ -647,6 +658,7 @@ switches = {
             "override" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "hpcs_v_1": {
         "positions": {
@@ -660,6 +672,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "hpcs_v_12": {
         "positions": {
@@ -673,6 +686,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "hpcs_v_15": {
         "positions": {
@@ -687,6 +701,7 @@ switches = {
             "override" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "hpcs_v_23": {
         "positions": {
@@ -700,6 +715,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     "rhr_p_2b": {
@@ -714,6 +730,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_48b": {
         "positions": {
@@ -727,6 +744,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_3b": {
         "positions": {
@@ -740,6 +758,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_42b": {
         "positions": {
@@ -753,6 +772,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_4b": {
         "positions": {
@@ -765,6 +785,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_6b": {
         "positions": {
@@ -777,6 +798,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     "rhr_p_2c": {
@@ -791,6 +813,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_p_3": {
         "positions": {
@@ -803,6 +826,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_4c": {
         "positions": {
@@ -815,6 +839,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_42c": {
         "positions": {
@@ -828,6 +853,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_24c": {
         "positions": {
@@ -841,6 +867,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     #safety/relief valves
@@ -857,6 +884,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_3d": {
         "positions": {
@@ -870,6 +898,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_5c": {
         "positions": {
@@ -883,6 +912,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_4d": {
         "positions": {
@@ -896,6 +926,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_4b": {
         "positions": {
@@ -909,6 +940,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_4a": {
         "positions": {
@@ -922,6 +954,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_4c": {
         "positions": {
@@ -935,6 +968,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_1a": {
         "positions": {
@@ -948,6 +982,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_2b": {
         "positions": {
@@ -961,6 +996,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_1c": {
         "positions": {
@@ -974,6 +1010,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_1b": {
         "positions": {
@@ -987,6 +1024,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_2c": {
         "positions": {
@@ -1000,6 +1038,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_1d": {
         "positions": {
@@ -1013,6 +1052,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_3c": {
         "positions": {
@@ -1026,6 +1066,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_2d": {
         "positions": {
@@ -1039,6 +1080,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_2a": {
         "positions": {
@@ -1052,6 +1094,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_3b": {
         "positions": {
@@ -1065,6 +1108,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_rv_3a": {
         "positions": {
@@ -1078,6 +1122,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     "rcic_v_45": {
@@ -1092,6 +1137,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rcic_v_1": {
         "positions": {
@@ -1105,6 +1151,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rcic_v_8": {
         "positions": {
@@ -1117,6 +1164,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rcic_v_63": {
         "positions": {
@@ -1129,6 +1177,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rcic_v_68": {
         "positions": {
@@ -1141,6 +1190,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     #flow paths
@@ -1156,6 +1206,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     "rcic_v_31": {
@@ -1170,6 +1221,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     #LPCS
@@ -1186,6 +1238,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     "lpcs_v_5": {
@@ -1200,6 +1253,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "lpcs_v_11": {
         "positions": {
@@ -1213,6 +1267,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "lpcs_v_12": {
         "positions": {
@@ -1226,6 +1281,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "lpcs_v_1": {
         "positions": {
@@ -1238,6 +1294,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     #RHR A
@@ -1253,6 +1310,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_42a": {
         "positions": {
@@ -1266,6 +1324,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_53a": {
         "positions": {
@@ -1279,6 +1338,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_48a": {
         "positions": {
@@ -1292,6 +1352,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_3a": {
         "positions": {
@@ -1305,6 +1366,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_64a": {
         "positions": {
@@ -1318,6 +1380,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_4a": {
         "positions": {
@@ -1330,6 +1393,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rhr_v_6a": {
         "positions": {
@@ -1342,6 +1406,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     #MSIVs (inboard)
@@ -1357,6 +1422,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_v_22b": {
         "positions": {
@@ -1370,6 +1436,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_v_22c": {
         "positions": {
@@ -1383,6 +1450,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_v_22d": {
         "positions": {
@@ -1396,6 +1464,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     #MSIVs (outboard)
@@ -1411,6 +1480,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_v_28b": {
         "positions": {
@@ -1424,6 +1494,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_v_28c": {
         "positions": {
@@ -1437,6 +1508,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_v_28d": {
         "positions": {
@@ -1450,6 +1522,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
 
@@ -1469,6 +1542,7 @@ switches = {
             "sync" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_s2": {
         "positions": {
@@ -1484,6 +1558,7 @@ switches = {
             "sync" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_s3": {
         "positions": {
@@ -1499,6 +1574,7 @@ switches = {
             "sync" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     "cb_s5": {
@@ -1515,6 +1591,7 @@ switches = {
             "sync" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_s6": {
         "positions": {
@@ -1530,6 +1607,7 @@ switches = {
             "sync" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     #SL-11
@@ -1546,6 +1624,7 @@ switches = {
             "lockout" : True,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_11_1": {
         "positions": {
@@ -1559,6 +1638,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     #SL-21
     "cb_2_21": {
@@ -1574,6 +1654,7 @@ switches = {
             "lockout" : True,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_21_2": {
         "positions": {
@@ -1587,6 +1668,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     #SL-31
     "cb_3_31": {
@@ -1602,6 +1684,7 @@ switches = {
             "lockout" : True,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_31_3": {
         "positions": {
@@ -1615,6 +1698,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     "cb_2_4": {
@@ -1631,6 +1715,7 @@ switches = {
             "sync" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_4_2": {
         "positions": {
@@ -1644,6 +1729,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     "cb_7_1": {
@@ -1660,6 +1746,7 @@ switches = {
             "sync" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "sync_cb_7_1": {
         "positions": {
@@ -1670,6 +1757,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_1_7": {
         "positions": {
@@ -1684,6 +1772,7 @@ switches = {
             "lockout" : True,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_8_3": {
         "positions": {
@@ -1699,6 +1788,7 @@ switches = {
             "sync" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "sync_cb_8_3": {
         "positions": {
@@ -1709,6 +1799,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_3_8": {
         "positions": {
@@ -1723,6 +1814,7 @@ switches = {
             "lockout" : True,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     #TR-B to SM-7
@@ -1742,6 +1834,7 @@ switches = {
             "xfer" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "sync_cb_b7": {
         "positions": {
@@ -1752,6 +1845,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
 
     #TR-B to SM-8
@@ -1771,6 +1865,7 @@ switches = {
             "xfer" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "sync_cb_b8": {
         "positions": {
@@ -1781,6 +1876,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
 
     #DG1
@@ -1797,6 +1893,7 @@ switches = {
             "close_permit" : True,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_7dg1": {
         "positions": {
@@ -1811,6 +1908,7 @@ switches = {
             "lockout" : True,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "dg1_voltreg": {
         "positions": {
@@ -1821,6 +1919,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_dg1_7_mode": {
         "positions": {
@@ -1831,6 +1930,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "sync_cb_dg1_7": {
         "positions": {
@@ -1841,6 +1941,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "dg1_gov": {
         "positions": {
@@ -1851,6 +1952,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "diesel_gen_1": {
         "positions": {
@@ -1864,6 +1966,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     #DG2
@@ -1880,6 +1983,7 @@ switches = {
             "close_permit" : True,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_8dg2": {
         "positions": {
@@ -1894,6 +1998,7 @@ switches = {
             "lockout" : True,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "dg2_voltreg": {
         "positions": {
@@ -1904,6 +2009,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_dg2_8_mode": {
         "positions": {
@@ -1914,6 +2020,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "sync_cb_dg2_8": {
         "positions": {
@@ -1924,6 +2031,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "dg2_gov": {
         "positions": {
@@ -1934,6 +2042,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "diesel_gen_2": {
         "positions": {
@@ -1947,6 +2056,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
 
@@ -1963,6 +2073,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_4888": {
         "positions": {
@@ -1976,6 +2087,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     "sync_cb_4885": {
@@ -1987,6 +2099,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
     "sync_cb_4888": {
         "positions": {
@@ -1997,6 +2110,7 @@ switches = {
         "position": 1,
         "lights" : {},
         "flag" : "green",
+        "momentary" : False,
     },
 
 
@@ -2018,6 +2132,7 @@ switches = {
             "lockout" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_rpt_3b": {
         "positions": {
@@ -2032,6 +2147,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_rpt_4b": {
         "positions": {
@@ -2046,6 +2162,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     #RR A
@@ -2063,6 +2180,7 @@ switches = {
             "lockout" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_rpt_3a": {
         "positions": {
@@ -2077,6 +2195,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cb_rpt_4a": {
         "positions": {
@@ -2091,6 +2210,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
 
@@ -2108,6 +2228,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ar_p_1b": {
         "positions": {
@@ -2121,6 +2242,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     #Condensate
@@ -2137,6 +2259,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cond_p_1b": {
         "positions": {
@@ -2150,6 +2273,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "cond_p_1c": {
         "positions": {
@@ -2163,6 +2287,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     "cond_p_2a": {
@@ -2178,6 +2303,7 @@ switches = {
             "lockout" : True,
         },
         "flag" : "green",
+        "momentary" : True,
     },
     "cond_p_2b": {
         "positions": {
@@ -2192,6 +2318,7 @@ switches = {
             "lockout" : True,
         },
         "flag" : "green",
+        "momentary" : True,
     },
     "cond_p_2c": {
         "positions": {
@@ -2206,6 +2333,7 @@ switches = {
             "lockout" : True,
         },
         "flag" : "green",
+        "momentary" : True,
     },
 
     #RFT
@@ -2221,6 +2349,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "ms_v_105b": {
         "positions": {
@@ -2234,6 +2363,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
     "rfw_v_102a": {
@@ -2248,6 +2378,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
     "rfw_v_102b": {
         "positions": {
@@ -2261,6 +2392,7 @@ switches = {
             "red" : False,
         },
         "flag" : "green",
+        "momentary" : False,
     },
 
 

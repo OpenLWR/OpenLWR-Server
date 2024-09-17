@@ -64,4 +64,4 @@ def run(delta):
 
         valve["flow"] = flow
 
-    print(fluid.headers["bypass_steam_header"]["pressure"]/6895)
+    #print(fluid.headers["bypass_steam_header"]["pressure"]/6895)
