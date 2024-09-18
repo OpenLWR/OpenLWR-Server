@@ -119,10 +119,19 @@ def run():
     global rft_a_reset_timer
     global rft_b_reset_timer
 
+    if model.pumps["rfw_p_1a"]["rpm"] > 6100:
+        model.alarms["turbine_a_overspeed_trip"]["alarm"] = True
+        rft_a_trip = True
+
+    if model.pumps["rfw_p_1b"]["rpm"] > 6100:
+        model.alarms["turbine_b_overspeed_trip"]["alarm"] = True
+        rft_b_trip = True
+
     if model.switches["rft_dt_1a_trip"]["position"] == 0:
         rft_a_trip = True
     elif model.switches["rft_dt_1a_trip"]["position"] == 2 and rft_a_reset_timer == -1:
         rft_a_reset_timer = 600 #TODO: Actually simulate this?
+        model.alarms["turbine_a_overspeed_trip"]["alarm"] = False
     elif model.switches["rft_dt_1a_trip"]["position"] == 2 and rft_a_reset_timer > 0:
         rft_a_reset_timer -= 1
     elif model.switches["rft_dt_1a_trip"]["position"] == 2 and rft_a_reset_timer <= 0:
@@ -133,6 +142,7 @@ def run():
         rft_b_trip = True
     elif model.switches["rft_dt_1b_trip"]["position"] == 2 and rft_b_reset_timer == -1:
         rft_b_reset_timer = 600 #TODO: Actually simulate this?
+        model.alarms["turbine_b_overspeed_trip"]["alarm"] = False
     elif model.switches["rft_dt_1b_trip"]["position"] == 2 and rft_b_reset_timer > 0:
         rft_b_reset_timer -= 1
     elif model.switches["rft_dt_1b_trip"]["position"] == 2 and rft_b_reset_timer <= 0:
@@ -140,10 +150,13 @@ def run():
         rft_b_reset_timer = -1
 
     #set the state of the tripe!!!!
+    model.alarms["turbine_a_tripped"]["state"] = rft_a_trip
     if rft_a_trip:
         fluid.valves["ms_v_172a"]["percent_open"] = min(max(fluid.valves["ms_v_172a"]["percent_open"]-25,0),100)
     else:
         fluid.valves["ms_v_172a"]["percent_open"] = min(max(fluid.valves["ms_v_172a"]["percent_open"]+25,0),100)
+    
+    model.alarms["turbine_b_tripped"]["state"] = rft_b_trip
     if rft_b_trip:
         fluid.valves["ms_v_172b"]["percent_open"] = min(max(fluid.valves["ms_v_172b"]["percent_open"]-25,0),100)
     else:
@@ -211,6 +224,8 @@ def run():
 
     fluid.valves["rft_gov_1a"]["percent_open"] = FeedAValve
     fluid.valves["rft_gov_1b"]["percent_open"] = FeedBValve
+
+    model.values["rfw_rpv_inlet_pressure"] = fluid.headers["rfw_discharge"]["pressure"]/6895
 
     model.values["rft_dt_1a_rpm"] = model.pumps["rfw_p_1a"]["rpm"]
     model.values["rft_dt_1b_rpm"] = model.pumps["rfw_p_1b"]["rpm"]

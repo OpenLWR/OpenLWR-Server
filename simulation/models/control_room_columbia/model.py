@@ -399,6 +399,40 @@ alarms = {
         "silenced" : False,
     },
 
+    #P840.A1
+    "turbine_a_tripped" : {
+        "alarm" : False,
+        "box": "P840_A1",
+		"window": "1-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "5",
+        "silenced" : False,
+    },
+    "turbine_a_overspeed_trip" : {
+        "alarm" : False,
+        "box": "P840_A1",
+		"window": "6-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "5",
+        "silenced" : False,
+    },
+    "turbine_b_tripped" : {
+        "alarm" : False,
+        "box": "P840_A1",
+		"window": "1-5",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "5",
+        "silenced" : False,
+    },
+    "turbine_b_overspeed_trip" : {
+        "alarm" : False,
+        "box": "P840_A1",
+		"window": "6-5",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "5",
+        "silenced" : False,
+    },
+
 
     #FCP-1
 
@@ -2573,6 +2607,8 @@ values = {
 
     "rft_dt_1a_rpm" : 0,
     "rft_dt_1b_rpm" : 0,
+
+    "rfw_rpv_inlet_pressure" : 0,
 }
 
 indicators = {
