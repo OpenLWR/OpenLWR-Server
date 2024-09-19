@@ -89,7 +89,7 @@ def calculate_suction(pump,delta):
 
     flow_resistance = (8*33*20000)/(math.pi*(radius**4))
 
-    flow = (suct_header["pressure"])/flow_resistance
+    flow = ((pump["rated_discharge_press"]*6895)-suct_header["pressure"])/flow_resistance
 
     flow = max(flow,0)
 

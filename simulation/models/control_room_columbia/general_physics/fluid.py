@@ -24,7 +24,7 @@ headers = { #most lines have a common header that they discharge into
         #16" HPCS(1)-4-1
 
         "diameter" : 406.40, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid, #Initialized on start. Is not changed again.
@@ -34,7 +34,7 @@ headers = { #most lines have a common header that they discharge into
         #24" HPCS(2)-1-1
 
         "diameter" : 609.60, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -45,7 +45,7 @@ headers = { #most lines have a common header that they discharge into
         #6"RCIC(1)-4-1
 
         "diameter" : 406.40, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -55,7 +55,7 @@ headers = { #most lines have a common header that they discharge into
         #8"RCIC(2)-1-1
 
         "diameter" : 609.60, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -66,7 +66,7 @@ headers = { #most lines have a common header that they discharge into
         #18" RHR(1)-2-5
 
         "diameter" : 457.20, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 6000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -76,7 +76,7 @@ headers = { #most lines have a common header that they discharge into
         #18" RHR(1)-2-4
 
         "diameter" : 457.20, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -86,7 +86,7 @@ headers = { #most lines have a common header that they discharge into
         #24" RHR(2)-2-2
 
         "diameter" : 609.60, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -97,7 +97,7 @@ headers = { #most lines have a common header that they discharge into
         #18" RHR(1)-2-5
 
         "diameter" : 457.20, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 6000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -107,7 +107,7 @@ headers = { #most lines have a common header that they discharge into
         #18" RHR(1)-2-4
 
         "diameter" : 457.20, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -117,7 +117,7 @@ headers = { #most lines have a common header that they discharge into
         #24" RHR(2)-2-2
 
         "diameter" : 609.60, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -128,7 +128,7 @@ headers = { #most lines have a common header that they discharge into
         #18"
 
         "diameter" : 457.20, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 6000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -138,7 +138,7 @@ headers = { #most lines have a common header that they discharge into
         #24"
 
         "diameter" : 609.60, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -149,7 +149,7 @@ headers = { #most lines have a common header that they discharge into
         #24"
 
         "diameter" : 609.60, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 6000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -401,7 +401,7 @@ headers = { #most lines have a common header that they discharge into
         #6"RCIC(1)-4-1
 
         "diameter" : 152.40, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -411,7 +411,7 @@ headers = { #most lines have a common header that they discharge into
         #8"RCIC(2)-1-1
 
         "diameter" : 203.20, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -423,7 +423,7 @@ headers = { #most lines have a common header that they discharge into
         #48"COND(1)-1
 
         "diameter" : 1219.20, #millimeters
-        "length" : 2000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -1530,15 +1530,17 @@ def inject_to_header(flow:int,press:int,header_name:str):
     press = press*6895 # to pascals
 
     if press > header["pressure"]:
-        fluid_flow = calculate_differential_pressure(press,header["pressure"],flow)
+        fluid_flow = calculate_differential_pressure(press,header["pressure"],header["diameter"])
         #keep in mind this is in gallons per minute
-        mass = fluid_flow*0.06309019640344 #to liters per second
-        mass = mass*0.1 # sim time
+        flow = flow * 3.78541 #l/m
+        flow = flow / 60 #l/s
+        fluid_flow = min(fluid_flow,flow) #to liters per second
+        mass = fluid_flow*0.1 # sim time
         header["mass"] += mass
 
         calculate_header_pressure(header_name)
         
-        return fluid_flow
+        return (fluid_flow * 60) / 3.78541
     else:
         return 0
 
@@ -1552,17 +1554,31 @@ def calculate_header_pressure(header_name:str):
     #header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],40,60,header["volume"]-header["mass"])
     header["pressure"] = header_press
 
-def calculate_differential_pressure(pressure_1:int,pressure_2:int,flow:int):
+def calculate_differential_pressure(pressure_1:int,pressure_2:int,outlet_diameter):
 
-    """Calculates differential pressure vs flow in a system. Can use any units, as long as the pressures are both the same unit."""
+    """Calculates differential pressure in a system. Needs pascals and returns liters per second."""
 
     if pressure_2 == 0: pressure_2 = 1
 
     if pressure_1 > pressure_2:
-        pressure_differential = clamp(abs(((pressure_1/pressure_2)-0.1)-1),0,1)
-        fluid_flow = pressure_differential*flow
 
-        return fluid_flow
+        radius = outlet_diameter / 2
+        radius = radius * 0.1  # to cm
+
+        flow_resistance = (8 * 33 * 4000) / (math.pi * (radius**4))
+
+     
+        flow_resistance = max(flow_resistance, 1e-5) 
+        flow = (pressure_1 - pressure_2) / flow_resistance
+        flow = abs(flow)  
+
+        if pressure_1 < pressure_2: #reverse not supported
+
+            return 0
+
+        flow = flow / 1000  # to liter/s
+
+        return flow
     else:
         return 0
 
@@ -1676,7 +1692,12 @@ def run(delta):
         radius = valve["diameter"] / 2
         radius = radius * 0.1  # to cm
 
-        flow_resistance = (8 * 33 * 6000) / (math.pi * (radius**4))
+        if isinstance(valve["output"],str):
+            length = outlet["length"]
+        else:
+            length = inlet["length"]
+
+        flow_resistance = (8 * 33 * length) / (math.pi * (radius**4))
 
      
         flow_resistance = max(flow_resistance, 1e-5) 
