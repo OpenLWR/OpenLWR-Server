@@ -364,7 +364,7 @@ alarms = {
     },
     "lpcs_rhr_a_init_rpv_level_low" : {
         "alarm" : False,
-        "box": "P601_A4",
+        "box": "P601_A3",
 		"window": "6-2",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "2",
@@ -3112,7 +3112,7 @@ pumps = {
         "bus" : "7",
         "horsepower" : 1000,
         "rated_rpm" : 1800,
-        "rated_discharge_press" : 250,
+        "rated_discharge_press" : 400,
         "flow_from_rpm" : 0,
         "rated_flow" : 10000,
         "header" : "lpcs_discharge_header",
@@ -3126,7 +3126,7 @@ pumps = {
         "bus" : "7",
         "horsepower" : 1000,
         "rated_rpm" : 1800,
-        "rated_discharge_press" : 250,
+        "rated_discharge_press" : 400,
         "flow_from_rpm" : 0,
         "rated_flow" : 10000,
         "header" : "rhr_a_discharge_header",
@@ -3140,7 +3140,7 @@ pumps = {
         "bus" : "8",
         "horsepower" : 1000,
         "rated_rpm" : 1800,
-        "rated_discharge_press" : 250,
+        "rated_discharge_press" : 400,
         "flow_from_rpm" : 0,
         "rated_flow" : 10000,
         "header" : "rhr_b_discharge_header",
@@ -3153,7 +3153,7 @@ pumps = {
         "bus" : "8",
         "horsepower" : 1000,
         "rated_rpm" : 1800,
-        "rated_discharge_press" : 250,
+        "rated_discharge_press" : 400,
         "flow_from_rpm" : 0,
         "rated_flow" : 10000,
         "header" : "rhr_c_discharge_header",
@@ -3420,6 +3420,7 @@ from simulation.models.control_room_columbia.systems import lpcs
 from simulation.models.control_room_columbia.systems import deh
 from simulation.models.control_room_columbia.systems import pcis
 from simulation.models.control_room_columbia.systems import rod_worth_minimizer
+from simulation.models.control_room_columbia.systems import residual_heat_removal
 from simulation.models.control_room_columbia.systems import sync
 from simulation.models.control_room_columbia.systems import loop_sequence
 from simulation.models.control_room_columbia.systems import rrc
@@ -3458,6 +3459,7 @@ def model_run(delta):
     main_generator.run()
     diesels.run()
 
+    residual_heat_removal.run()
     rrc.run()
     safety_relief.run()
     irm_srm_positioner.run()

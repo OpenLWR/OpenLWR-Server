@@ -28,9 +28,9 @@ def run():
     if model.pumps["rhr_p_2a"]["motor_breaker_closed"]:
         fluid.valves["rhr_v_64a"]["sealed_in"] = model.pumps["rhr_p_2a"]["actual_flow"] < 1200
 
-    if model.buttons["rhr_cb_init"]["state"]:
+    """if model.buttons["rhr_cb_init"]["state"]:
         rhr_cb_init = True
-        rhr_cb_init_first = True
+        rhr_cb_init_first = True"""
 
     if rhr_cb_init:
         if rhr_cb_init_first:
@@ -38,4 +38,4 @@ def run():
         
         fluid.valves["rhr_v_42c"]["sealed_in"] = True
 
-    model.indicators["rhr_cb_init"] = rhr_cb_init
+    #model.indicators["rhr_cb_init"] = rhr_cb_init
