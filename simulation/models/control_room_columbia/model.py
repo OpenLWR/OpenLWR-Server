@@ -3383,7 +3383,7 @@ pumps = {
         "bus" : "", 
         "horsepower" : 0,
         "rated_rpm" : 5000,
-        "rated_discharge_press" : 1800,
+        "rated_discharge_press" : 1400,
         "flow_from_rpm" : 0,
         "rated_flow" : 18520, #lowering rated flow because its unstable
         "header" : "rfw_discharge",
@@ -3397,7 +3397,7 @@ pumps = {
         "bus" : "", 
         "horsepower" : 0,
         "rated_rpm" : 5000,
-        "rated_discharge_press" : 1800,
+        "rated_discharge_press" : 1400,
         "flow_from_rpm" : 0,
         "rated_flow" : 18520, #lowering rated flow because its unstable
         "header" : "rfw_discharge",

@@ -523,7 +523,7 @@ headers = { #most lines have a common header that they discharge into
         #30"RFW(1)-4
 
         "diameter" : 762, #millimeters
-        "length" : 4000, #TODO : determine a good length
+        "length" : 18000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
