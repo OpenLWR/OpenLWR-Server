@@ -2773,6 +2773,26 @@ indicators = {
     "ehc_line_speed_off": False,
     "ehc_line_speed_selected": False,
     "ehc_line_speed_operating": False,
+
+    "mt_tripped": False,
+	"mt_reset": False,
+	
+	#mech trip test
+	"mech_trip_normal": False,
+	"mech_trip_lockout": False,
+	"mech_trip_oiltrip": False,
+	"mech_trip_reset_pb": False,
+	
+	#mech trip
+	"mech_trip_tripped": False,
+	"mech_trip_resetting": False,
+	"mech_trip_reset": False,
+	
+	#condenser vacuum trip
+	"vacuum_tripped": False,
+	"vacuum_normal": False,
+	"vacuum_reset": False,
+	"vacuum_low": False,
 }
 
 buttons = {
@@ -3074,6 +3094,32 @@ buttons = {
         "state" : False,
         "armed" : False,
     },
+
+    "mt_trip_1": {
+        "state" : False,
+        "armed" : False,
+    },
+    "mt_reset_pb": {
+        "state" : False,
+        "armed" : False,
+    },
+
+    "mech_trip_normal": {
+        "state" : False,
+        "armed" : False,
+    },
+    "mech_trip_lockout": {
+        "state" : False,
+        "armed" : False,
+    },
+    "mech_trip_oiltrip": {
+        "state" : False,
+        "armed" : False,
+    },
+    "mech_trip_reset_pb": {
+        "state" : False,
+        "armed" : False,
+    },
 }
 
 from simulation.models.control_room_columbia.general_physics import pump
@@ -3337,7 +3383,7 @@ pumps = {
         "bus" : "", 
         "horsepower" : 0,
         "rated_rpm" : 5000,
-        "rated_discharge_press" : 1700,
+        "rated_discharge_press" : 1800,
         "flow_from_rpm" : 0,
         "rated_flow" : 18520, #lowering rated flow because its unstable
         "header" : "rfw_discharge",
@@ -3351,7 +3397,7 @@ pumps = {
         "bus" : "", 
         "horsepower" : 0,
         "rated_rpm" : 5000,
-        "rated_discharge_press" : 1700,
+        "rated_discharge_press" : 1800,
         "flow_from_rpm" : 0,
         "rated_flow" : 18520, #lowering rated flow because its unstable
         "header" : "rfw_discharge",

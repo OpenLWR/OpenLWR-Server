@@ -3,6 +3,7 @@ from simulation.models.control_room_columbia import reactor_protection_system
 from simulation.models.control_room_columbia.general_physics import fluid
 from simulation.models.control_room_columbia.general_physics import main_turbine
 from simulation.models.control_room_columbia.general_physics import main_generator
+from simulation.models.control_room_columbia.general_physics import main_condenser
 from simulation.models.control_room_columbia.reactor_physics import pressure
 from simulation.models.control_room_columbia.libraries.pid import PID
 import math
@@ -16,6 +17,9 @@ SpeedController = None
 gov_valve = 0
 bypass_valve = 0
 last_speed = 0
+
+turbine_trip = False
+mechanical_lockout = False
 
 SpeedReference = {
     "ehc_closed" : -500,
@@ -69,9 +73,65 @@ def run():
     global bypass_valve
 
     global last_speed
+    global turbine_trip
+
+    #Main turbine trips
 
     #get the Turbine Speed
     rpm = main_turbine.Turbine["RPM"]
+    reset_permissive = True
+ 
+    if rpm > 1980: #Mechanical Overspeed 110% normal (First trip)
+        turbine_trip = True
+        reset_permissive = False
+        model.indicators["mech_trip_tripped"] = True
+        model.indicators["mech_trip_resetting"] = False
+        model.indicators["mech_trip_reset"] = False
+    elif rpm < 1980 and rpm > 1800 and model.indicators["mech_trip_tripped"] == True:
+        model.indicators["mech_trip_resetting"] = True
+        reset_permissive = False
+    else:
+        model.indicators["mech_trip_tripped"] = False
+        model.indicators["mech_trip_resetting"] = False
+        model.indicators["mech_trip_reset"] = True
+
+    if rpm > 2016: #Electrical Overspeed 112% normal (Aux trip)
+        turbine_trip = True
+        reset_permissive = False
+
+    if main_condenser.MainCondenserBackPressure < 22.5: #22.5 in.hg Loss of heat sink
+        turbine_trip = True
+        reset_permissive = False
+        model.indicators["vacuum_low"] = True
+        model.indicators["vacuum_tripped"] = True
+        model.indicators["vacuum_normal"] = False
+        model.indicators["vacuum_reset"] = False
+    else:
+        model.indicators["vacuum_low"] = False
+        model.indicators["vacuum_normal"] = True
+
+    if model.buttons["mt_trip_1"]["state"]:
+        turbine_trip = True
+
+    if model.buttons["mt_reset_pb"]["state"] and reset_permissive:
+        turbine_trip = False
+        model.indicators["vacuum_tripped"] = False
+        model.indicators["vacuum_reset"] = True
+
+    if turbine_trip:
+        model.indicators["mt_tripped"] = True
+        model.indicators["mt_reset"] = False
+        fluid.valves["ms_v_sv1"]["percent_open"] = min(max(fluid.valves["ms_v_sv1"]["percent_open"]-25,0),100)
+        fluid.valves["ms_v_sv2"]["percent_open"] = min(max(fluid.valves["ms_v_sv2"]["percent_open"]-25,0),100)
+        fluid.valves["ms_v_sv3"]["percent_open"] = min(max(fluid.valves["ms_v_sv3"]["percent_open"]-25,0),100)
+        fluid.valves["ms_v_sv4"]["percent_open"] = min(max(fluid.valves["ms_v_sv4"]["percent_open"]-25,0),100)
+    else:
+        model.indicators["mt_tripped"] = False
+        model.indicators["mt_reset"] = True
+        fluid.valves["ms_v_sv1"]["percent_open"] = min(max(fluid.valves["ms_v_sv1"]["percent_open"]+25,0),100)
+        fluid.valves["ms_v_sv2"]["percent_open"] = min(max(fluid.valves["ms_v_sv2"]["percent_open"]+25,0),100)
+        fluid.valves["ms_v_sv3"]["percent_open"] = min(max(fluid.valves["ms_v_sv3"]["percent_open"]+25,0),100)
+        fluid.valves["ms_v_sv4"]["percent_open"] = min(max(fluid.valves["ms_v_sv4"]["percent_open"]+25,0),100)
 
     for button in SpeedReference:
         if model.buttons[button]["state"]:

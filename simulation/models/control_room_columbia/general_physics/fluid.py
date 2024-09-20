@@ -283,6 +283,47 @@ headers = { #most lines have a common header that they discharge into
 
     #Main Steam System
 
+    "mt_stop_a" : {
+        #a
+
+        "diameter" : 660.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "mt_stop_b" : {
+        #a
+
+        "diameter" : 660.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "mt_stop_c" : {
+        #a
+
+        "diameter" : 660.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+    "mt_stop_d" : {
+        #a
+
+        "diameter" : 660.40, #millimeters
+        "length" : 20000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Gas,
+        "mass" : 0,
+    },
+
     "bypass_steam_header" : {
         #24" MS (1)-4-31
 
@@ -482,7 +523,7 @@ headers = { #most lines have a common header that they discharge into
         #30"RFW(1)-4
 
         "diameter" : 762, #millimeters
-        "length" : 6000, #TODO : determine a good length
+        "length" : 4000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -1229,9 +1270,58 @@ valves = {
 
     #Governor valves
 
-    "ms_v_gv1" : { 
+    "ms_v_sv1" : { 
         "control_switch" : "",
         "input" : "main_steam_line_a_tunnel",
+        "output" : "mt_stop_a",
+        "percent_open" : 100,
+        "diameter" : 300, #mm, 28 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_sv2" : { 
+        "control_switch" : "",
+        "input" : "main_steam_line_a_tunnel",
+        "output" : "mt_stop_b",
+        "percent_open" : 100,
+        "diameter" : 300, #mm, 28 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_sv3" : { 
+        "control_switch" : "",
+        "input" : "main_steam_line_a_tunnel",
+        "output" : "mt_stop_c",
+        "percent_open" : 100,
+        "diameter" : 300, #mm, 28 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "ms_v_sv4" : { 
+        "control_switch" : "",
+        "input" : "main_steam_line_a_tunnel",
+        "output" : "mt_stop_d",
+        "percent_open" : 100,
+        "diameter" : 300, #mm, 28 inches
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    "ms_v_gv1" : { 
+        "control_switch" : "",
+        "input" : "mt_stop_a",
         "output" : "fake_turbine",
         "percent_open" : 0,
         "diameter" : 300, #mm, 28 inches
@@ -1243,7 +1333,7 @@ valves = {
     },
     "ms_v_gv2" : { 
         "control_switch" : "",
-        "input" : "main_steam_line_b_tunnel",
+        "input" : "mt_stop_b",
         "output" : "fake_turbine",
         "percent_open" : 0,
         "diameter" : 300, #mm, 28 inches
@@ -1255,7 +1345,7 @@ valves = {
     },
     "ms_v_gv3" : { 
         "control_switch" : "",
-        "input" : "main_steam_line_c_tunnel",
+        "input" : "mt_stop_c",
         "output" : "fake_turbine",
         "percent_open" : 0,
         "diameter" : 300, #mm, 28 inches
@@ -1267,7 +1357,7 @@ valves = {
     },
     "ms_v_gv4" : { 
         "control_switch" : "",
-        "input" : "main_steam_line_d_tunnel",
+        "input" : "mt_stop_d",
         "output" : "fake_turbine",
         "percent_open" : 0,
         "diameter" : 300, #mm, 28 inches
