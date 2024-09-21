@@ -326,8 +326,10 @@ def run(alarms,buttons,indicators,rods,switches,values):
 
     for irm_name in intermediate_range_monitors:
         irm = intermediate_range_monitors[irm_name]
+
+        #IRM should indicate around 40% range 1 at 10^5 SRM
         
-        power = rods[irm["rod"]]["neutrons"]/(320e15*0.7)*1000000*2.5
+        power = (rods[irm["rod"]]["neutrons"]/1000000)*40
 
         irm["power"] = power*abs((irm["withdrawal_percent"]/100)-1)
 
@@ -387,7 +389,10 @@ def run(alarms,buttons,indicators,rods,switches,values):
             continue
 
         average_power = average_power/directions_detected #average them
-        average_power = average_power/(320e15*0.7)
+        
+        #100% range 10 IRM equals around 40% power
+        average_power = average_power/(2500000000000)
+        average_power = average_power*40
 
         lprm["A"]["power"] = average_power #TODO: all detectors of the LPRM
 

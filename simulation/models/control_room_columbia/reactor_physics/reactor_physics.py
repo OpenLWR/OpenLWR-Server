@@ -27,15 +27,15 @@ def run(delta,rods):
 
     rod_num = 0
 
-    energy = 1200 # in mwt
+   # energy = 1200 # in mwt
 
-    calories = ((energy*1000000))
+  #  calories = ((energy*1000000))
 				
-    HeatC = calories/1000
+   # HeatC = calories/1000
 				
-    TempNow = (HeatC/waterMass)*delta
+   # TempNow = (HeatC/waterMass)*delta
 				
-    new_temp += TempNow
+   # new_temp += TempNow
 
 
 
@@ -63,8 +63,8 @@ def run(delta,rods):
 			{"x" : 0,"y" : -4}
 		]
 
-        energy = info["neutrons"]/(320e15*0.7*100)
-        energy = (energy*3486)*delta # in mwt
+        energy = info["neutrons"]/(2500000000000)
+        energy = (energy*3486)#*delta # in mwt
 
         calories = ((energy*1000000))/185 # divide by number of rods
 				

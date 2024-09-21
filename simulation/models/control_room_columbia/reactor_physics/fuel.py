@@ -27,7 +27,7 @@ def get(waterMass, controlDepth, neutronFlux, temperatureFuel,CoreFlow,NeutronPo
     U235SumCrossSection = (N235*MicroscopicCrossSections["Fuel"]["U235"]["Thermal"]["Fission"]) + (N235*MicroscopicCrossSections["Fuel"]["U235"]["Thermal"]["Capture"])
     CR = controlDepth
 	
-    voids = NeutronPopulation/(320e15*0.7*100)
+    voids = NeutronPopulation/(2500000000000*100)
 
     CoreFlow = CoreFlow
 
@@ -44,7 +44,7 @@ def get(waterMass, controlDepth, neutronFlux, temperatureFuel,CoreFlow,NeutronPo
     U = U235SumCrossSection
     M = MacroscopicCrossSections["Moderator"]["C12"]["Capture"]
     P = 0
-    CR = (MacroscopicCrossSections["Absorbers"]["B10"]["Capture"]*(CR*50))
+    CR = (MacroscopicCrossSections["Absorbers"]["B10"]["Capture"]*(CR*2000))
 	
 
     ThermalUtilizationFactor = (U)/(U+M+P+CR)
