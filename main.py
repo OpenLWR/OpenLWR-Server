@@ -10,8 +10,8 @@ import json
 
 
 def main():
-    with serve(init_server.init_server, config.config["server_ip"], 7001, process_request=process_request) as server:
-        print(f"> Listening for clients on {config.config["server_ip"]}:7001")
+    with serve(init_server.init_server, config.config["server_ip"], config.config["server_port"], process_request=process_request) as server:
+        print(f"> Listening for clients on {config.config["server_ip"]}:{config.config["server_port"]}")
         server.serve_forever()
 
 def process_request(connection, headers):

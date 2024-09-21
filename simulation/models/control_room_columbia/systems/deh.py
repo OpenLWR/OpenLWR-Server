@@ -46,6 +46,9 @@ SelectedAccelerationReference = 10
 
 SelectedSpeedReference = -500
 
+mech_trip_lockout = False #Locks out the mechanical trip device to make sure it doesnt initiate an actual turbine trip
+mech_trip_test = False #Tests the mechanical trip device. If the system isnt locked out before, this will initiate a turbine trip
+
 def initialize():
     #initialize our PIDs:
     global PressureController
@@ -94,6 +97,23 @@ def run():
         model.indicators["mech_trip_tripped"] = False
         model.indicators["mech_trip_resetting"] = False
         model.indicators["mech_trip_reset"] = True
+    
+    global mech_trip_test
+    global mech_trip_lockout
+
+    if model.buttons["mech_trip_normal"]["state"]:
+        mech_trip_lockout = False
+    
+    if model.buttons["mech_trip_lockout"]["state"]:
+        mech_trip_lockout = True
+
+    if model.buttons["mech_trip_oiltrip"]["state"]:
+        mech_trip_test = True
+
+    if model.buttons["mech_trip_reset_pb"]["state"]:
+        mech_trip_test = True
+
+    #TODO: Trigger annunciator overspeed lockout on mech_trip_lockout
 
     if rpm > 2016: #Electrical Overspeed 112% normal (Aux trip)
         turbine_trip = True
