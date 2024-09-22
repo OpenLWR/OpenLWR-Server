@@ -46,8 +46,11 @@ insert_block = False
 
 def run():
 
-    withdraw_block = withdraw_blocks != []
-    insert_block = insert_blocks != []
+    global withdraw_block
+    global insert_block
+
+    withdraw_block = (withdraw_blocks != [])
+    insert_block = (insert_blocks != [])
 
 
     if not ac_power.busses["7"].is_voltage_at_bus(4000):

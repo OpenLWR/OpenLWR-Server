@@ -62,7 +62,7 @@ def run(delta):
         boilingPoint = steam_functions.getBoilingPointForWater(pressure.Pressures["Vessel"])
 
         if water_temperature > boilingPoint:
-            water_temperature -= (water_temperature - boilingPoint) * (delta+0.15)
+            water_temperature = boilingPoint
 
     else:
         NewPress = pressure.getPressure(reactor_physics.kgSteam, water_temperature,pressure.Volumes["Vessel"])
