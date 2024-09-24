@@ -205,18 +205,21 @@ def run():
             control_sw["lights"]["green"] =  valve["open_percent"] != 100
 
         relief_open = pressure.Pressures["Vessel"]/6895 >= valve["auto"]
+        relief_close = pressure.Pressures["Vessel"]/6895 <= valve["auto"] - 40 #closes 40 psig below the setpoint
         safety_open = pressure.Pressures["Vessel"]/6895 >= valve["safety_auto"]
 
-        if ((operator_open or relief_open or ads_open) and not operator_off) or (safety_open):
+        if ((operator_open or ads_open) and not operator_off) or (safety_open):
             valve["open_percent"] = max(min(valve["open_percent"]+10,100),0)
-        else:
+        elif (relief_open and not operator_off):
+            valve["open_percent"] = max(min(valve["open_percent"]+10,100),0)
+        elif relief_close or operator_off:
             valve["open_percent"] = max(min(valve["open_percent"]-10,100),0)
 
         #take pounds per hour
         #becomes kilograms per hour (0.4536)
-        #to kilograms per second /60
+        #to kilograms per second /120
 
-        SRVOutflow = ((valve["flow"]*0.4536)/60)*(pressure.Pressures["Vessel"]/(valve["auto"]*6895))*(valve["open_percent"]/100)
+        SRVOutflow = ((valve["flow"]*0.4536)/120)*(pressure.Pressures["Vessel"]/(valve["auto"]*6895))*(valve["open_percent"]/100)
 
         SRVOutflow = SRVOutflow*0.1 #sim time
 

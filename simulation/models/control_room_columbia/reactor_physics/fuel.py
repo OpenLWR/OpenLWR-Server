@@ -44,7 +44,7 @@ def get(waterMass, controlDepth, neutronFlux, temperatureFuel,CoreFlow,NeutronPo
     U = U235SumCrossSection
     M = MacroscopicCrossSections["Moderator"]["C12"]["Capture"]
     P = 0
-    CR = (MacroscopicCrossSections["Absorbers"]["B10"]["Capture"]*(CR*2000))
+    CR = (MacroscopicCrossSections["Absorbers"]["B10"]["Capture"]*(CR*10))
 	
 
     ThermalUtilizationFactor = (U)/(U+M+P+CR)

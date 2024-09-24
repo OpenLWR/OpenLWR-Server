@@ -9,35 +9,22 @@ from simulation.models.control_room_columbia.reactor_physics import reactor_inve
 
 
 kgSteam = 10e2
-steps = 0
+
+power_before_sd = 0
+time_since_sd = 0
 
 def run(delta,rods):
     #TODO: Improve code quality, add comments, etc
-    reactivityRate = 0
 
     CoreFlow = ((model.pumps["rrc_p_1a"]["flow"] + model.pumps["rrc_p_1b"]["flow"]) / 100000) * 100
     waterMass = reactor_inventory.waterMass
     old_temp = model.reactor_water_temperature
     new_temp = model.reactor_water_temperature
 
-    global steps
-
-    steps = steps+1
-    if steps > 10: steps = 0
+    avg_keff = 0
+    avg_power = 0
 
     rod_num = 0
-
-   # energy = 1200 # in mwt
-
-  #  calories = ((energy*1000000))
-				
-   # HeatC = calories/1000
-				
-   # TempNow = (HeatC/waterMass)*delta
-				
-   # new_temp += TempNow
-
-
 
     for rod in rods:
         rod_num+=1
@@ -47,14 +34,9 @@ def run(delta,rods):
 
         mykEffArgs = fuel.get(waterMass, abs((info["insertion"]/48)-1), NeutronFlux, 60 ,CoreFlow,info["neutrons"])
         mykStep = mykEffArgs["kStep"]
+        avg_keff += mykEffArgs["kEff"]
         info["neutrons"] = info["neutrons"]*mykStep
         info["neutrons"] = max(info["neutrons"],100)  
-
-        reactionRate = neutrons.getReactionRate(
-			neutrons.getNeutronFlux(info["neutrons"], neutrons.getNeutronVelocity(neutrons.getNeutronEnergy(22))),
-			mykEffArgs["MacroU235"]
-		)
-        reactivityRate += reactionRate
 
         directions = [
 			{"x" : 4,"y" : 0},
@@ -64,6 +46,7 @@ def run(delta,rods):
 		]
 
         energy = info["neutrons"]/(2500000000000)
+        avg_power += energy
         energy = (energy*3486)#*delta # in mwt
 
         calories = ((energy*1000000))/185 # divide by number of rods
@@ -89,8 +72,6 @@ def run(delta,rods):
                 avgNeutronEnergy = neutrons.getNeutronEnergy(22)
                 neutronVelocity = neutrons.getNeutronVelocity(avgNeutronEnergy)
                 neutronDensity = neutrons.getNeutronDensity(info["neutrons"], 2000)
-                neutronFlux = neutrons.getNeutronFlux(neutronDensity, neutronVelocity)
-                reactionRate = neutrons.getReactionRate(neutronFlux, mykEffArgs["MacroU235"])
 
 				# simulate transfer
 
@@ -106,6 +87,38 @@ def run(delta,rods):
                     info["neutrons"] -= transport_equation()
             except:
                 continue
+
+    avg_keff = avg_keff/rod_num
+    avg_power = avg_power/rod_num
+
+    global time_since_sd
+    global power_before_sd
+
+    if avg_keff < 0.8 or avg_power < 0.02:
+        #print(avg_keff)
+        if time_since_sd == 0:
+            print("!!! Reactor shutdown !!!")
+            power_before_sd = avg_power
+
+        time_since_sd += 0.1
+
+    #Wigner-Way formula for decay heat
+
+    avg_power = 100#power_before_sd #TODO
+    t_0 = 100*86400 #100 days to seconds
+    t = time_since_sd+1
+
+    decay = 0.0622 * avg_power * ( ( t ** -0.2 ) - ( ( t_0 + t ) ** - 0.2 ) )
+
+    heat_generated = (decay/100)*3486 #percent core power to mwt
+
+    calories = ((heat_generated*1000000))
+				
+    HeatC = calories/1000
+				
+    TempNow = (HeatC/waterMass)*delta
+				
+    new_temp += TempNow
 
     model.reactor_water_temperature += new_temp-old_temp
 
