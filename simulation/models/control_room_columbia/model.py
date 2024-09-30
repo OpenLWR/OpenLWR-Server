@@ -2093,6 +2093,40 @@ switches = {
         "momentary" : False,
     },
 
+    #SM-7 loads
+
+    "cb_7_73": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    },
+
+    #SM-8 loads
+
+    "cb_8_83": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    },
+
 
 
     "cb_4885": {
@@ -2638,6 +2672,8 @@ indicators = {
 
     "cr_light_normal_1": True,
     "cr_light_normal_2": True,
+    "cr_light_normal_3": True,
+    "cr_light_normal_4": True,
     "cr_light_emergency": False,
 
     #APRM Status

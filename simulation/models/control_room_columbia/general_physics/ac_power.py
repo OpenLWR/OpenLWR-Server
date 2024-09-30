@@ -520,6 +520,35 @@ def initialize():
 
     breakers["cb_dg2_8"].set_running(breakers["cb_8dg2"])
 
+    #SM-7 loads
+
+    Bus(name="73",voltage=480,frequency=60,rated_voltage=480)
+
+    Breaker(name="cb_7_73",incoming=busses["7"],closed=True)
+
+    Transformer(name="tr_7_73",incoming=breakers["cb_7_73"],running=busses["73"],factor=0.1153846154)
+
+    breakers["cb_7_73"].set_running(transformers["tr_7_73"])
+
+    Bus(name="7e",voltage=480,frequency=60,rated_voltage=480)
+
+
+    Breaker(name="cb_73_7e",incoming=busses["73"],running=busses["7e"],closed=True,custom=True)
+
+    #SM-8 loads
+
+    Bus(name="83",voltage=480,frequency=60,rated_voltage=480)
+
+    Breaker(name="cb_8_83",incoming=busses["8"],closed=True)
+
+    Transformer(name="tr_8_83",incoming=breakers["cb_8_83"],running=busses["83"],factor=0.1153846154)
+
+    breakers["cb_8_83"].set_running(transformers["tr_8_83"])
+
+    Bus(name="8e",voltage=480,frequency=60,rated_voltage=480)
+
+
+    Breaker(name="cb_83_8e",incoming=busses["83"],running=busses["8e"],closed=True,custom=True)
 
     #Main Generator
 
@@ -552,6 +581,8 @@ def run():
 
     model.indicators["cr_light_normal_1"] = busses["7"].is_voltage_at_bus(3000)
     model.indicators["cr_light_normal_2"] = busses["8"].is_voltage_at_bus(3000)
+    model.indicators["cr_light_normal_3"] = busses["7e"].is_voltage_at_bus(240)
+    model.indicators["cr_light_normal_4"] = busses["8e"].is_voltage_at_bus(240)
     model.indicators["cr_light_emergency"] = not (busses["7"].is_voltage_at_bus(3000) and busses["8"].is_voltage_at_bus(3000)) #TODO: divisional emergency lights
 
     #graph.add("DG1 Voltage",sources["DG1"].info["voltage"])

@@ -68,10 +68,7 @@ def run(delta,rods):
                 neighbors.append(nextPosition)
                 if info["neutrons"] < 1:
                     info["neutrons"] = 1
-				
-                avgNeutronEnergy = neutrons.getNeutronEnergy(22)
-                neutronVelocity = neutrons.getNeutronVelocity(avgNeutronEnergy)
-                neutronDensity = neutrons.getNeutronDensity(info["neutrons"], 2000)
+
 
 				# simulate transfer
 
@@ -94,7 +91,7 @@ def run(delta,rods):
     global time_since_sd
     global power_before_sd
 
-    if avg_keff < 0.8 or avg_power < 0.02:
+    if avg_keff < 0.85 or avg_power < 0.02:
         #print(avg_keff)
         if time_since_sd == 0:
             print("!!! Reactor shutdown !!!")
@@ -104,11 +101,13 @@ def run(delta,rods):
 
     #Wigner-Way formula for decay heat
 
-    avg_power = 100#power_before_sd #TODO
+    pw = power_before_sd #TODO
     t_0 = 100*86400 #100 days to seconds
     t = time_since_sd+1
 
-    decay = 0.0622 * avg_power * ( ( t ** -0.2 ) - ( ( t_0 + t ) ** - 0.2 ) )
+    decay = 0.0622 * pw * ( ( t ** -0.2 ) - ( ( t_0 + t ) ** - 0.2 ) )
+
+    decay *= 3 #slight increase for the heat of internals in the core
 
     heat_generated = (decay/100)*3486 #percent core power to mwt
 
@@ -116,7 +115,7 @@ def run(delta,rods):
 				
     HeatC = calories/1000
 				
-    TempNow = (HeatC/waterMass)*delta
+    TempNow = (HeatC/waterMass)
 				
     new_temp += TempNow
 
