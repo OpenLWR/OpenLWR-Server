@@ -39,7 +39,7 @@ class Simulation:
             if drop == 0: # prevent flooding clients on high speedups
                 server_meter_parameters_update_event.fire(model.values)
                 server_indicator_parameters_update_event.fire(model.indicators)
-                server_switch_parameters_update_event.fire(model.switches)
+                server_switch_parameters_update_event.fire(model.switches,True)
                 server_alarm_parameters_update_event.fire(model.alarms)
                 server_recorder_parameters_update_event.fire(model.recorders)
             end = time.perf_counter()

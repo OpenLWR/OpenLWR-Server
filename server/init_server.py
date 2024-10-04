@@ -18,6 +18,8 @@ from server.client_events import client_chat_event
 from server.server_events import server_recorder_parameters_update_event
 import json
 import importlib
+import copy
+import time
 from server import rcon
 rcon_init = False
 
@@ -59,13 +61,22 @@ def init_server(websocket):
                     "channels":model_recorders[recorder].channels,
                 }
 
+            model_rods = copy.deepcopy(model.rods) #sanitize rods sent to the client
+            for rod in model_rods:
+                model_rods[rod].pop("neutrons")
+                model_rods[rod].pop("neutrons_last")
+                model_rods[rod].pop("driftto")
+                model_rods[rod].pop("driving")
+                model_rods[rod].pop("reed_switch_fail")
+                model_rods[rod].pop("accum_pressure")
+
             model_copy = {
                 "switches" : model.switches.copy(),
                 #"values" : model.values.copy(), #This will stay on the client
                 "buttons" : model.buttons.copy(),
                 #"indicators" : model.indicators.copy(), #This will stay on the client
                 "alarms" : model.alarms.copy(),
-                "rods" : server_rod_position_parameters_update_event.old_rods.copy(),
+                "rods" : model_rods,
                 "recorders" : recorders,
             }
 
@@ -76,6 +87,7 @@ def init_server(websocket):
 
                 manager.send_user_packet(packet_helper.build(packets.ServerPackets.DOWNLOAD_DATA,data_to_send),token_object.token)
             
+                time.sleep(0.05) #yeah whatever why not
             #TODO: Checksum the client against the server
 
             #last, we finally broadcast the login packet

@@ -4,18 +4,27 @@ from server.constants import packets
 import json
 import config
 import importlib
-
-
-def fire(switches):
+old_switches = {}
+def fire(switches,model=False):
     model = importlib.import_module(f"simulation.models.{config.config["model"]}.model")
     to_send = {}
-    for switch in switches:
-        if type(switches[switch]) == int:
-            to_send[switch] = {"position" : switches[switch], "lights" : model.switches[switch]["lights"], "flag" : model.switches[switch]["flag"]}
-        else:
-            to_send[switch] = {"position" : switches[switch]["position"], "lights" : model.switches[switch]["lights"], "flag" : switches[switch]["flag"]}
 
-    manager.broadcast_packet(packet_helper.build(packets.ServerPackets.SWITCH_PARAMETERS_UPDATE, json.dumps(to_send)))
+    if model == True:
+        for switch in switches:
+            if switch in old_switches:
+                if old_switches[switch] != switches[switch]:
+                    to_send[switch] = {"position" : switches[switch]["position"], "lights" : switches[switch]["lights"], "flag" : switches[switch]["flag"]}
+
+        old_switches = switches
+    else:
+        for switch in switches:
+            if type(switches[switch]) == int:
+                to_send[switch] = {"position" : switches[switch], "lights" : model.switches[switch]["lights"], "flag" : model.switches[switch]["flag"]}
+            else:
+                to_send[switch] = {"position" : switches[switch]["position"], "lights" : model.switches[switch]["lights"], "flag" : switches[switch]["flag"]}
+
+    if to_send != {}:
+        manager.broadcast_packet(packet_helper.build(packets.ServerPackets.SWITCH_PARAMETERS_UPDATE, json.dumps(to_send)))
 
 # used when a client first connects to sync up switch positions
 def fire_initial(token):
