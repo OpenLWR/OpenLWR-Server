@@ -1,7 +1,6 @@
 from websockets.sync.server import serve
 from websockets.http11 import Response
 from websockets.datastructures import Headers
-import websockets #why are we doing websockets here?
 import config
 from server import init_server
 import threading

@@ -39,7 +39,7 @@ def run(rods,alarms,buttons):
             drift_alarm = True
 
         #if the accumulator pressure deviates too far , activate the accumulator alarm for that rod
-        if information["accum_pressure"] > 1500 or information["accum_pressure"] < 600:
+        if information["accum_pressure"] > 1900 or information["accum_pressure"] < 1000:
             information["accum_trouble"] = True
 
         rod_position_information[rod] = {}

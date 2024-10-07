@@ -4,18 +4,19 @@ from server.constants import packets
 import json
 import config
 import importlib
+import copy
 old_switches = {}
-def fire(switches,model=False):
+def fire(switches,is_model=False):
     model = importlib.import_module(f"simulation.models.{config.config["model"]}.model")
     to_send = {}
-
-    if model == True:
+    global old_switches
+    if is_model == True:
         for switch in switches:
             if switch in old_switches:
                 if old_switches[switch] != switches[switch]:
                     to_send[switch] = {"position" : switches[switch]["position"], "lights" : switches[switch]["lights"], "flag" : switches[switch]["flag"]}
 
-        old_switches = switches
+        old_switches = copy.deepcopy(switches)
     else:
         for switch in switches:
             if type(switches[switch]) == int:

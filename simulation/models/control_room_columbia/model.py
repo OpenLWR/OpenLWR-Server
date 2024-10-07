@@ -2517,6 +2517,50 @@ switches = {
         "momentary" : False,
     },
 
+    #CRD system
+    "crd_p_1a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    },
+    "crd_p_1b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    },
+    "crd_v_3": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    },
+
 
 }
 
@@ -2643,6 +2687,15 @@ values = {
     "rft_dt_1b_rpm" : 0,
 
     "rfw_rpv_inlet_pressure" : 0,
+
+    "crd_p_1a_amps" : 0,
+    "crd_p_1b_amps" : 0,
+
+    "charge_header_pressure" : 0,
+    "drive_header_flow" : 0,
+    "cooling_header_flow" : 0,
+
+    "crd_system_flow" : 0,
 }
 
 indicators = {
@@ -3441,6 +3494,33 @@ pumps = {
         "shaft_driven" : True,
         "type" : pump.PumpTypes.Type1,
     },
+
+    "crd_p_1a" : {
+        "motor_breaker_closed" : False,
+        "motor_control_switch" : "crd_p_1a",
+        "bus" : "7",
+        "horsepower" : 250,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 1700,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 200,
+        "header" : "crd_discharge",
+        "suct_header" : "crd_suction",
+        "type" : pump.PumpTypes.Type1,
+    },
+    "crd_p_1b" : {
+        "motor_breaker_closed" : False,
+        "motor_control_switch" : "crd_p_1b",
+        "bus" : "8",
+        "horsepower" : 250,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 1700,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 200,
+        "header" : "crd_discharge",
+        "suct_header" : "crd_suction",
+        "type" : pump.PumpTypes.Type1,
+    },
 }
 
 turbines = {
@@ -3506,8 +3586,10 @@ from simulation.models.control_room_columbia.systems import residual_heat_remova
 from simulation.models.control_room_columbia.systems import sync
 from simulation.models.control_room_columbia.systems import loop_sequence
 from simulation.models.control_room_columbia.systems import rrc
+from simulation.models.control_room_columbia.systems import control_rod_drive
 from simulation.models.control_room_columbia.systems import fire
 from simulation.models.control_room_columbia.systems import fire_control_panel
+control_rod_drive.initialize()
 loop_sequence.initialize()
 sync.initialize()
 deh.initialize()
@@ -3543,6 +3625,7 @@ def model_run(delta):
 
     residual_heat_removal.run()
     rrc.run()
+    control_rod_drive.run()
     safety_relief.run()
     irm_srm_positioner.run()
     condensate.run()

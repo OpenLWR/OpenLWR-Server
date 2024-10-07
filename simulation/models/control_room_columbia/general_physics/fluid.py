@@ -565,6 +565,63 @@ headers = { #most lines have a common header that they discharge into
     },
 
 
+    #CRD system
+
+    "crd_suction" : {
+        #4"CRD(1)-1
+
+        "diameter" : 406.4, #millimeters
+        "length" : 10000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+    "crd_discharge" : {
+        #2"CRD(2)-4
+
+        "diameter" : 203.2, #millimeters
+        "length" : 18000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+
+    "drive_water_station" : {
+        #2"CRD(2)-4
+
+        "diameter" : 203.2, #millimeters
+        "length" : 10000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+    "cooling_water_header" : {
+        #2"CRD(2)-4
+
+        "diameter" : 203.2, #millimeters
+        "length" : 10000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+    "drive_water_header" : {
+        #1"CRD(5)-4S
+
+        "diameter" : 203.2, #millimeters
+        "length" : 10000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+
+    
+
+
 }
 
 from enum import IntEnum
@@ -1562,6 +1619,74 @@ valves = {
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
+
+
+    #CRD System
+
+    "crd_suction_nozzle" : { 
+        "control_switch" : "",
+        "input" : StaticTanks.Wetwell, #TODO: REMEMBER TO CHANGE THIS
+        "output" : "crd_suction",
+        "percent_open" : 100,
+        "diameter" : 812.8, #mm
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    "crd_fcv_2a" : { 
+        "control_switch" : "",
+        "input" : "crd_discharge",
+        "output" : "drive_water_station",
+        "percent_open" : 100,
+        "diameter" : 200, #mm
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+    "crd_fcv_2b" : { 
+        "control_switch" : "",
+        "input" : "crd_discharge",
+        "output" : "drive_water_station",
+        "percent_open" : 0,
+        "diameter" : 200, #mm
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    "crd_v_3" : { 
+        "control_switch" : "crd_v_3",
+        "input" : "drive_water_station",
+        "output" : "cooling_water_header",
+        "percent_open" : 0,
+        "diameter" : 100, #mm
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    "cooling_to_reactor" : { 
+        "control_switch" : "",
+        "input" : "cooling_water_header",
+        "output" : StaticTanks.Reactor,
+        "percent_open" : 100,
+        "diameter" : 400, #mm
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
 }
 
 def initialize_headers():
@@ -1818,5 +1943,6 @@ def run(delta):
                flow = inlet["mass"]
 
         # flow logic
+        valve["flow"] = flow / delta
         valve_inject_to_header(flow * -1, valve["input"])
         valve_inject_to_header(flow, valve["output"])

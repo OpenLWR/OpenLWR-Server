@@ -1,6 +1,7 @@
 import math
 from simulation.models.control_room_columbia import reactor_protection_system
 from simulation.models.control_room_columbia import model
+from simulation.models.control_room_columbia.general_physics import fluid
 from threading import Thread
 any_rod_driving = False
 select_block = False
@@ -66,6 +67,12 @@ def run(rods,buttons):
                 info["accum_pressure"] = info["accum_pressure"] - 30 #approximately 2 seconds until the accumulator alarm activates
             else:
                 info["insertion"] = 0
+
+        flow = ((fluid.headers["crd_discharge"]["pressure"]/6895)-info["accum_pressure"])*0.05
+        flow = max(min(flow,40),0)
+        if fluid.headers["crd_discharge"]["mass"] - flow > 0 and info["accum_pressure"] + flow > 0:
+            info["accum_pressure"] += flow*5
+            fluid.headers["crd_discharge"]["mass"] -= flow*0.05 #fudged
 
 
     withdraw_pressed = buttons["RMCS_WITHDRAW_PB"]["state"]
