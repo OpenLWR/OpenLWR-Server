@@ -876,6 +876,18 @@ valves = {
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
         #TODO: valve control power and motive power
     },
+    "rhr_v_64b" : {  #min flow
+        "control_switch" : "rhr_v_64b",
+        "input" : "rhr_b_discharge_header",
+        "output" : StaticTanks.Wetwell,
+        "percent_open" : 0,
+        "diameter" : 355.60, #mm, 14 in
+        "open_speed" : 0.333, #30 seconds to open from full closed.
+        "seal_in" : True, 
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
+        #TODO: valve control power and motive power
+    },
 
     "rhr_v_4c" : { 
         "control_switch" : "rhr_v_4c",
@@ -896,6 +908,18 @@ valves = {
         "percent_open" : 0,
         "diameter" : 355.60, #mm, 14 in
         "open_speed" : 0.333, #30 seconds to open from full closed..
+        "seal_in" : True, 
+        "sealed_in" : False, #current state
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,
+        #TODO: valve control power and motive power
+    },
+    "rhr_v_64c" : {  #min flow
+        "control_switch" : "rhr_v_64c",
+        "input" : "rhr_c_discharge_header",
+        "output" : StaticTanks.Wetwell,
+        "percent_open" : 0,
+        "diameter" : 355.60, #mm, 14 in
+        "open_speed" : 0.333, #30 seconds to open from full closed.
         "seal_in" : True, 
         "sealed_in" : False, #current state
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED,

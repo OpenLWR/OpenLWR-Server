@@ -1416,6 +1416,34 @@ switches = {
         "flag" : "green",
         "momentary" : False,
     },
+    "rhr_v_64b": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : False,
+    },
+    "rhr_v_64c": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : False,
+    },
     "rhr_v_4a": {
         "positions": {
 			0: 45,
