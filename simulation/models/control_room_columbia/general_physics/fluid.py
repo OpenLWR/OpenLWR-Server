@@ -1720,6 +1720,9 @@ def initialize_headers():
 
         #print(f"Initialized header {header_name}: Pressure = {header['pressure']}, Volume = {header['volume']}, Type = {header['type']}")
 
+    for valve_name in valves:
+        valves[valve_name]["flow"] = 0
+
 def valve_inject_to_header(mass:int,header_name):
 
     if type(header_name) == StaticTanks:
