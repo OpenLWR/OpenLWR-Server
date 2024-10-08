@@ -15,7 +15,6 @@ def main():
 
 def process_request(connection, headers):
     path = connection.request.path
-    print(path)
     if path == "/status":
         response = bytes(json.dumps({'status': '{}'.format(config.config["model"]), 'model': config.config["model"], 'motd': motd()}),'UTF-8')
         return Response(200, "OK", Headers({'Content-Type': 'application/json', 'Content-Length': len(response)}),

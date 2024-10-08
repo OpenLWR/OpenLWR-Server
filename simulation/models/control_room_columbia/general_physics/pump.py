@@ -115,21 +115,6 @@ def run(delta):
             pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
             continue
 
-        if pump["motor_control_switch"] != "":
-            if len(model.switches[pump["motor_control_switch"]]["positions"]) > 2:
-                if model.switches[pump["motor_control_switch"]]["position"] == 2:
-                    pump["motor_breaker_closed"] = True
-            else:
-                if model.switches[pump["motor_control_switch"]]["position"] == 1:
-                    pump["motor_breaker_closed"] = True
-        
-            if model.switches[pump["motor_control_switch"]]["position"] == 0:
-                pump["motor_breaker_closed"] = False
-
-            if model.switches[pump["motor_control_switch"]]["lights"] != {}:
-                model.switches[pump["motor_control_switch"]]["lights"]["green"] = not pump["motor_breaker_closed"]
-                model.switches[pump["motor_control_switch"]]["lights"]["red"] = pump["motor_breaker_closed"]
-
         #undervoltage breaker trip
 
         voltage = 0
@@ -150,6 +135,21 @@ def run(delta):
         except:
             #log.warning("Pump does not have an available bus!")
             voltage = 4160
+
+        if pump["motor_control_switch"] != "":
+            if len(model.switches[pump["motor_control_switch"]]["positions"]) > 2:
+                if model.switches[pump["motor_control_switch"]]["position"] == 2:
+                    pump["motor_breaker_closed"] = True
+            else:
+                if model.switches[pump["motor_control_switch"]]["position"] == 1:
+                    pump["motor_breaker_closed"] = True
+        
+            if model.switches[pump["motor_control_switch"]]["position"] == 0:
+                pump["motor_breaker_closed"] = False
+
+            if model.switches[pump["motor_control_switch"]]["lights"] != {}:
+                model.switches[pump["motor_control_switch"]]["lights"]["green"] = (not pump["motor_breaker_closed"]) and voltage > 120
+                model.switches[pump["motor_control_switch"]]["lights"]["red"] = pump["motor_breaker_closed"] and voltage > 120
 
 
         if not pump["custom"]:

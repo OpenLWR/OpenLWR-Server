@@ -35,8 +35,8 @@ class ConnectionManager:
             for token in token_list:
                 try: 
                     self.tokens[token].websocket.send(message)
-                except websockets.exceptions.ConnectionClosedError:
-                    from server.server_events import server_user_logout_event
+                except websockets.exceptions.ConnectionClosedOK:
+                    self.disconnect(token)
                 except Exception:
                     log.error(traceback.format_exc())
         except RuntimeError:
