@@ -18,3 +18,6 @@ def fire(values):
     
     if to_send != {}:
         manager.broadcast_packet(packet_helper.build(packets.ServerPackets.METER_PARAMETERS_UPDATE, json.dumps(to_send)))
+
+def fire_initial(token):
+    manager.send_user_packet(packet_helper.build(packets.ServerPackets.METER_PARAMETERS_UPDATE, json.dumps(old_values)),token)

@@ -31,9 +31,6 @@ def run(rods,alarms,buttons):
         if buttons["ACCUM_TROUBLE_RESET"]["state"]:
             if information["accum_trouble"]:
                 information["accum_trouble_acknowledged"] = True
-            else:
-                information["accum_trouble_acknowledged"] = False
-                information["accum_trouble"] = False
         
         if information["drift_alarm"]:
             drift_alarm = True
@@ -41,6 +38,9 @@ def run(rods,alarms,buttons):
         #if the accumulator pressure deviates too far , activate the accumulator alarm for that rod
         if information["accum_pressure"] > 1900 or information["accum_pressure"] < 1000:
             information["accum_trouble"] = True
+        elif information["accum_trouble"] and information["accum_trouble_acknowledged"]:
+            information["accum_trouble"] = False
+            information["accum_trouble_acknowledged"] = False
 
         rod_position_information[rod] = {}
         #this looks really messy, but it should hold true as we add more entries to every rod

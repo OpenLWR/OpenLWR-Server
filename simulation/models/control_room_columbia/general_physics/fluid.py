@@ -591,8 +591,8 @@ headers = { #most lines have a common header that they discharge into
     "drive_water_station" : {
         #2"CRD(2)-4
 
-        "diameter" : 203.2, #millimeters
-        "length" : 10000, #TODO : determine a good length
+        "diameter" : 130, #millimeters
+        "length" : 9000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -1641,7 +1641,7 @@ valves = {
         "input" : "crd_discharge",
         "output" : "drive_water_station",
         "percent_open" : 100,
-        "diameter" : 200, #mm
+        "diameter" : 250, #mm
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : False, 
         "sealed_in" : False,
@@ -1653,7 +1653,7 @@ valves = {
         "input" : "crd_discharge",
         "output" : "drive_water_station",
         "percent_open" : 0,
-        "diameter" : 200, #mm
+        "diameter" : 250, #mm
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : False, 
         "sealed_in" : False,
@@ -1666,7 +1666,7 @@ valves = {
         "input" : "drive_water_station",
         "output" : "cooling_water_header",
         "percent_open" : 0,
-        "diameter" : 100, #mm
+        "diameter" : 150, #mm
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : False, 
         "sealed_in" : False,
@@ -1679,7 +1679,7 @@ valves = {
         "input" : "cooling_water_header",
         "output" : StaticTanks.Reactor,
         "percent_open" : 100,
-        "diameter" : 400, #mm
+        "diameter" : 130, #mm
         "open_speed" : 0.333, #30 seconds to full close to open
         "seal_in" : False, 
         "sealed_in" : False,

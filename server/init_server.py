@@ -16,6 +16,7 @@ from server.client_events import client_rod_select_update_event
 from server.server_events import server_chat_event
 from server.client_events import client_chat_event
 from server.server_events import server_recorder_parameters_update_event
+from server.server_events import server_meter_parameters_update_event
 import json
 import importlib
 import copy
@@ -123,11 +124,9 @@ def init_server(websocket):
                     client_rod_select_update_event.handle(packet_data)
                     log.blame(token_object.username,packet_data)
 
-                case packets.ClientPackets.SYNCHRONIZE: #allows the client to request all the simulation data, like how it was when they joined the server.
-                    server_switch_parameters_update_event.fire_initial(token_object.token)
-                    server_button_parameters_update_event.fire_initial(token_object.token)
+                case packets.ClientPackets.SYNCHRONIZE: #allows the client to request some extra stuff
                     server_player_position_parameters_update_event.fire_initial(token_object.token)
-                    server_rod_position_parameters_update_event.fire_initial(token_object.token)
+                    server_meter_parameters_update_event.fire_initial(token_object.token)
 
                 case packets.ClientPackets.CHAT:
                     client_chat_event.handle(packet_data, token_object.username)

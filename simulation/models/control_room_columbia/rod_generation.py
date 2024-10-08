@@ -81,9 +81,9 @@ def run(rods,buttons):
 
 				rods[rod_number] = {
                         #TODO: set this back to 00.00. 48 is for testing.
-						"insertion": 28.00,
+						"insertion": 26.00,
 						"scram": False,
-						"accum_pressure": 1400.00, #normal pressure is around 1400 psig
+						"accum_pressure": 1700.00, #normal pressure is around 1700 psig
 						"accum_trouble": False,
 						"accum_trouble_acknowledged": False,
 						"reed_switch_fail" : False,

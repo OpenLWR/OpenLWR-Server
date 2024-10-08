@@ -2695,6 +2695,9 @@ values = {
     "drive_header_flow" : 0,
     "cooling_header_flow" : 0,
 
+    "drive_header_dp" : 0,
+    "cooling_header_dp" : 0,
+
     "crd_system_flow" : 0,
 }
 
