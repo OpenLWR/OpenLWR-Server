@@ -7,7 +7,10 @@ def fire():
     positions = {}
     for tk in manager.tokens:
         position = manager.tokens[tk].position
-        positions[manager.tokens[tk].username] = position
+        rotation = manager.tokens[tk].rotation
+        positions[manager.tokens[tk].username] = {}
+        positions[manager.tokens[tk].username]["position"] = position
+        positions[manager.tokens[tk].username]["rotation"] = rotation
 
     manager.broadcast_packet(packet_helper.build(packets.ServerPackets.PLAYER_POSITION_PARAMETERS_UPDATE, json.dumps(positions)))
 
@@ -15,7 +18,9 @@ def fire_initial(token):
     positions = {}
     for tk in manager.tokens:
         position = manager.tokens[tk].position
-        positions[manager.tokens[tk].username] = position
+        rotation = manager.tokens[tk].rotation
+        positions[manager.tokens[tk].username] = {}
+        positions[manager.tokens[tk].username]["position"] = position
+        positions[manager.tokens[tk].username]["rotation"] = rotation
 
     manager.send_user_packet(packet_helper.build(packets.ServerPackets.PLAYER_POSITION_PARAMETERS_UPDATE, json.dumps(positions)),token)
-    pass

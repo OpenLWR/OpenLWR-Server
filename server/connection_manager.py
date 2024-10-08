@@ -6,7 +6,8 @@ class Token:
     def __init__(self, websocket, username, token):
         self.websocket = websocket
         self.username = username
-        self.position = {"x":0,"y":0,"z":0} #TODO: Move somewhere else?
+        self.position = {"x":0,"y":0,"z":0}
+        self.rotation = {"x":0,"y":0,"z":0} #TODO: Move somewhere else?
         self.token = token
 
 class ConnectionManager:
