@@ -2802,6 +2802,7 @@ indicators = {
     "APRM_F_DOWNSCALE": False,
 
     "hpcs_init": False,
+    "hpcs_l8": False,
 
 
     # SRMs
@@ -3016,6 +3017,14 @@ buttons = {
     },
 
     "hpcs_init": {
+        "state" : False,
+        "armed" : False,
+    },
+    "hpcs_init_reset": {
+        "state" : False,
+        "armed" : False,
+    },
+    "hpcs_l8_reset": {
         "state" : False,
         "armed" : False,
     },

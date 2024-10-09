@@ -58,9 +58,6 @@ def run():
         
         fluid.valves["rhr_v_42b"]["sealed_in"] = True
         fluid.valves["rhr_v_42c"]["sealed_in"] = True
-    else:
-        fluid.valves["rhr_v_42b"]["sealed_in"] = False
-        fluid.valves["rhr_v_42c"]["sealed_in"] = False
 
     if rhr_a_lpcs_init:
         if rhr_a_lpcs_init_first:

@@ -16,8 +16,6 @@ def run():
             residual_heat_removal.rhr_a_lpcs_init_first = False
         
         fluid.valves["lpcs_v_5"]["sealed_in"] = True
-    else:
-        fluid.valves["lpcs_v_5"]["sealed_in"] = False
 
 
     if model.pumps["lpcs_p_1"]["motor_breaker_closed"]:
