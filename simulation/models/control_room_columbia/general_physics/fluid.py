@@ -619,8 +619,36 @@ headers = { #most lines have a common header that they discharge into
         "mass" : 0,
     },
 
-    
+    "sw_p_1a_discharge" : {
+        #20"SW(1)-2-1(U G)
 
+        "diameter" : 508, #millimeters
+        "length" : 9000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+    "sw_a_supply" : {
+        #20"SW(1)-2-1(U G)
+
+        "diameter" : 508, #millimeters
+        "length" : 10000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
+    "sw_a_return" : {
+        #20"SW(1)-2-1(U G)
+
+        "diameter" : 457.2, #millimeters
+        "length" : 10000, #TODO : determine a good length
+        "pressure" : 0, #pascals
+        "volume" : 0,
+        "type" : FluidTypes.Liquid,
+        "mass" : 0,
+    },
 
 }
 
@@ -631,6 +659,8 @@ class StaticTanks(IntEnum):
     Wetwell = 2,
     SteamDome = 3,
     Hotwell = 4,
+    SWPondA = 5,
+    SWPondB = 6,
 
 valves = {
     "hpcs_v_4" : { #The flow through a valve is not linear. Exponents?
@@ -1711,6 +1741,45 @@ valves = {
         #TODO: valve control power and motive power
     },
 
+    "sw_v_2a" : { 
+        "control_switch" : "sw_v_2a",
+        "input" : "sw_p_1a_discharge",
+        "output" : "sw_a_supply",
+        "percent_open" : 0,
+        "diameter" : 508, #mm
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    "rhr_v_68a" : { #RHR HX SW outlet
+        "control_switch" : "rhr_v_68a",
+        "input" : "sw_a_supply",
+        "output" : "sw_a_return",
+        "percent_open" : 100,
+        "diameter" : 508, #mm
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : True, 
+        "sealed_in" : True,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
+    "temporarypondreturn" : {
+        "control_switch" : "",
+        "input" : "sw_a_return",
+        "output" : StaticTanks.SWPondA,
+        "percent_open" : 100,
+        "diameter" : 508, #mm
+        "open_speed" : 0.333, #30 seconds to full close to open
+        "seal_in" : False, 
+        "sealed_in" : False,
+        "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        #TODO: valve control power and motive power
+    },
+
 }
 
 def initialize_headers():
@@ -1824,6 +1893,8 @@ def calculate_differential_pressure(pressure_1:int,pressure_2:int,outlet_diamete
     else:
         return 0
 
+SWPondAMass = 1000000*3.78541 # 1 meeelion gallons
+
 def get_static_tank(name:int):
 
     match name:
@@ -1855,6 +1926,13 @@ def get_static_tank(name:int):
             tank["mass"] = main_condenser.MainCondenserHotwellMass
             tank["type"] = FluidTypes.Liquid,
             return tank
+        case StaticTanks.SWPondA:
+            tank = {}
+            tank["pressure"] = 344738 #50 psi
+            global SWPondAMass
+            tank["mass"] = SWPondAMass
+            tank["type"] = FluidTypes.Liquid,
+            return tank
 
 def inject_to_static_tank(name:int,amount):
 
@@ -1862,6 +1940,9 @@ def inject_to_static_tank(name:int,amount):
         case StaticTanks.Reactor:
             from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
             reactor_inventory.add_water(amount)
+        case StaticTanks.SWPondA:
+            global SWPondAMass
+            SWPondAMass = SWPondAMass + amount
             
     
 

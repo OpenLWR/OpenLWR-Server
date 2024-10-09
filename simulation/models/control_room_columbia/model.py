@@ -2607,6 +2607,49 @@ switches = {
         "momentary" : True,
     },
 
+    "sw_p_1a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    },
+    "sw_v_2a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    },
+    "rhr_v_68a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    },
+
 
 }
 
@@ -2745,6 +2788,10 @@ values = {
     "cooling_header_dp" : 0,
 
     "crd_system_flow" : 0,
+
+    "sw_a_flow" : 0,
+    "sw_a_press" : 0,
+    "sw_p_1a_amps" : 0,
 }
 
 indicators = {
@@ -3588,6 +3635,21 @@ pumps = {
         "suct_header" : "crd_suction",
         "type" : pump.PumpTypes.Type1,
     },
+
+    #SW
+    "sw_p_1a" : {
+        "motor_breaker_closed" : False,
+        "motor_control_switch" : "sw_p_1a",
+        "bus" : "7",
+        "horsepower" : 2000,
+        "rated_rpm" : 1800,
+        "rated_discharge_press" : 250,
+        "flow_from_rpm" : 0,
+        "rated_flow" : 10000,
+        "header" : "sw_p_1a_discharge",
+        "suct_header" : "",
+        "type" : pump.PumpTypes.Type1,
+    },
 }
 
 turbines = {
@@ -3650,6 +3712,7 @@ from simulation.models.control_room_columbia.systems import deh
 from simulation.models.control_room_columbia.systems import pcis
 from simulation.models.control_room_columbia.systems import rod_worth_minimizer
 from simulation.models.control_room_columbia.systems import residual_heat_removal
+from simulation.models.control_room_columbia.systems import service_water
 from simulation.models.control_room_columbia.systems import sync
 from simulation.models.control_room_columbia.systems import loop_sequence
 from simulation.models.control_room_columbia.systems import rrc
@@ -3691,6 +3754,7 @@ def model_run(delta):
     diesels.run()
 
     residual_heat_removal.run()
+    service_water.run()
     rrc.run()
     control_rod_drive.run()
     safety_relief.run()
