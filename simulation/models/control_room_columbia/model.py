@@ -371,6 +371,24 @@ alarms = {
         "silenced" : False,
     },
 
+    #RHR B/C
+    "rhr_bc_actuated" : {
+        "alarm" : False,
+        "box": "P601_A2",
+		"window": "1-4",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "rhr_bc_init_rpv_level_low" : {
+        "alarm" : False,
+        "box": "P601_A2",
+		"window": "1-5",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+
     #P601.A4 (RCIC)
     "rcic_actuated" : {
         "alarm" : False,
@@ -2861,6 +2879,7 @@ indicators = {
     "rcic_init": False,
 
     "lpcs_init": False,
+    "rhr_cb_init": False,
 
     "rwm_insert_block": False,
     "rwm_withdraw_block": False,
@@ -3072,6 +3091,14 @@ buttons = {
         "armed" : False,
     },
     "lpcs_init_reset": {
+        "state" : False,
+        "armed" : False,
+    },
+    "rhr_cb_init": {
+        "state" : False,
+        "armed" : False,
+    },
+    "rhr_cb_init_reset": {
         "state" : False,
         "armed" : False,
     },

@@ -29,7 +29,10 @@ def run():
     if hpcs_init:
         if hpcs_init_first:
             model.pumps["hpcs_p_1"]["motor_breaker_closed"] = True
+            hpcs_init_first = False
         
         fluid.valves["hpcs_v_4"]["sealed_in"] = True
+    else:
+        fluid.valves["hpcs_v_4"]["sealed_in"] = False
 
     model.indicators["hpcs_init"] = hpcs_init

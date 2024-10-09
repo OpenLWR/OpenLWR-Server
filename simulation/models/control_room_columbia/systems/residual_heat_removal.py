@@ -28,14 +28,47 @@ def run():
     if model.pumps["rhr_p_2a"]["motor_breaker_closed"]:
         fluid.valves["rhr_v_64a"]["sealed_in"] = model.pumps["rhr_p_2a"]["actual_flow"] < 1200
 
-    """if model.buttons["rhr_cb_init"]["state"]:
+    if model.pumps["rhr_p_2b"]["motor_breaker_closed"]:
+        fluid.valves["rhr_v_64b"]["sealed_in"] = model.pumps["rhr_p_2b"]["actual_flow"] < 1200
+
+    if model.pumps["rhr_p_2c"]["motor_breaker_closed"]:
+        fluid.valves["rhr_v_64c"]["sealed_in"] = model.pumps["rhr_p_2c"]["actual_flow"] < 1200
+
+    if reactor_inventory.rx_level_wr <= -129:
+        if rhr_cb_init == False:
+            rhr_cb_init = True
+            rhr_cb_init_first = True
+
+        model.alarms["rhr_bc_init_rpv_level_low"]["alarm"] = True
+
+    if model.buttons["rhr_cb_init"]["state"]:
         rhr_cb_init = True
-        rhr_cb_init_first = True"""
+        rhr_cb_init_first = True
+
+    if model.buttons["rhr_cb_init_reset"]["state"] and reactor_inventory.rx_level_wr > -129:
+        rhr_cb_init = False
+        rhr_cb_init_first = False
+        model.alarms["rhr_bc_init_rpv_level_low"]["alarm"] = False
 
     if rhr_cb_init:
         if rhr_cb_init_first:
+            model.pumps["rhr_p_2b"]["motor_breaker_closed"] = True
             model.pumps["rhr_p_2c"]["motor_breaker_closed"] = True
+            rhr_cb_init_first = False
         
+        fluid.valves["rhr_v_42b"]["sealed_in"] = True
         fluid.valves["rhr_v_42c"]["sealed_in"] = True
+    else:
+        fluid.valves["rhr_v_42b"]["sealed_in"] = False
+        fluid.valves["rhr_v_42c"]["sealed_in"] = False
 
-    #model.indicators["rhr_cb_init"] = rhr_cb_init
+    if rhr_a_lpcs_init:
+        if rhr_a_lpcs_init_first:
+            model.pumps["rhr_p_2a"]["motor_breaker_closed"] = True
+        
+        fluid.valves["rhr_v_42a"]["sealed_in"] = True
+    else:
+        fluid.valves["rhr_v_42a"]["sealed_in"] = False
+
+    model.alarms["rhr_bc_actuated"]["alarm"] = rhr_cb_init
+    model.indicators["rhr_cb_init"] = rhr_cb_init
