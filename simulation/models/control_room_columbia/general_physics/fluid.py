@@ -28,6 +28,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid, #Initialized on start. Is not changed again.
+        "temperature" : 60, 
         "mass" : 0,
     },
     "hpcs_suction_header" : {
@@ -38,6 +39,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -49,6 +51,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "lpcs_suction_header" : {
@@ -59,6 +62,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -70,6 +74,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "rhr_a_discharge_header" : {
@@ -80,6 +85,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "rhr_a_suction_header" : {
@@ -90,6 +96,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -101,6 +108,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "rhr_b_discharge_header" : {
@@ -111,6 +119,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "rhr_b_suction_header" : {
@@ -121,6 +130,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     #we dont have RHR C's P&ID
@@ -132,6 +142,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "rhr_c_suction_header" : {
@@ -142,6 +153,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -153,6 +165,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -446,6 +459,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "rcic_suction_header" : {
@@ -456,6 +470,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -468,6 +483,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -479,6 +495,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -494,6 +511,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -507,6 +525,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "rfw_p_1b_discharge" : {
@@ -517,6 +536,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "rfw_discharge" : {
@@ -527,6 +547,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -540,6 +561,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "rfw_hx_6b" : {
@@ -550,6 +572,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -561,6 +584,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -575,6 +599,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "crd_discharge" : {
@@ -585,6 +610,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -596,6 +622,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "cooling_water_header" : {
@@ -606,6 +633,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "drive_water_header" : {
@@ -616,6 +644,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -627,6 +656,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "sw_a_supply" : {
@@ -637,6 +667,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
     "sw_a_return" : {
@@ -647,6 +678,7 @@ headers = { #most lines have a common header that they discharge into
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
+        "temperature" : 60,
         "mass" : 0,
     },
 
@@ -1764,6 +1796,7 @@ valves = {
         "seal_in" : True, 
         "sealed_in" : True,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        "hx":"rhr_hx_1a",
         #TODO: valve control power and motive power
     },
 
@@ -1777,9 +1810,18 @@ valves = {
         "seal_in" : False, 
         "sealed_in" : False,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
+        "hx":"rhr_hx_1a",
         #TODO: valve control power and motive power
     },
 
+}
+
+heat_exchangers = {
+    "rhr_hx_1a" : {
+        "temperature" : 60,
+        "hot_side_valve" : "rhr_v_3a",
+        "cold_side_valve" : "rhr_v_68a",
+    },
 }
 
 def initialize_headers():
@@ -1816,7 +1858,18 @@ def initialize_headers():
     for valve_name in valves:
         valves[valve_name]["flow"] = 0
 
-def valve_inject_to_header(mass:int,header_name):
+def calculate_temperature(v1,v2,t1,t2,eff=1):
+    #Tfinal = (V1T1+V2T2)/(V1+V2)
+    #T being temperature V being volume (mass)
+    """Takes two volumes and two temperatures. Calculates the final temperature if the two volumes mix.
+    Returns TFinal of the two liquids."""
+    if v1+v2 == 0:
+        v1+=1
+    TFinal = ((v1*t1)+(v2*t2))/(v1+v2)
+
+    return TFinal
+
+def valve_inject_to_header(mass:int,temperature,header_name,valve_name):
 
     if type(header_name) == StaticTanks:
         
@@ -1825,19 +1878,44 @@ def valve_inject_to_header(mass:int,header_name):
             from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
             reactor_inventory.remove_steam(mass*-1)
         else:
-            inject_to_static_tank(header_name,mass)
+            inject_to_static_tank(header_name,temperature,mass)
     else:
-        headers[header_name]["mass"] += mass
         if headers[header_name]["type"] == FluidTypes.Gas:
+            headers[header_name]["mass"] += mass
             gas.calculate_header_pressure(header_name)
         else:
+            #calculate temperature change
+            if mass > 0:
+                temp_after_hx = 0
+                header_temp = headers[header_name]["temperature"]
+                if "hx" in valves[valve_name]:
+                    hx = heat_exchangers[valves[valve_name]["hx"]]
+                    if hx["hot_side_valve"] == valve_name:
+                        hx_valve_temp = headers[valves[hx["hot_side_valve"]]["input"]]["temperature"]
+                        hx_valve_flow = valves[hx["hot_side_valve"]]["flow"]
+
+                        temp_after_hx = calculate_temperature(mass,hx_valve_flow,hx_valve_temp,temperature)
+                    else:
+                        hx_valve_temp = headers[valves[hx["cold_side_valve"]]["input"]]["temperature"]
+                        hx_valve_flow = valves[hx["cold_side_valve"]]["flow"]
+                        
+                        temp_after_hx = calculate_temperature(mass,hx_valve_flow,hx_valve_temp,temperature)
+                    header_temp = temp_after_hx
+
+                temp = calculate_temperature(mass,headers[header_name]["mass"],temp_after_hx,header_temp)
+                headers[header_name]["temperature"] = temp
+
+            headers[header_name]["mass"] += mass
             calculate_header_pressure(header_name)
 
 
-def inject_to_header(flow:int,press:int,header_name:str):
+def inject_to_header(flow:int,press:int,temperature:int,header_name:str,suct_header_name:str):
 
     #TODO: feedback to allow pump shutoff head
     header = headers[header_name]
+    suct_header = None
+    if suct_header_name != "":
+        suct_header = headers[suct_header_name]
     press = press*6895 # to pascals
 
     if press > header["pressure"]:
@@ -1847,9 +1925,17 @@ def inject_to_header(flow:int,press:int,header_name:str):
         flow = flow / 60 #l/s
         fluid_flow = min(fluid_flow,flow) #to liters per second
         mass = fluid_flow*0.1 # sim time
-        header["mass"] += mass
 
+        TFinal = calculate_temperature(header["mass"],mass,header["temperature"],temperature)
+
+        header["temperature"] = TFinal
+        header["mass"] += mass
         calculate_header_pressure(header_name)
+
+        if suct_header != None:
+            suct_header["mass"] -= mass
+            calculate_header_pressure(suct_header_name)
+        
         
         return (fluid_flow * 60) / 3.78541
     else:
@@ -1894,6 +1980,7 @@ def calculate_differential_pressure(pressure_1:int,pressure_2:int,outlet_diamete
         return 0
 
 SWPondAMass = 1000000*3.78541 # 1 meeelion gallons
+SWPondATemp = 60 #c
 
 def get_static_tank(name:int):
 
@@ -1905,12 +1992,14 @@ def get_static_tank(name:int):
             from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
             tank["mass"] = reactor_inventory.waterMass
             tank["type"] = FluidTypes.Liquid,
+            tank["temperature"] = model.reactor_water_temperature
             return tank
         case StaticTanks.Wetwell:
             tank = {}
             tank["pressure"] = 344738 #50 psi
             tank["mass"] = 10000000
             tank["type"] = FluidTypes.Liquid,
+            tank["temperature"] = 60
             return tank
         case StaticTanks.SteamDome:
             tank = {}
@@ -1925,6 +2014,7 @@ def get_static_tank(name:int):
             from simulation.models.control_room_columbia.general_physics import main_condenser
             tank["mass"] = main_condenser.MainCondenserHotwellMass
             tank["type"] = FluidTypes.Liquid,
+            tank["temperature"] = 90
             return tank
         case StaticTanks.SWPondA:
             tank = {}
@@ -1932,16 +2022,25 @@ def get_static_tank(name:int):
             global SWPondAMass
             tank["mass"] = SWPondAMass
             tank["type"] = FluidTypes.Liquid,
+            tank["temperature"] = SWPondATemp
             return tank
 
-def inject_to_static_tank(name:int,amount):
+def inject_to_static_tank(name:int,temperature,amount):
 
     match name:
         case StaticTanks.Reactor:
             from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
+            v = reactor_inventory.waterMass
+            t = model.reactor_water_temperature
+            TFinal = calculate_temperature(v,amount,t,temperature)
+            model.reactor_water_temperature = TFinal
             reactor_inventory.add_water(amount)
         case StaticTanks.SWPondA:
+            global SWPondATemp
             global SWPondAMass
+
+            TFinal = calculate_temperature(SWPondAMass,amount,SWPondATemp,temperature)
+            SWPondATemp = TFinal
             SWPondAMass = SWPondAMass + amount
             
     
@@ -1963,7 +2062,6 @@ def get_header(header_name):
 #hours wasted = 48
 
 def run(delta):
- 
     for valve_name in valves:
         valve = valves[valve_name]
 
@@ -2052,5 +2150,5 @@ def run(delta):
 
         # flow logic
         valve["flow"] = flow / delta
-        valve_inject_to_header(flow * -1, valve["input"])
-        valve_inject_to_header(flow, valve["output"])
+        valve_inject_to_header(flow * -1, outlet["temperature"],valve["input"],valve_name)
+        valve_inject_to_header(flow, inlet["temperature"],valve["output"],valve_name)

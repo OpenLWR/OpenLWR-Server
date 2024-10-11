@@ -58,9 +58,9 @@ def run(delta):
             valve["flow"] = 0
             continue
         else:
-            fluid.valve_inject_to_header(flow*-1,valve["input"])
+            fluid.valve_inject_to_header(flow*-1,0,valve["input"],valve_name)
             if valve["output"] != "magic":
-                fluid.valve_inject_to_header(flow,valve["output"])
+                fluid.valve_inject_to_header(flow,0,valve["output"],valve_name)
 
         valve["flow"] = flow
 

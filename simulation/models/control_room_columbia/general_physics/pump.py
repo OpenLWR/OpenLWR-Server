@@ -31,6 +31,7 @@ pump_1 = { #TODO: improve the accuracy of these calculations
     "actual_flow" : 0,
     "rated_rpm" : 0,
     "rated_discharge_press" : 0,
+    "npshr" : 1, #feet
     "flow_from_rpm" : 0,
     "rated_flow" : 0,
     "current_limit" : 0,
@@ -53,6 +54,7 @@ pump_2 = { #TODO: improve the accuracy of these calculations
     "rated_rpm" : 0,
     "rated_discharge_press" : 0,
     "rated_flow" : 0,
+    "npshr" : 1,
     "header" : "",
     "suct_header" : "",
     "type" : PumpTypes.Type2,
@@ -80,26 +82,12 @@ def calculate_suction(pump,delta):
 
     if pump["suct_header"] == "":
         return pump["flow"]
-    
-    suct_header = fluid.headers[pump["suct_header"]]
-    disch_header = fluid.headers[pump["header"]]
+    #a
+    if pump["npshr"] < fluid.headers[pump["suct_header"]]["pressure"]*2.3072493927233:
+        return pump["flow"]
+    else:
+        return 0
 
-    radius = suct_header["diameter"]/2
-    radius = radius*0.1 #to cm
-
-    flow_resistance = (8*33*20000)/(math.pi*(radius**4))
-
-    flow = ((pump["rated_discharge_press"]*6895)-suct_header["pressure"])/flow_resistance
-
-    flow = max(flow,0)
-
-    flow = flow/1000 #to liter/s
-
-    flow = flow*15.850323140625 #to gpm
-
-    flow = min(flow,pump["flow"])
-        
-    return flow
 def run(delta):
     for pump_name in model.pumps:
         pump = model.pumps[pump_name]
@@ -112,7 +100,7 @@ def run(delta):
             pump["flow"] = calculate_suction(pump_name,delta)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
             
-            pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
+            pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],fluid.headers[pump["header"]]["temperature"],pump["header"],pump["suct_header"])
             continue
 
         #undervoltage breaker trip
@@ -162,12 +150,8 @@ def run(delta):
             pump["flow"] = calculate_suction(pump_name,delta)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
             
-            if pump["header"] != "":
-                pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
-                if pump["suct_header"] != "":
-                    fluid.headers[pump["suct_header"]]["mass"] -= pump["actual_flow"]*delta*(1/60)
-                    fluid.headers[pump["suct_header"]]["mass"] = max(fluid.headers[pump["suct_header"]]["mass"],0)
-                    fluid.calculate_header_pressure(pump["suct_header"])
+            if pump["header"] != "":   
+                pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],fluid.headers[pump["header"]]["temperature"],pump["header"],pump["suct_header"])
             else:
                 pump["actual_flow"] = pump["flow"]
 
@@ -196,12 +180,8 @@ def run(delta):
             pump["flow"] = calculate_suction(pump_name,delta)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
             
-            if pump["header"] != "":
-                pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
-                if pump["suct_header"] != "":
-                    fluid.headers[pump["suct_header"]]["mass"] -= pump["actual_flow"]*delta*(1/60)
-                    fluid.headers[pump["suct_header"]]["mass"] = max(fluid.headers[pump["suct_header"]]["mass"],1)
-                    fluid.calculate_header_pressure(pump["suct_header"])
+            if pump["header"] != "":   
+                pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],fluid.headers[pump["header"]]["temperature"],pump["header"],pump["suct_header"])
             else:
                 pump["actual_flow"] = pump["flow"]
         else:
@@ -214,12 +194,8 @@ def run(delta):
             pump["flow"] = calculate_suction(pump_name,delta)
             pump["discharge_pressure"] = pump["rated_discharge_press"]*(pump["rpm"]/pump["rated_rpm"])
 
-            if pump["header"] != "":
-                pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],pump["header"])
-                if pump["suct_header"] != "":
-                    fluid.headers[pump["suct_header"]]["mass"] -= pump["actual_flow"]*delta*(1/60)
-                    fluid.headers[pump["suct_header"]]["mass"] = max(fluid.headers[pump["suct_header"]]["mass"],1)
-                    fluid.calculate_header_pressure(pump["suct_header"])
+            if pump["header"] != "":   
+                pump["actual_flow"] = fluid.inject_to_header(pump["flow"],pump["discharge_pressure"],fluid.headers[pump["header"]]["temperature"],pump["header"],pump["suct_header"])
             else:
                 pump["actual_flow"] = pump["flow"]
     
