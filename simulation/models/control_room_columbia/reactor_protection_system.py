@@ -244,7 +244,10 @@ def scram_trip_rpv_level_low(info,system):
 
 def scram_trip_neutron_monitor_system(info,system):
 
-    return neutron_monitoring.scram_reactor
+    if system == "A":
+        return neutron_monitoring.scram_reactor_a
+    else:
+        return neutron_monitoring.scram_reactor_b
 
 msiv_associations = {
     "A" : {

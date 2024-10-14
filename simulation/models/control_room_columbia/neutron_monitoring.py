@@ -284,14 +284,17 @@ rod_block_monitors = { #TODO
 
 oscillation_power_range_monitors = {}
 
-scram_reactor = False
+scram_reactor_a = False
+scram_reactor_b = False
 
 def run(alarms,buttons,indicators,rods,switches,values):
 
     from simulation.models.control_room_columbia import model
     from simulation.models.control_room_columbia import rod_position_information_system
-    global scram_reactor
-    scram_reactor = False
+    global scram_reactor_a
+    global scram_reactor_b
+    scram_reactor_a = False
+    scram_reactor_b = False
 
     model.alarms["rbm_downscale"]["alarm"] = False
     model.alarms["irm_downscale"]["alarm"] = False
@@ -351,6 +354,33 @@ def run(alarms,buttons,indicators,rods,switches,values):
             scale = scale/40
             scale = scale*125
             irm["power"] = min(scale,125) #0-40 scale (display shows it as if it was a 0-125 scale.)
+
+        #IRM trips
+
+        ms_in_run = model.switches["reactor_mode_switch"]["position"] == 3
+
+        if min(irm["power"]/range_divider,125) <= 5 and ms_in_run == False and irm["range"] != 1:
+            #downscale
+            model.alarms["irm_upscale"]["alarm"] = True
+            reactor_protection_system.add_withdraw_block("irm_%s_upscale" % irm_name)
+        else:
+            reactor_protection_system.remove_withdraw_block("irm_%s_upscale" % irm_name)
+
+        if min(irm["power"]/range_divider,125) >= 108 and ms_in_run == False:
+            #upscale
+            model.alarms["irm_upscale"]["alarm"] = True
+            reactor_protection_system.add_withdraw_block("irm_%s_upscale" % irm_name)
+        else:
+            reactor_protection_system.remove_withdraw_block("irm_%s_upscale" % irm_name)
+
+        if min(irm["power"]/range_divider,125) >= 120:#bypass the 0-40 scale
+            #upscale trip/inop
+            if irm_name in ["A","C","E","G"]:
+                model.alarms["irm_aceg_upscl_trip_or_inop"]["alarm"] = True
+                scram_reactor_a = True
+            else:
+                model.alarms["irm_bdfh_upscl_trip_or_inop"]["alarm"] = True
+                scram_reactor_b = True
 
 
     for lprm_name in local_power_range_monitors:
@@ -607,10 +637,11 @@ def run(alarms,buttons,indicators,rods,switches,values):
             reactor_protection_system.remove_withdraw_block("APRM_UPSCALE_%s" % aprm_name)
 
         if UpscaleTripOrInop:
-            scram_reactor = True
             if aprm_name in {"A","C","E"}:
+                scram_reactor_a = True
                 alarms["aprm_ace_upscl_trip_or_inop"]["alarm"] = True
             else:
+                scram_reactor_b = True
                 alarms["aprm_bdf_upscl_trip_or_inop"]["alarm"] = True
 
     try:
