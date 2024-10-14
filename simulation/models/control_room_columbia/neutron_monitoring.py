@@ -1,5 +1,6 @@
-
-from simulation.constants.annunciator_states import AnnunciatorStates
+from simulation.models.control_room_columbia import model
+from simulation.models.control_room_columbia import rod_position_information_system
+from simulation.models.control_room_columbia import reactor_protection_system
 import math
 
 rps_a_trip = False
@@ -288,9 +289,6 @@ scram_reactor_a = False
 scram_reactor_b = False
 
 def run(alarms,buttons,indicators,rods,switches,values):
-
-    from simulation.models.control_room_columbia import model
-    from simulation.models.control_room_columbia import rod_position_information_system
     global scram_reactor_a
     global scram_reactor_b
     scram_reactor_a = False
@@ -431,8 +429,6 @@ def run(alarms,buttons,indicators,rods,switches,values):
 
         if average_power > lprm["A"]["upscale_setpoint"]:
             model.alarms["lprm_upscale"]["alarm"] = True
-
-    from simulation.models.control_room_columbia import reactor_protection_system
 
     for rbm_name in rod_block_monitors:
         rbm = rod_block_monitors[rbm_name]
