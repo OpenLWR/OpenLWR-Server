@@ -205,6 +205,9 @@ def withdraw_rod(rod:str):
     if int(current_insertion) >= 48:
         return
     
+    #from simulation.models.control_room_columbia.systems import rod_worth_minimizer #this allows us to test startup easily
+    #rod_worth_minimizer.withdraw_next()
+    
     motion = Thread(target=withdraw_rod_motion,args=(rod,))
     motion.start()
 

@@ -26,6 +26,8 @@ def run(delta,rods):
 
     rod_num = 0
 
+    rods_to_set = {}
+
     for rod in rods:
         rod_num+=1
         info = rods[rod]
@@ -35,8 +37,7 @@ def run(delta,rods):
         mykEffArgs = fuel.get(waterMass, abs((info["insertion"]/48)-1), NeutronFlux, 60 ,CoreFlow,info["neutrons"])
         mykStep = mykEffArgs["kStep"]
         avg_keff += mykEffArgs["kEff"]
-        info["neutrons"] = info["neutrons"]*mykStep
-        info["neutrons"] = max(info["neutrons"],100)  
+        rods_to_set[rod] = max(info["neutrons"]*mykStep,10)
 
         directions = [
 			{"x" : 4,"y" : 0},
@@ -57,33 +58,48 @@ def run(delta,rods):
 		
         new_temp += TempNow
 
+        if info["neutrons"] < 1:
+            info["neutrons"] = 1
+
         for direction in directions:
 
-            dirX =direction["x"]
+            dirX = direction["x"]
             dirY = direction["y"]
             neighbors = []
 
-            try:
-                nextPosition = rods["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))]
-                neighbors.append(nextPosition)
-                if info["neutrons"] < 1:
-                    info["neutrons"] = 1
-
-
-				# simulate transfer
-
-                for neighbor in neighbors:
-                    nextPosition = neighbor
-                    kEffArgs = fuel.get(waterMass, abs((nextPosition["insertion"]/48)-1), NeutronFlux, 60 ,CoreFlow,info["neutrons"])
-                    kStep = kEffArgs["kStep"]
-
-                    def transport_equation():
-                        return (info["neutrons"] - nextPosition["neutrons"])*mykStep*kStep
-
-                    nextPosition["neutrons"] += transport_equation()
-                    info["neutrons"] -= transport_equation()
-            except:
+            if not "%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY)) in rods:
                 continue
+
+            nextPosition = rods["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))]
+            neighbors.append(nextPosition)
+
+
+			# simulate transfer
+
+            for neighbor in neighbors:
+                nextPosition = neighbor
+                #kEffArgs = fuel.get(waterMass, abs((info["insertion"]/48)-1), NeutronFlux, 60 ,CoreFlow,nextPosition["neutrons"])
+                #kStep = kEffArgs["kStep"]
+
+                def transport_equation():
+                    return (info["neutrons"] - nextPosition["neutrons"])*abs(mykStep-1)
+
+
+
+                if "%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY)) in rods_to_set:
+                    rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))] += transport_equation()
+                else:
+                    rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))] = nextPosition["neutrons"] + transport_equation()
+
+                rods_to_set[rod] -= transport_equation()
+
+
+    for rod in rods_to_set:
+        info = rods[rod]
+        if rods_to_set[rod] < 1:
+            rods_to_set[rod] = 1
+        info["neutrons"] = rods_to_set[rod]
+
 
     avg_keff = avg_keff/rod_num
     avg_power = avg_power/rod_num

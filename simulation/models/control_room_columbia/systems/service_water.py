@@ -9,4 +9,4 @@ def run():
     model.values["sw_a_press"] = fluid.headers["sw_a_return"]["pressure"]/6895
     model.values["sw_p_1a_amps"] = model.pumps["sw_p_1a"]["amperes"]
     model.values["sw_a_temp"] = (fluid.SWPondATemp*1.8) + 32
-    print(fluid.SWPondATemp, model.reactor_water_temperature)
+    #print(fluid.SWPondATemp, model.reactor_water_temperature)

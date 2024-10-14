@@ -80,8 +80,7 @@ def run(rods,buttons):
 				rod_number = "%s-%s" % (x_str, y_str)
 
 				rods[rod_number] = {
-                        #TODO: set this back to 00.00. 48 is for testing.
-						"insertion": 24.00,
+						"insertion": 0.00,
 						"scram": False,
 						"accum_pressure": 1700.00, #normal pressure is around 1700 psig
 						"accum_trouble": False,
@@ -95,8 +94,8 @@ def run(rods,buttons):
 						"y" : y,
 
 						#physics stuff
-	  					"neutrons" : 250000000000,
-						"neutrons_last" : 250000000000,
+	  					"neutrons" : 0,#250000000000,
+						"neutrons_last" : 0,#250000000000,
 				}
 
 				if ((x/4) - 0.5) % 2 != 0: #generate LPRMs

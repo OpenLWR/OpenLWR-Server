@@ -2,6 +2,8 @@ from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia import rod_position_information_system
 from simulation.models.control_room_columbia import reactor_protection_system
 
+latched_group = 1
+
 rwm = {
     "initialized" : False,
     "inop" : False,
@@ -209,6 +211,7 @@ def run():
 
 def calculate_data():
     # calculate the group
+    global latched_group
     latched_group = 1
     for group_number in groups["sequence_a"]:
         
@@ -312,7 +315,23 @@ def calculate_data():
 
     rwm["withdraw_errors"] = withdraw_errors
     rwm["insert_errors"] = insert_errors
-                
+
+def withdraw_next():
+    last_rod = True
+    parameters_for_group = groups["sequence_a"][latched_group]
+    for rod in group_rods["sequence_a"][parameters_for_group["rod_group"]]:
+        max_this_group = parameters_for_group["max_position"]
+        if model.rods[rod]["insertion"] != max_this_group:
+            model.rods[rod]["insertion"] = max_this_group
+            last_rod = False
+            break
+
+    #now we know all rods in this group are out, withdraw the first in the next
+    if last_rod:
+        parameters_for_group = groups["sequence_a"][latched_group+1]
+        max_this_group = parameters_for_group["max_position"]
+        model.rods[group_rods["sequence_a"][parameters_for_group["rod_group"]][0]]["insertion"] = max_this_group
+
 # rod group data begins here
 # TODO: add sequence B (found in NRC document ML20136H955)
 groups = {
