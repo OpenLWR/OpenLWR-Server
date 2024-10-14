@@ -46,7 +46,7 @@ def run(delta,rods):
 			{"x" : 0,"y" : -4}
 		]
 
-        energy = info["neutrons"]/(2500000000000)
+        energy = info["neutrons"]/(2500000000000*100)
         avg_power += energy
         energy = (energy*3486)#*delta # in mwt
 

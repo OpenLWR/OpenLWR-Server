@@ -357,21 +357,21 @@ def run(alarms,buttons,indicators,rods,switches,values):
 
         ms_in_run = model.switches["reactor_mode_switch"]["position"] == 3
 
-        if min(irm["power"]/range_divider,125) <= 5 and ms_in_run == False and irm["range"] != 1:
+        if irm["power"] <= 5 and ms_in_run == False and irm["range"] != 1:
             #downscale
             model.alarms["irm_downscale"]["alarm"] = True
             reactor_protection_system.add_withdraw_block("irm_%s_upscale" % irm_name)
         else:
             reactor_protection_system.remove_withdraw_block("irm_%s_upscale" % irm_name)
 
-        if min(irm["power"]/range_divider,125) >= 108 and ms_in_run == False:
+        if irm["power"] >= 108 and ms_in_run == False:
             #upscale
             model.alarms["irm_upscale"]["alarm"] = True
             reactor_protection_system.add_withdraw_block("irm_%s_upscale" % irm_name)
         else:
             reactor_protection_system.remove_withdraw_block("irm_%s_upscale" % irm_name)
 
-        if min(irm["power"]/range_divider,125) >= 120:#bypass the 0-40 scale
+        if irm["power"] >= 120:#bypass the 0-40 scale
             #upscale trip/inop
             if irm_name in ["A","C","E","G"]:
                 model.alarms["irm_aceg_upscl_trip_or_inop"]["alarm"] = True
