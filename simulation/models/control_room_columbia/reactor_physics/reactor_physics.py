@@ -46,7 +46,7 @@ def run(delta,rods):
 			{"x" : 0,"y" : -4}
 		]
 
-        energy = info["neutrons"]/(2500000000000*100)
+        energy = info["neutrons"]/(2500000000000)
         avg_power += energy
         energy = (energy*3486)#*delta # in mwt
 
@@ -54,7 +54,7 @@ def run(delta,rods):
 				
         HeatC = calories/1000
 				
-        TempNow = (HeatC/waterMass)
+        TempNow = (HeatC/waterMass)*delta
 		
         new_temp += TempNow
 
@@ -103,6 +103,7 @@ def run(delta,rods):
 
     avg_keff = avg_keff/rod_num
     avg_power = avg_power/rod_num
+    avg_power = avg_power * 100
 
     global time_since_sd
     global power_before_sd
