@@ -359,7 +359,7 @@ def run(alarms,buttons,indicators,rods,switches,values):
 
         if min(irm["power"]/range_divider,125) <= 5 and ms_in_run == False and irm["range"] != 1:
             #downscale
-            model.alarms["irm_upscale"]["alarm"] = True
+            model.alarms["irm_downscale"]["alarm"] = True
             reactor_protection_system.add_withdraw_block("irm_%s_upscale" % irm_name)
         else:
             reactor_protection_system.remove_withdraw_block("irm_%s_upscale" % irm_name)
