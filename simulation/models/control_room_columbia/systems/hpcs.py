@@ -41,8 +41,8 @@ def run():
         fluid.valves["hpcs_v_4"]["sealed_in"] = True
 
     if model.buttons["hpcs_init_reset"]["state"] and reactor_inventory.rx_level_wr > -51:
-        hpcs_init = True
-        hpcs_init_first = True
+        hpcs_init = False
+        hpcs_init_first = False
 
     if model.buttons["hpcs_l8_reset"]["state"] and reactor_inventory.rx_level_wr < 54:
         hpcs_l8 = False
