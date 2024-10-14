@@ -103,7 +103,7 @@ def run(delta,rods):
 
     avg_keff = avg_keff/rod_num
     avg_power = avg_power/rod_num
-    avg_power = avg_power * 100
+    avg_power = avg_power
 
     global time_since_sd
     global power_before_sd
@@ -115,6 +115,10 @@ def run(delta,rods):
             power_before_sd = avg_power
 
         time_since_sd += 0.1
+    else:
+        #reactor no longer shutdown
+        power_before_sd = 0
+        time_since_sd = 0
 
     #Wigner-Way formula for decay heat
 

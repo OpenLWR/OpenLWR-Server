@@ -1,5 +1,6 @@
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
+from simulation.models.control_room_columbia.reactor_physics import pressure
 from simulation.models.control_room_columbia.general_physics import fluid
 from simulation.models.control_room_columbia.general_physics import ac_power
 from simulation.models.control_room_columbia.systems import residual_heat_removal
@@ -140,6 +141,10 @@ def run():
 
     #TODO: use the actual RPS bus and whatnot
 
+    if pressure.Pressures["Vessel"]/6895 < 835 and model.switches["reactor_mode_switch"]["position"] == 3:
+        logic["C"] = True
+        logic["D"] = True
+
     if main_condenser.MainCondenserBackPressure < 8.5:
         logic["C"] = True
         logic["D"] = True
@@ -148,6 +153,17 @@ def run():
     else:
         model.alarms["nssss_isol_main_condenser_vac_low_a"]["alarm"] = False
         model.alarms["nssss_isol_main_condenser_vac_low_b"]["alarm"] = False
+
+    #TODO: find the second condenser vacuum low bypass annunciator
+
+    if reactor_inventory.rx_level_wr <= -129:
+        logic["C"] = True
+        logic["D"] = True
+        model.alarms["nssss_isol_rpv_level_low_a"]["alarm"] = True
+        model.alarms["nssss_isol_rpv_level_low_b"]["alarm"] = True
+    else:
+        model.alarms["nssss_isol_rpv_level_low_a"]["alarm"] = False
+        model.alarms["nssss_isol_rpv_level_low_b"]["alarm"] = False
 
 
     #RPS A Powers A/C, so no isolations would result from a loss of RPS A.
