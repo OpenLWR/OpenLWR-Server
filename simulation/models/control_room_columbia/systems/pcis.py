@@ -141,11 +141,16 @@ def run():
 
     #TODO: use the actual RPS bus and whatnot
 
+    model.alarms["main_steam_line_press_low"]["alarm"] = pressure.Pressures["Vessel"]/6895 < 835 
+
     if pressure.Pressures["Vessel"]/6895 < 835 and model.switches["reactor_mode_switch"]["position"] == 3:
         logic["C"] = True
         logic["D"] = True
 
-    if main_condenser.MainCondenserBackPressure < 8.5:
+    stop_valves_closed = fluid.valves["ms_v_sv1"]["percent_open"] < 90 and fluid.valves["ms_v_sv2"]["percent_open"] < 90 and fluid.valves["ms_v_sv3"]["percent_open"] < 90 and fluid.valves["ms_v_sv4"]["percent_open"] < 90
+    cond_vac_bypassed = model.switches["reactor_mode_switch"]["position"] != 3 and model.switches["msiv_a_cond_vac"]["position"] == 1 and stop_valves_closed and pressure.Pressures["Vessel"]/6895 < 1060
+
+    if main_condenser.MainCondenserBackPressure < 8.5 and not cond_vac_bypassed:
         logic["C"] = True
         logic["D"] = True
         model.alarms["nssss_isol_main_condenser_vac_low_a"]["alarm"] = True
@@ -154,9 +159,12 @@ def run():
         model.alarms["nssss_isol_main_condenser_vac_low_a"]["alarm"] = False
         model.alarms["nssss_isol_main_condenser_vac_low_b"]["alarm"] = False
 
-    #TODO: find the second condenser vacuum low bypass annunciator
+    model.alarms["nssss_main_condsr_vac_low_bypass_a"]["alarm"] = cond_vac_bypassed
+    model.alarms["nssss_main_condsr_vac_low_bypass_b"]["alarm"] = cond_vac_bypassed
 
-    if reactor_inventory.rx_level_wr <= -129:
+    low_rpv_lvl_bypassed = model.switches["msiv_a_rpvl_stm"]["position"] == 1
+
+    if reactor_inventory.rx_level_wr <= -129 and not low_rpv_lvl_bypassed:
         logic["C"] = True
         logic["D"] = True
         model.alarms["nssss_isol_rpv_level_low_a"]["alarm"] = True
@@ -164,6 +172,9 @@ def run():
     else:
         model.alarms["nssss_isol_rpv_level_low_a"]["alarm"] = False
         model.alarms["nssss_isol_rpv_level_low_b"]["alarm"] = False
+
+    model.alarms["msiv_isol_sys_a_lvl/tmp_bypass"]["alarm"] = low_rpv_lvl_bypassed
+    model.alarms["msiv_isol_sys_b_lvl/tmp_bypass"]["alarm"] = low_rpv_lvl_bypassed
 
 
     #RPS A Powers A/C, so no isolations would result from a loss of RPS A.

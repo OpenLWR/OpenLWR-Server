@@ -326,10 +326,34 @@ alarms = {
         "group" : "2",
         "silenced" : False,
     },
+    "nssss_main_condsr_vac_low_bypass_b" : {
+        "alarm" : False,
+        "box": "P601_A11",
+		"window": "6-2",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
     "nssss_isol_main_condenser_vac_low_b" : {
         "alarm" : False,
         "box": "P601_A11",
 		"window": "5-2",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "main_steam_line_press_low" : {
+        "alarm" : False,
+        "box": "P601_A11",
+		"window": "1-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "msiv_isol_sys_b_lvl/tmp_bypass" : {
+        "alarm" : False,
+        "box": "P601_A11",
+		"window": "1-4",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "2",
         "silenced" : False,
@@ -360,7 +384,7 @@ alarms = {
         "group" : "2",
         "silenced" : False,
     },
-    "nsss_main_condsr_vac_low_bypass_a" : {
+    "nssss_main_condsr_vac_low_bypass_a" : {
         "alarm" : False,
         "box": "P601_A12",
 		"window": "2-2",
@@ -372,6 +396,14 @@ alarms = {
         "alarm" : False,
         "box": "P601_A12",
 		"window": "3-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "msiv_isol_sys_a_lvl/tmp_bypass" : {
+        "alarm" : False,
+        "box": "P601_A12",
+		"window": "1-4",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "2",
         "silenced" : False,
@@ -2674,6 +2706,28 @@ switches = {
         "momentary" : True,
     },
 
+
+    #RPS/A Backpanel
+    "msiv_a_cond_vac": {
+        "positions": {
+			0: 45,
+			1: -45,
+		},
+        "position": 0,
+        "lights" : {},
+        "flag" : "green",
+        "momentary" : False,
+    },
+    "msiv_a_rpvl_stm": {
+        "positions": {
+			0: 45,
+			1: -45,
+		},
+        "position": 0,
+        "lights" : {},
+        "flag" : "green",
+        "momentary" : False,
+    },
 
 }
 
