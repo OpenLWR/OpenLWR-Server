@@ -140,15 +140,15 @@ def run():
     #This is all kind of a mess
 
     #TODO: use the actual RPS bus and whatnot
+    low_pressure = bool(pressure.Pressures["Vessel"]/6895 < 835)
+    model.alarms["main_steam_line_press_low"]["alarm"] = low_pressure
 
-    model.alarms["main_steam_line_press_low"]["alarm"] = pressure.Pressures["Vessel"]/6895 < 835 
-
-    if pressure.Pressures["Vessel"]/6895 < 835 and model.switches["reactor_mode_switch"]["position"] == 3:
+    if low_pressure and model.switches["reactor_mode_switch"]["position"] == 3:
         logic["C"] = True
         logic["D"] = True
 
-    stop_valves_closed = fluid.valves["ms_v_sv1"]["percent_open"] < 90 and fluid.valves["ms_v_sv2"]["percent_open"] < 90 and fluid.valves["ms_v_sv3"]["percent_open"] < 90 and fluid.valves["ms_v_sv4"]["percent_open"] < 90
-    cond_vac_bypassed = model.switches["reactor_mode_switch"]["position"] != 3 and model.switches["msiv_a_cond_vac"]["position"] == 1 and stop_valves_closed and pressure.Pressures["Vessel"]/6895 < 1060
+    stop_valves_closed = bool(fluid.valves["ms_v_sv1"]["percent_open"] < 90 and fluid.valves["ms_v_sv2"]["percent_open"] < 90 and fluid.valves["ms_v_sv3"]["percent_open"] < 90 and fluid.valves["ms_v_sv4"]["percent_open"] < 90)
+    cond_vac_bypassed = bool(model.switches["reactor_mode_switch"]["position"] != 3 and model.switches["msiv_a_cond_vac"]["position"] == 1 and stop_valves_closed and pressure.Pressures["Vessel"]/6895 < 1060)
 
     if main_condenser.MainCondenserBackPressure < 8.5 and not cond_vac_bypassed:
         logic["C"] = True

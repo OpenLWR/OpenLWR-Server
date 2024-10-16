@@ -104,6 +104,7 @@ def run(delta,rods):
     avg_keff = avg_keff/rod_num
     avg_power = avg_power/rod_num
     avg_power = avg_power
+    avg_power = 0.98
 
     global time_since_sd
     global power_before_sd
@@ -128,11 +129,11 @@ def run(delta,rods):
 
     decay = 0.0622 * pw * ( ( t ** -0.2 ) - ( ( t_0 + t ) ** - 0.2 ) )
 
-    decay *= 3 #slight increase for the heat of internals in the core
+    decay *= 1.3 #slight increase for the heat of internals in the core
 
-    heat_generated = (decay/100)*3486 #percent core power to mwt
+    heat_generated = decay*3486 #percent core power to mwt
 
-    calories = ((heat_generated*1000000))
+    calories = (heat_generated*1000000)
 				
     HeatC = calories/1000
 				
