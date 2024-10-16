@@ -104,7 +104,6 @@ def run(delta,rods):
     avg_keff = avg_keff/rod_num
     avg_power = avg_power/rod_num
     avg_power = avg_power
-    avg_power = 0.98
 
     global time_since_sd
     global power_before_sd
