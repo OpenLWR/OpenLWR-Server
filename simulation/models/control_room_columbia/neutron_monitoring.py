@@ -324,6 +324,7 @@ def run(alarms,buttons,indicators,rods,switches,values):
             srm["period"] = 1/srm["counts_log"]
         else:
             srm["period"] = math.inf
+        print(srm["period"])
 
     for irm_name in intermediate_range_monitors:
         irm = intermediate_range_monitors[irm_name]

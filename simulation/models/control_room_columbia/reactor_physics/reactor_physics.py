@@ -37,7 +37,10 @@ def run(delta,rods):
         mykEffArgs = fuel.get(waterMass, abs((info["insertion"]/48)-1), NeutronFlux, 60 ,CoreFlow,info["neutrons"])
         mykStep = mykEffArgs["kStep"]
         avg_keff += mykEffArgs["kEff"]
-        rods_to_set[rod] = max(info["neutrons"]*mykStep,10)
+        if rod in rods_to_set:
+            rods_to_set[rod] += max(info["neutrons"]*mykStep,1)
+        else:
+            rods_to_set[rod] = max(info["neutrons"]*mykStep,1)
 
         directions = [
 			{"x" : 4,"y" : 0},
@@ -68,30 +71,37 @@ def run(delta,rods):
             neighbors = []
 
             if not "%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY)) in rods:
-                continue
-
-            nextPosition = rods["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))]
-            neighbors.append(nextPosition)
+                neighbors.append("fake it") #allows losses to outside the core
+            else:
+                nextPosition = rods["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))]
+                neighbors.append(nextPosition)
 
 
 			# simulate transfer
 
             for neighbor in neighbors:
                 nextPosition = neighbor
-                #kEffArgs = fuel.get(waterMass, abs((info["insertion"]/48)-1), NeutronFlux, 60 ,CoreFlow,nextPosition["neutrons"])
-                #kStep = kEffArgs["kStep"]
+
+                if neighbor == "fake it":
+                    nextPosition = {"neutrons" : 0}
 
                 def transport_equation():
                     return (info["neutrons"] - nextPosition["neutrons"])*abs(mykStep-1)
 
+                transported = transport_equation()
+                total_neutrons_exchangable = transported
 
+                total_neutrons_exchangable = max(min(transported,total_neutrons_exchangable-info["neutrons"]),1)
 
-                if "%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY)) in rods_to_set:
-                    rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))] += transport_equation()
-                else:
-                    rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))] = nextPosition["neutrons"] + transport_equation()
+                if neighbor != "fake it":
+                    if "%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY)) in rods_to_set:
+                        rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))] += total_neutrons_exchangable
+                        rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))] = max(rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))],1)
+                    else:
+                        rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))] = nextPosition["neutrons"] + total_neutrons_exchangable
+                        rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))] = max(rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))],1)
 
-                rods_to_set[rod] -= transport_equation()
+                rods_to_set[rod] = max(rods_to_set[rod] - total_neutrons_exchangable,1)
 
 
     for rod in rods_to_set:
