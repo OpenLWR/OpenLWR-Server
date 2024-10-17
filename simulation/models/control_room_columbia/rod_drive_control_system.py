@@ -205,6 +205,7 @@ def withdraw_rod(rod:str):
     if RWM_WITHDRAW_TEST_MODE:
         from simulation.models.control_room_columbia.systems import rod_worth_minimizer #this allows us to test startup easily
         rod_worth_minimizer.withdraw_next()
+        return
 
     #TODO: overtravel test
     if int(current_insertion) >= 48:
