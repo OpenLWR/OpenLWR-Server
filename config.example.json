@@ -6,5 +6,5 @@
     "discord_webhook_logging" : "",
     "blame_logging": false,
     "server_motd" : "MOTD",
-    "version" : "alpha20240919"
+    "version" : "alpha20241016"
 }
