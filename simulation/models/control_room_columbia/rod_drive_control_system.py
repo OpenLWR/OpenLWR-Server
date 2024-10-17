@@ -189,6 +189,7 @@ def cont_insert_rod_motion(args):
 
     model.rods[rod]["driving"] = False
 
+RWM_WITHDRAW_TEST_MODE = False
 
 def withdraw_rod(rod:str):
 
@@ -201,12 +202,13 @@ def withdraw_rod(rod:str):
     current_rod = model.rods[rod]
     current_insertion = current_rod["insertion"]
 
+    if RWM_WITHDRAW_TEST_MODE:
+        from simulation.models.control_room_columbia.systems import rod_worth_minimizer #this allows us to test startup easily
+        rod_worth_minimizer.withdraw_next()
+
     #TODO: overtravel test
     if int(current_insertion) >= 48:
         return
-    
-    #from simulation.models.control_room_columbia.systems import rod_worth_minimizer #this allows us to test startup easily
-    #rod_worth_minimizer.withdraw_next()
     
     motion = Thread(target=withdraw_rod_motion,args=(rod,))
     motion.start()
