@@ -217,9 +217,9 @@ def run():
 
         #take pounds per hour
         #becomes kilograms per hour (0.4536)
-        #to kilograms per second /120
+        #to kilograms per second 1/(60*60) = 1/3600
 
-        SRVOutflow = ((valve["flow"]*0.4536)/120)*((pressure.Pressures["Vessel"]/(valve["auto"]*6895)))*(valve["open_percent"]/100)
+        SRVOutflow = ((valve["flow"]*0.4536)/(60*60))*((pressure.Pressures["Vessel"]/(valve["auto"]*6895)))*(valve["open_percent"]/100)
 
         SRVOutflow = SRVOutflow*0.1 #sim time
 
