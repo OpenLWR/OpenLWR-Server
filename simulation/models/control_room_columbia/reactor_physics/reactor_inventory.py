@@ -37,6 +37,7 @@ def run(delta):
     from simulation.models.control_room_columbia.reactor_physics  import steam_functions
     from simulation.models.control_room_columbia.reactor_physics  import pressure
     global rx_level_wr
+    global rx_level_nr
     global waterMass
     global limit_press
     boilingPoint = steam_functions.getBoilingPointForWater(pressure.Pressures["Vessel"])

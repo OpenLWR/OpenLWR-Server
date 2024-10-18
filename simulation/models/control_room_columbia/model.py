@@ -3560,7 +3560,7 @@ pumps = {
         "bus" : "7",
         "horsepower" : 1000,
         "rated_rpm" : 1800,
-        "rated_discharge_press" : 250,
+        "rated_discharge_press" : 280,
         "flow_from_rpm" : 0,
         "rated_flow" : 10000,
         "npshr" : 11,
