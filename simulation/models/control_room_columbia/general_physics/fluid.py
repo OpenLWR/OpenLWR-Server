@@ -70,7 +70,7 @@ headers = { #most lines have a common header that they discharge into
         #18" RHR(1)-2-5
 
         "diameter" : 457.20, #millimeters
-        "length" : 6000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -104,7 +104,7 @@ headers = { #most lines have a common header that they discharge into
         #18" RHR(1)-2-5
 
         "diameter" : 457.20, #millimeters
-        "length" : 6000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -138,7 +138,7 @@ headers = { #most lines have a common header that they discharge into
         #18"
 
         "diameter" : 457.20, #millimeters
-        "length" : 6000, #TODO : determine a good length
+        "length" : 10000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -455,7 +455,7 @@ headers = { #most lines have a common header that they discharge into
         #6"RCIC(1)-4-1
 
         "diameter" : 152.40, #millimeters
-        "length" : 10000, #TODO : determine a good length
+        "length" : 20000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -466,7 +466,7 @@ headers = { #most lines have a common header that they discharge into
         #8"RCIC(2)-1-1
 
         "diameter" : 203.20, #millimeters
-        "length" : 10000, #TODO : determine a good length
+        "length" : 20000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -1518,11 +1518,11 @@ valves = {
         "control_switch" : "ms_v_105a",
         "input" : "bypass_steam_header",
         "output" : "rft_dt_1a_stop",
-        "percent_open" : 100,
+        "percent_open" : 0,
         "diameter" : 200,#152.4, #mm, 6 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : True,
+        "sealed_in" : False,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -1555,11 +1555,11 @@ valves = {
         "control_switch" : "ms_v_105b",
         "input" : "bypass_steam_header",
         "output" : "rft_dt_1b_stop",
-        "percent_open" : 100,
+        "percent_open" : 0,
         "diameter" : 200,#152.4, #mm, 6 inches
         "open_speed" : 2, #5 seconds to full close to open
         "seal_in" : True, 
-        "sealed_in" : True,
+        "sealed_in" : False,
         "external_argue" : 0, #0 - No Contest 1 - Wants CLOSED 2 - Wants OPENED
         #TODO: valve control power and motive power
     },
@@ -1947,7 +1947,7 @@ def calculate_header_pressure(header_name:str):
 
     from simulation.models.control_room_columbia.reactor_physics import pressure
     preferred_mass = header["volume"]*9/2800
-    header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],9,60,header["volume"]-header["mass"])
+    header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],6,60,header["volume"]-header["mass"])
     #header_press = pressure.PartialPressure(pressure.GasTypes["Steam"],40,60,header["volume"]-header["mass"])
     header["pressure"] = header_press
 
