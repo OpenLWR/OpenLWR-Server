@@ -25,6 +25,8 @@ def mm_to_inches(value):
     return value/25.4
 
 rx_level_wr = 35
+rx_level_nr = 35
+
 waterMass = 928500.26*(1/3)#Equipment in the RPV takes up volume
 limit_press = False
 
@@ -76,6 +78,11 @@ def run(delta):
 
     raw_level = mm_to_inches(calculate_level_cylinder(Vessel_Diameter,waterMass))
     rx_level_wr = raw_level-528.55
+
+    if rx_level_wr > 0:
+        rx_level_nr = rx_level_wr
+    else:
+        rx_level_nr = 0
 
     model.values["rpv_level_recorder_1"] = round(rx_level_wr,1)
     model.values["rpv_pressure_recorder_1"] = round(pressure.Pressures["Vessel"]/6895,1)

@@ -1,6 +1,7 @@
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
 from simulation.models.control_room_columbia.reactor_physics import pressure
+from simulation.models.control_room_columbia.systems import ESFAS
 
 safety_relief = {
     "ms_rv_5b" : {
@@ -192,7 +193,10 @@ def run():
         operator_open = False
         relief_open = False
         safety_open = False
-        ads_open = False
+        if valve["ads"] == True :
+            ads_open = (ESFAS.ADS_1.ADS_SYS_INITIATED or ESFAS.ADS_2.ADS_SYS_INITIATED)
+        else:
+            ads_open = False
 
         if valve_name in model.switches:
             control_sw = model.switches[valve_name]
