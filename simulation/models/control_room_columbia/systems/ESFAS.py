@@ -125,16 +125,16 @@ def run(delta):
         model.alarms["ads_low_lvl_confirmed"]["alarm"] = True
     else:
         model.alarms["ads_low_lvl_confirmed"]["alarm"]  = False
-    model.alarms["ads_rhr_a_lpcs_permissive"]["alarm"] = model.values["rhr_a_press"] > ADS_RHR_PRESS_PERMISSIVE_PA\
-          or model.values["lpcs_press"] > ADS_LPCS_PRESS_PERMISSIVE_PA     
-    model.alarms["ads_rhr_bc_permissive"]["alarm"] = model.values["rhr_b_press"] > ADS_RHR_PRESS_PERMISSIVE_PA\
-          or model.values["rhr_c_press"] > ADS_RHR_PRESS_PERMISSIVE_PA
-    model.alarms["ads_div2_oos"]["alarm"] = ADS_2.ADS_INHIBIT  
-    model.alarms["ads_div1_oos"]["alarm"] = ADS_1.ADS_INHIBIT
-    model.alarms["ads_sys_initiated_1"]["alarm"] = ADS_1.ADS_SYS_INITIATED
-    model.alarms["ads_sys_initiated_2"]["alarm"] = ADS_2.ADS_SYS_INITIATED
-    model.alarms["ads_timer_initiated_1"]["alarm"] = ADS_1.ADS_Timer_Status
-    model.alarms["ads_timer_initiated_2"]["alarm"] = ADS_2.ADS_Timer_Status
+    model.alarms["ads_rhr_a_lpcs_permissive"]["alarm"] = bool(model.values["rhr_a_press"] > ADS_RHR_PRESS_PERMISSIVE_PA\
+          or model.values["lpcs_press"] > ADS_LPCS_PRESS_PERMISSIVE_PA) 
+    model.alarms["ads_rhr_bc_permissive"]["alarm"] = bool(model.values["rhr_b_press"] > ADS_RHR_PRESS_PERMISSIVE_PA\
+          or model.values["rhr_c_press"] > ADS_RHR_PRESS_PERMISSIVE_PA)
+    model.alarms["ads_div2_oos"]["alarm"] = bool(ADS_2.ADS_INHIBIT)
+    model.alarms["ads_div1_oos"]["alarm"] = bool(ADS_1.ADS_INHIBIT)
+    model.alarms["ads_sys_initiated_1"]["alarm"] = bool(ADS_1.ADS_SYS_INITIATED)
+    model.alarms["ads_sys_initiated_2"]["alarm"] = bool(ADS_2.ADS_SYS_INITIATED)
+    model.alarms["ads_timer_initiated_1"]["alarm"] = bool(ADS_1.ADS_Timer_Status)
+    model.alarms["ads_timer_initiated_2"]["alarm"] = bool(ADS_2.ADS_Timer_Status)
 
     ADS_1.ADS_Run(reactor_inventory.rx_level_nr, reactor_inventory.rx_level_wr, model.values["rhr_a_press"]\
                 , model.values["rhr_b_press"], model.values["rhr_c_press"], model.values["lpcs_press"],delta)
