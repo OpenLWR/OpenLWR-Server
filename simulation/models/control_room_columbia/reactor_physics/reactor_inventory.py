@@ -28,6 +28,7 @@ rx_level_wr = 35
 rx_level_nr = 35
 
 waterMass = 928500.26*(1/3)#Equipment in the RPV takes up volume
+waterMass = waterMass*(2/3) #so we start at a reasonable level
 limit_press = False
 
 def run(delta):
