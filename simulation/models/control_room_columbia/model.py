@@ -444,6 +444,80 @@ alarms = {
         "group" : "2",
         "silenced" : False,
     },
+    "ads_sys_initiated_2" : {
+        "alarm" : False,
+        "box": "P601_A2",
+		"window": "1-7",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "ads_timer_initiated_2" : {
+        "alarm" : False,
+        "box": "P601_A2",
+		"window": "1-8",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },    
+    "ads_low_lvl_confirmed" : {
+        "alarm" : False,
+        "box": "P601_A2",
+		"window": "4-8",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "ads_rhr_bc_permissive" : {
+        "alarm" : False,
+        "box": "P601_A2",
+		"window": "5-7",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "ads_div2_oos" : {
+        "alarm" : False,
+        "box": "P601_A2",
+		"window": "6-8",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },        
+
+    #P601.A3
+    "ads_rhr_a_lpcs_permissive" : {
+        "alarm" : False,
+        "box": "P601_A3",
+		"window": "5-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "ads_div1_oos" : {
+        "alarm" : False,
+        "box": "P601_A3",
+		"window": "6-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },      
+    "ads_sys_initiated_1" : {
+        "alarm" : False,
+        "box": "P601_A3",
+		"window": "1-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
+    "ads_timer_initiated_1" : {
+        "alarm" : False,
+        "box": "P601_A3",
+		"window": "1-2",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },   
 
     #P601.A4 (RCIC)
     "rcic_actuated" : {
@@ -2728,7 +2802,26 @@ switches = {
         "flag" : "green",
         "momentary" : False,
     },
-
+    "ads_inhibit_1": {
+        "positions": {
+			0: -45,
+			1: 45,
+		},
+        "position": 0,
+        "lights" : {},
+        "flag" : "green",
+        "momentary" : False,
+    },
+    "ads_inhibit_2": {
+        "positions": {
+			0: -45,
+			1: 45,
+		},
+        "position": 0,
+        "lights" : {},
+        "flag" : "green",
+        "momentary" : False,
+    },    
 }
 
 values = {
@@ -3402,6 +3495,38 @@ buttons = {
         "state" : False,
         "armed" : False,
     },
+    "ads_initiate_1a" : {
+        "state" : False,
+        "armed" : False,
+    },
+    "ads_initiate_1b" : {
+        "state" : False,
+        "armed" : False,
+    },
+    "ads_initiate_2a" : {
+        "state" : False,
+        "armed" : False,
+    },
+    "ads_initiate_2b" : {
+        "state" : False,
+        "armed" : False,
+    },
+    "ads_delayreset_1" : {
+        "state" : False,
+        "armed" : False,
+    },
+    "ads_delayreset_2" : {
+        "state" : False,
+        "armed" : False,
+    },
+    "ads_reset_1" : {
+        "state" : False,
+        "armed" : False,
+    },
+    "ads_reset_2" : {
+        "state" : False,
+        "armed" : False,
+    },
 }
 
 from simulation.models.control_room_columbia.general_physics import pump
@@ -3802,6 +3927,7 @@ from simulation.models.control_room_columbia.systems import rrc
 from simulation.models.control_room_columbia.systems import control_rod_drive
 from simulation.models.control_room_columbia.systems import fire
 from simulation.models.control_room_columbia.systems import fire_control_panel
+from simulation.models.control_room_columbia.systems import ESFAS
 control_rod_drive.initialize()
 loop_sequence.initialize()
 sync.initialize()
@@ -3835,6 +3961,7 @@ def model_run(delta):
     main_turbine.run()
     main_generator.run()
     diesels.run()
+    ESFAS.run(delta)
 
     residual_heat_removal.run()
     service_water.run()
