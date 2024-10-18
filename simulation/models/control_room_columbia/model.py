@@ -3511,14 +3511,6 @@ buttons = {
         "state" : False,
         "armed" : False,
     },
-    "ads_delayreset_1" : {
-        "state" : False,
-        "armed" : False,
-    },
-    "ads_delayreset_2" : {
-        "state" : False,
-        "armed" : False,
-    },
     "ads_reset_1" : {
         "state" : False,
         "armed" : False,

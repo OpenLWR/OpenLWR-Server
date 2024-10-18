@@ -32,7 +32,6 @@ class ADS_Logic:
         self.sw_init_2 = "ads_initiate_" + train + "b"
         self.sw_inhib = "ads_inhibit_" + train
         self.sw_reset = "ads_reset_" + train
-        self.sw_delayreset = "ads_delayreset_" + train
         self.Train = train
 
     def ADS_Run(self,LevelNR_in, LevelWR_in, RHR_A_PRESS, RHR_B_PRESS, RHR_C_PRESS, LPCS_PRESS, delta):
@@ -49,9 +48,6 @@ class ADS_Logic:
         }
         if(model.buttons[self.sw_reset]["state"] == True) : {
             self.ADS_RESET_LOGIC()
-        }
-        if(model.buttons[self.sw_delayreset]["state"] == True) : {
-            self.ADS_TIMER_RESET()
         }
 
         #Logic:
@@ -94,6 +90,7 @@ class ADS_Logic:
         self.ADS_INITIATED_1 = False
         self.ADS_INITIATED_2 = False
         self.ADS_SYS_INITIATED = False
+        self.ADS_Timer_Sec = 0
 
     def ADS_INHIBIT_CHECK(self, Inhibit_Sw):
         if Inhibit_Sw == False:
@@ -101,8 +98,6 @@ class ADS_Logic:
         elif self.ADS_INHIBIT == False:
             self.ADS_INHIBIT = True
          
-    def ADS_TIMER_RESET(self):        
-        self.ADS_Timer_Sec = 0
 
     def ADS_Timer_Run(self, delta):
         #TODO: check power. If power is lost, set status to false and time to 0
