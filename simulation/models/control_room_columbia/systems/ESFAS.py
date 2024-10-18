@@ -51,13 +51,12 @@ class ADS_Logic:
         }
 
         #Logic:
-        if LevelNR_in > RPV_LEVEL_3_in:
-            self.ADS_Timer_Stop()
-        if LevelWR_in > RPV_LEVEL_1_in:
-            self.ADS_Timer_Stop()
         
         if self.ADS_Timer_Status == False:
             self.ADS_Timer_Start()
+
+        if LevelNR_in > RPV_LEVEL_3_in or LevelWR_in > RPV_LEVEL_1_in:
+            self.ADS_Timer_Stop()
 
         if self.ADS_Timer_Run(delta) == False:
             return

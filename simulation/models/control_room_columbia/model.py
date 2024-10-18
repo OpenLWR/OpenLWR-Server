@@ -2804,8 +2804,8 @@ switches = {
     },
     "ads_inhibit_1": {
         "positions": {
-			0: -45,
-			1: 45,
+			0: 45,
+			1: -45,
 		},
         "position": 0,
         "lights" : {},
@@ -2814,8 +2814,8 @@ switches = {
     },
     "ads_inhibit_2": {
         "positions": {
-			0: -45,
-			1: 45,
+			0: 45,
+			1: -45,
 		},
         "position": 0,
         "lights" : {},
@@ -3495,6 +3495,9 @@ buttons = {
         "state" : False,
         "armed" : False,
     },
+
+    #ADS System
+
     "ads_initiate_1a" : {
         "state" : False,
         "armed" : False,
