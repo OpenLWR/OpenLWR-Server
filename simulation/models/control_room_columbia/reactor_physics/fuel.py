@@ -69,8 +69,7 @@ def get(waterMass, controlDepth, neutronFlux, temperatureFuel,CoreFlow,NeutronPo
     iEff = 4.45 + 26.6 * math.sqrt(4/pD)
 
     Nf = 1e8
-    Nm = min(waterMass,50000)
-    Nm = 1
+    Nm = 309502086.6666667*4 #waterMass*1000
     Nmf = Nm/Nf
     Vf = math.pi*Radius*Length
     #Nm = clamp(Nm,484531200,math.huge)

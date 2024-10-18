@@ -38,16 +38,9 @@ def run(delta,rods):
         mykStep = mykEffArgs["kStep"]
         avg_keff += mykEffArgs["kEff"]
         if rod in rods_to_set:
-            rods_to_set[rod] += max(info["neutrons"]*mykStep,1)
+            rods_to_set[rod] = max((info["neutrons"]+rods_to_set[rod])*mykStep,10)
         else:
-            rods_to_set[rod] = max(info["neutrons"]*mykStep,1)
-
-        directions = [
-			{"x" : 4,"y" : 0},
-			{"x" : -4,"y" : 0},
-			{"x" : 0,"y" : 4},
-			{"x" : 0,"y" : -4}
-		]
+            rods_to_set[rod] = max(info["neutrons"]*mykStep,10)
 
         energy = info["neutrons"]/(2500000000000)
         avg_power += energy
@@ -61,53 +54,56 @@ def run(delta,rods):
 		
         new_temp += TempNow
 
-        if info["neutrons"] < 1:
-            info["neutrons"] = 1
+        if info["neutrons"] < 10:
+            info["neutrons"] = 10
+
+        directions = [
+			{"x" : 4,"y" : 0},
+			{"x" : -4,"y" : 0},
+			{"x" : 0,"y" : 4},
+			{"x" : 0,"y" : -4}
+		]
+
+        neighbors = []
 
         for direction in directions:
 
             dirX = direction["x"]
             dirY = direction["y"]
-            neighbors = []
-
-            if not "%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY)) in rods:
-                neighbors.append("fake it") #allows losses to outside the core
-            else:
-                nextPosition = rods["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))]
+            
+            rod_name = "%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))
+            if not rod_name in rods:
+                nextPosition = {"name": "outside_core","actual_amount":info["neutrons"]*0.94,"count":0}
                 neighbors.append(nextPosition)
+                continue
 
+            if rod_name in rods_to_set:
+                nextPosition = {"name": rod_name,"actual_amount":rods_to_set[rod_name],"count":rods_to_set[rod_name]}
+            else:
+                nextPosition = {"name": rod_name,"actual_amount":rods[rod_name]["neutrons"],"count":0} #set to 0 so the rod can add later
 
-			# simulate transfer
+            neighbors.append(nextPosition)
 
-            for neighbor in neighbors:
-                nextPosition = neighbor
+		# simulate transfer
 
-                if neighbor == "fake it":
-                    nextPosition = {"neutrons" : 0}
+        for neighbor in neighbors:
 
-                def transport_equation():
-                    return (info["neutrons"] - nextPosition["neutrons"])*abs(mykStep-1)
+            def transport_equation():
+                return (info["neutrons"] - neighbor["actual_amount"])/10*mykStep
 
-                transported = transport_equation()
-                total_neutrons_exchangable = transported
+            transported = transport_equation()
 
-                total_neutrons_exchangable = max(min(transported,total_neutrons_exchangable-info["neutrons"]),1)
+            rods_to_set[neighbor["name"]] = neighbor["count"] + transported
 
-                if neighbor != "fake it":
-                    if "%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY)) in rods_to_set:
-                        rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))] += total_neutrons_exchangable
-                        rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))] = max(rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))],1)
-                    else:
-                        rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))] = nextPosition["neutrons"] + total_neutrons_exchangable
-                        rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))] = max(rods_to_set["%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))],1)
-
-                rods_to_set[rod] = max(rods_to_set[rod] - total_neutrons_exchangable,1)
+            rods_to_set[rod] = max(rods_to_set[rod] - transported,10)
 
 
     for rod in rods_to_set:
+        if rod == "outside_core":
+            continue
         info = rods[rod]
-        if rods_to_set[rod] < 1:
-            rods_to_set[rod] = 1
+        if rods_to_set[rod] < 10:
+            rods_to_set[rod] = 10
         info["neutrons"] = rods_to_set[rod]
 
 
