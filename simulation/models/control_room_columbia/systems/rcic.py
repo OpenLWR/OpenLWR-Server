@@ -1,10 +1,12 @@
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
 from simulation.models.control_room_columbia.general_physics import fluid
+from simulation.models.control_room_columbia.systems import ESFAS
 
 trip_permissive_delay = -1
 start_delay = -1
 initiation = False
+high_level_shutdown = False
 
 def run():
 
@@ -20,15 +22,28 @@ def run():
     if fluid.headers["rcic_exhaust_steam_line"]["pressure"]/6895 >= 30: #tech specs 3.3.6.1
         model.turbines["rcic_turbine"]["trip"] = True #this trips the RCIC turbine, and if the rupture disk blows, RCIC isolates
 
-    #FSAR states RCIC-V-45 being NOT full closed initiates a 15 second time delay for the low suction and discharge pressure trip and;
-    #initiates the startup ramp
     global start_delay
     global initiation
+    global high_level_shutdown
+
+    low_level_init = False
+
+    if reactor_inventory.rx_level_wr < ESFAS.RPV_LEVEL_2_in:
+        high_level_shutdown = False
+        low_level_init = True
+
+
+    if reactor_inventory.rx_level_wr > ESFAS.RPV_LEVEL_8_in:
+        high_level_shutdown = True
+
+
+    #FSAR states RCIC-V-45 being NOT full closed initiates a 15 second time delay for the low suction and discharge pressure trip and;
+    #initiates the startup ramp
 
     #Operator stated that the signal must be in for six seconds until the valves will begin to reposition. (Seal in light wont come in until that happens)
 
     #forces operator to depress for six seconds until the signal comes in
-    if initiation or start_delay == 0 or model.buttons["rcic_init"]["state"]:
+    if initiation or start_delay == 0 or model.buttons["rcic_init"]["state"] or low_level_init:
         model.alarms["rcic_actuated"]["alarm"] = True #should this come in?
         if start_delay == -1:
             start_delay = 60
@@ -40,7 +55,7 @@ def run():
             # RCIC-V-45 and RCIC-V-46 and;
             # RCIC-V-13 to open, RCIC-V-13,RCIC-V-13,RCIC-V-13,RCIC-V-13 to close, SW-P-1B to start, and RRA-FN-6 to start (permissive on RCIC-V-1 and RCIC-V-45 being open) and;
             # starts the barometric condenser vacuum pump
-            fluid.valves["rcic_v_45"]["sealed_in"] = True
+            fluid.valves["rcic_v_45"]["sealed_in"] = not high_level_shutdown
             if fluid.valves["rcic_v_45"]["percent_open"] != 0 and fluid.valves["rcic_v_1"]["percent_open"] != 0:
                 fluid.valves["rcic_v_13"]["sealed_in"] = True
     else:
