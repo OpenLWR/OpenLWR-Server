@@ -15,6 +15,7 @@ from server.server_events import server_rod_position_parameters_update_event
 from server.client_events import client_rod_select_update_event
 from server.server_events import server_chat_event
 from server.client_events import client_chat_event
+from server.client_events import client_voip_event
 from server.server_events import server_recorder_parameters_update_event
 from server.server_events import server_meter_parameters_update_event
 import json
@@ -136,6 +137,9 @@ def init_server(websocket):
 
                 case packets.ClientPackets.CHAT:
                     client_chat_event.handle(packet_data, token_object.username)
+
+                case packets.ClientPackets.VOIP:
+                    client_voip_event.handle(packet_data, token_object.username)
 
                 case packets.ClientPackets.RCON:
                     rcon.process_rcon(packet_data)
