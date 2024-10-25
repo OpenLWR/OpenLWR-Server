@@ -16,7 +16,7 @@ Can also be installed from the python website, however please make sure you chec
 <details>
   <summary>macOS</summary>
   
-NOTE: This requires version 12.7.5 "Monterey" or later\
+NOTE: macOS 13 "Ventura" or later is required to install python\
 Install [brew.sh](https://brew.sh/) via the following command:
 ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -35,7 +35,7 @@ brew install python@3.12
   
   <summary>Ubuntu/Debian</summary>
   
-NOTE: On stable releases of Debian, python3.12 is not available, you can either build 3.12 from source, or you can install python3.11 through apt (though 3.11 is not supported and may cause issues)
+NOTE: python3.12 is not available on debian stable, in this case, you must build python3.12 yourself in order to run the server. This process will not be covered by this guide.
 ```
 sudo apt install python3.12 python3-pip
 ```
@@ -66,10 +66,10 @@ sudo emerge --ask dev-lang/python:3.12 dev-python/pip
 <details>
   <summary>FreeBSD</summary>
   
-NOTE: python3.12 is not available, you can either build 3.12 from source, or you can install python 3.11 (though 3.11 is not supported and may cause issues)
+NOTE: python3.12 is not available, you must build python3.12 yourself in order to run the server. This process will not be covered by this guide.
 ```
 sudo pkg install python311
-python3.11 -m ensurepip --upgrade
+python3.12 -m ensurepip --upgrade
 ```
 </details>
 
