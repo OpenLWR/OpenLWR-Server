@@ -4,7 +4,7 @@ Serverside component of OpenLWR, handles communication with clients and runs the
 very big thanks to Goosey (fluff.goose on discord) for writing the original reactor physics in lua
 
 # How to run
-## Installing python3.12
+## Step 1: Installing python3.12
 
 <details>
   <summary>Windows</summary>
@@ -73,7 +73,7 @@ python3.12 -m ensurepip --upgrade
 ```
 </details>
 
-## Installing python dependencies
+## Step 2: Installing python dependencies
 cd into the directory where the server files are, then run the following command:
 ```
 python3.12 -m pip install -r requirements.txt
@@ -91,7 +91,7 @@ python3.12 -m pip install -r requirements.txt
 ```
 
 
-## Running the server
+## Step 3: Running the server
 In the server directory, run the following command:
 ```
 python3.12 main.py
