@@ -66,9 +66,9 @@ sudo emerge --ask dev-lang/python:3.12 dev-python/pip
 <details>
   <summary>FreeBSD</summary>
   
-NOTE: python3.12 is not available, you must build python3.12 yourself in order to run the server. This process will not be covered by this guide.
+NOTE: python3.12 is not available, you must build python3.12 yourself in order to run the server. This process will not be covered by this guide.\
+Once python3.12 is installed, you may install pip using the following command.
 ```
-sudo pkg install python311
 python3.12 -m ensurepip --upgrade
 ```
 </details>
