@@ -187,6 +187,8 @@ safety_relief = {
 }
 
 def run():
+    model.alarms["srv_open"]["alarm"] = False
+
     for valve_name in safety_relief:
         valve = safety_relief[valve_name]
         operator_off = False
@@ -198,6 +200,10 @@ def run():
         else:
             ads_open = False
 
+        relief_open = pressure.Pressures["Vessel"]/6895 >= valve["auto"]
+        relief_close = pressure.Pressures["Vessel"]/6895 <= valve["auto"] - 40 #closes 40 psig below the setpoint
+        safety_open = pressure.Pressures["Vessel"]/6895 >= valve["safety_auto"]
+
         if valve_name in model.switches:
             control_sw = model.switches[valve_name]
             if control_sw["position"] == 0:
@@ -205,19 +211,18 @@ def run():
             elif control_sw["position"] == 2:
                 operator_open = True
 
-            control_sw["lights"]["red"] =  valve["open_percent"] == 100
-            control_sw["lights"]["green"] =  valve["open_percent"] != 100
-
-        relief_open = pressure.Pressures["Vessel"]/6895 >= valve["auto"]
-        relief_close = pressure.Pressures["Vessel"]/6895 <= valve["auto"] - 40 #closes 40 psig below the setpoint
-        safety_open = pressure.Pressures["Vessel"]/6895 >= valve["safety_auto"]
+            control_sw["lights"]["red"] = operator_open or relief_open
+            control_sw["lights"]["green"] = not operator_open and not relief_open #light does not indicate if the valve is actually open (didnt we learn from TMI???)
 
         if ((operator_open or ads_open) and not operator_off) or (safety_open):
             valve["open_percent"] = max(min(valve["open_percent"]+10,100),0)
         elif (relief_open and not operator_off):
-            valve["open_percent"] = max(min(valve["open_percent"]+10,100),0)
+            valve["open_percent"] = max(min(valve["open_percent"]+50,100),0)
         elif relief_close or operator_off:
-            valve["open_percent"] = max(min(valve["open_percent"]-10,100),0)
+            valve["open_percent"] = max(min(valve["open_percent"]-50,100),0)
+
+        if valve["open_percent"] > 0:
+            model.alarms["srv_open"]["alarm"] = True
 
         #take pounds per hour
         #becomes kilograms per hour (0.4536)

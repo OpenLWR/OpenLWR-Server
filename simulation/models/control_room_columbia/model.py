@@ -476,6 +476,14 @@ alarms = {
         "group" : "2",
         "silenced" : False,
     },
+    "srv_open" : {
+        "alarm" : False,
+        "box": "P601_A2",
+		"window": "5-8",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "2",
+        "silenced" : False,
+    },
     "ads_div2_oos" : {
         "alarm" : False,
         "box": "P601_A2",
