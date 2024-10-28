@@ -3923,6 +3923,7 @@ from simulation.models.control_room_columbia.systems import control_rod_drive
 from simulation.models.control_room_columbia.systems import fire
 from simulation.models.control_room_columbia.systems import fire_control_panel
 from simulation.models.control_room_columbia.systems import ESFAS
+from simulation.models.control_room_columbia.general_physics import accidents
 control_rod_drive.initialize()
 loop_sequence.initialize()
 sync.initialize()
@@ -3974,6 +3975,8 @@ def model_run(delta):
     rod_worth_minimizer.run()
     fire.run(delta)
     fire_control_panel.run(delta)
+
+    accidents.run(delta)
     #from simulation.models.control_room_columbia.systems import fukushima
     #fukushima.run(runs)
     runs += 1

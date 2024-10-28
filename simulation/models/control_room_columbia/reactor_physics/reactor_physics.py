@@ -9,6 +9,7 @@ from simulation.models.control_room_columbia.reactor_physics import reactor_inve
 
 
 kgSteam = 10e2
+kgSteamDrywell = 0
 
 power_before_sd = 0
 time_since_sd = 0
