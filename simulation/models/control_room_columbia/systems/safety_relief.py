@@ -211,8 +211,8 @@ def run():
             elif control_sw["position"] == 2:
                 operator_open = True
 
-            control_sw["lights"]["red"] = operator_open or relief_open
-            control_sw["lights"]["green"] = not operator_open and not relief_open #light does not indicate if the valve is actually open (didnt we learn from TMI???)
+            control_sw["lights"]["red"] = bool(operator_open or relief_open)
+            control_sw["lights"]["green"] = bool(not operator_open and not relief_open) #light does not indicate if the valve is actually open (didnt we learn from TMI???)
 
         if ((operator_open or ads_open) and not operator_off) or (safety_open):
             valve["open_percent"] = max(min(valve["open_percent"]+10,100),0)
