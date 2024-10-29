@@ -53,7 +53,7 @@ def run(delta):
 
     #calculate the level of the supp pool vs the downcomer exits
 
-    downcomer_level = 18 #maybe correct?
+    downcomer_level = 10 #maybe correct?
 
     felt_water_column = max(supp_pool_level - downcomer_level,0)
     water_pressure = felt_water_column * 2989.067 #ft of h2o to pascal

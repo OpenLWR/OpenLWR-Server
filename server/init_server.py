@@ -16,6 +16,7 @@ from server.client_events import client_rod_select_update_event
 from server.server_events import server_chat_event
 from server.client_events import client_chat_event
 from server.client_events import client_voip_event
+from server.client_events import client_recorder_parameters_update_event
 from server.server_events import server_recorder_parameters_update_event
 from server.server_events import server_meter_parameters_update_event
 import json
@@ -62,6 +63,8 @@ def init_server(websocket):
                 for recorder in model_recorders:
                     recorders[recorder] = {
                         "channels":model_recorders[recorder].channels,
+                        "buttons":model_recorders[recorder].buttons,
+                        "page":model_recorders[recorder].page
                     }
 
                 model_rods = copy.deepcopy(model.rods) #sanitize rods sent to the client
@@ -145,7 +148,7 @@ def init_server(websocket):
                     rcon.process_rcon(packet_data)
 
                 case packets.ClientPackets.RECORDER:
-                    log.info("Client tried to use a packet that is not handled yet.")
+                    client_recorder_parameters_update_event.handle(packet_data)
 
     except websockets.exceptions.ConnectionClosedOK:
         manager.disconnect(token_str)

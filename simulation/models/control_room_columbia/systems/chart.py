@@ -2,27 +2,27 @@
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
 
-dx1000 = {
-    "pages" : {
-        1:["1_UNIT","2_UNIT","1_NAME","2_NAME","1_VALUE","2_VALUE"]
-    },
-    "buttons" : {},
-}
-
-class Recorder:
+class RecorderDX1000:
     def __init__(self,name):
         self.name = name
         self.channels = {}
         self.channel_alarms = {}
-        self.allow_reprogram = True
+        self.allow_reprogram = False
         self.sampling_enabled = False #Disables drawing of graphs
 
         self.page = 1
-        self.page_info = {}
+
+        self.buttons = {
+            "ENTER" : False,
+            "LEFTARROW" : False,
+            "RIGHTARROW" : False,
+            "UPARROW" : False,
+            "DOWNARROW" : False,
+            "MENU" : False,
+            "ESCAPE" : False,
+        }
 
         model.recorders[self.name] = self
-
-    #def button_updated(self,name):
 
     def set_allow_reprogram(self,allow):
         self.allow_reprogram = allow
@@ -36,6 +36,10 @@ class Recorder:
     def set_channel_value(self,channel_name,value):
         self.channels[channel_name]["value"] = value
 
+    def button_updated(self,button,state):
+        if button in self.buttons:
+            self.buttons[button] = state
+
     def calculate(self):
         for channel in self.channels:
             channel = self.channels[channel]
@@ -46,14 +50,33 @@ class Recorder:
             else:
                 channel["text"] = str(round(channel["value"],3))
 
-        #TODO: Alarms
+        #buttons
 
-        #TODO: Trend
+        if self.buttons["MENU"]:
 
-        #TODO: Different pages
+            #any value display page to settings page
+            if self.page == 1 or self.page == 2:
+                self.page = 3
+
+        if self.buttons["ESCAPE"]:
+
+            #menu page back to regular
+            #TODO: save the view selected
+            if self.page == 3:
+                self.page = 1
+
+
+
+    def change_page(self,page):
+        self.page = page
+
+    #TODO: Alarms
+
+    #TODO: Trend
+
 
 def initialize():
-    a = Recorder("601RPV")
+    a = RecorderDX1000("601RPV")
     a.add_channel("RPV LEVEL WR","INCHES",0,20,183) #TODO: what were the limits of RPV WR?
 
 
