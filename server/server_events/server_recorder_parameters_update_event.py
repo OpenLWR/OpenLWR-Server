@@ -10,7 +10,8 @@ def fire(recorders):
     for recorder in recorders:
         recorder_table[recorder] = {
             "channels":recorders[recorder].channels,
-            "page":recorders[recorder].page
+            "page":recorders[recorder].page,
+            "elements":recorders[recorder].elements
         }
 
     manager.broadcast_packet(packet_helper.build(packets.ServerPackets.RECORDER, json.dumps(recorder_table)))

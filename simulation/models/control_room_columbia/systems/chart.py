@@ -1,6 +1,6 @@
-
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
+from simulation.models.control_room_columbia.reactor_physics import pressure
 
 class RecorderDX1000:
     def __init__(self,name):
@@ -13,7 +13,7 @@ class RecorderDX1000:
         self.page = 1
 
         self.buttons = {
-            "ENTER" : False,
+            "ENTER" : False, #ENTER/DISP
             "LEFTARROW" : False,
             "RIGHTARROW" : False,
             "UPARROW" : False,
@@ -21,6 +21,12 @@ class RecorderDX1000:
             "MENU" : False,
             "ESCAPE" : False,
         }
+        self.elements = { #additional stuff on screen that isnt a page change
+            "MODE_SELECT":{
+                "SEL":1,
+                "SHOW":False,
+            },
+        } 
 
         model.recorders[self.name] = self
 
@@ -52,6 +58,14 @@ class RecorderDX1000:
 
         #buttons
 
+        if self.buttons["ENTER"]:
+            #if we're on the normal value pages, open the selection box to go to another
+            if (self.page == 1 or self.page == 2) and not self.elements["MODE_SELECT"]["SHOW"]:
+                self.elements["MODE_SELECT"]["SHOW"] = True
+            elif self.elements["MODE_SELECT"]["SHOW"] and (self.page == 1 or self.page == 2):
+                self.elements["MODE_SELECT"]["SHOW"] = False
+                self.page = self.elements["MODE_SELECT"]["SEL"]
+
         if self.buttons["MENU"]:
 
             #any value display page to settings page
@@ -65,8 +79,6 @@ class RecorderDX1000:
             if self.page == 3:
                 self.page = 1
 
-
-
     def change_page(self,page):
         self.page = page
 
@@ -77,11 +89,13 @@ class RecorderDX1000:
 
 def initialize():
     a = RecorderDX1000("601RPV")
-    a.add_channel("RPV LEVEL WR","INCHES",0,20,183) #TODO: what were the limits of RPV WR?
+    a.add_channel("RPV LEVEL WR","INCHES",0,-150,60)
+    a.add_channel("RPV PRESS","PSIG",0,0,5000)
 
 
 def run():
     model.recorders["601RPV"].channels["RPV LEVEL WR"]["value"] = reactor_inventory.rx_level_wr
+    model.recorders["601RPV"].channels["RPV PRESS"]["value"] = pressure.Pressures["Vessel"]/6895
 
     for recorder in model.recorders:
         model.recorders[recorder].calculate()

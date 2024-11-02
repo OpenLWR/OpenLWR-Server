@@ -64,7 +64,8 @@ def init_server(websocket):
                     recorders[recorder] = {
                         "channels":model_recorders[recorder].channels,
                         "buttons":model_recorders[recorder].buttons,
-                        "page":model_recorders[recorder].page
+                        "page":model_recorders[recorder].page,
+                        "elements":model_recorders[recorder].elements
                     }
 
                 model_rods = copy.deepcopy(model.rods) #sanitize rods sent to the client
