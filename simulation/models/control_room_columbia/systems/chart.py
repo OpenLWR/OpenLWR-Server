@@ -97,7 +97,7 @@ def initialize():
     a.add_channel("FUEL ZONE COMP","INCHES",-110,-300,-110)
 
     a = RecorderDX1000("601WWP")
-    a.add_channel("WETWELL PRESSURE","PSIG",-10,100,-110) #find proper ranges
+    a.add_channel("WETWELL PRESSURE","PSIG",0,-10,100) #find proper ranges
 
     a = RecorderDX1000("601DWP1")
     a.add_channel("DRYWELL RANGE 1","PSIG",0,-5,3)
