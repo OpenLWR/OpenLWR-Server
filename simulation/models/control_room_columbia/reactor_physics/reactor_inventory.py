@@ -26,6 +26,7 @@ def mm_to_inches(value):
 
 rx_level_wr = 35
 rx_level_nr = 35
+rx_level_fzr = 35
 
 waterMass = 928500.26*(1/3)#Equipment in the RPV takes up volume
 waterMass = waterMass*(2/3) #so we start at a reasonable level
@@ -38,6 +39,7 @@ def run(delta):
     from simulation.models.control_room_columbia.reactor_physics  import pressure
     global rx_level_wr
     global rx_level_nr
+    global rx_level_fzr
     global waterMass
     global limit_press
     boilingPoint = steam_functions.getBoilingPointForWater(pressure.Pressures["Vessel"])
@@ -81,13 +83,12 @@ def run(delta):
     raw_level = mm_to_inches(calculate_level_cylinder(Vessel_Diameter,waterMass))
     rx_level_wr = raw_level-528.55
 
+    rx_level_fzr = min(-110,rx_level_wr) #find the bottom of this range
+
     if rx_level_wr > 0:
         rx_level_nr = rx_level_wr
     else:
         rx_level_nr = 0
-
-    model.values["rpv_level_recorder_1"] = round(rx_level_wr,1)
-    model.values["rpv_pressure_recorder_1"] = round(pressure.Pressures["Vessel"]/6895,1)
     
 def add_water(kg:int):
     global waterMass

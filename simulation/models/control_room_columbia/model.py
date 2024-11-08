@@ -2857,9 +2857,6 @@ values = {
     "rhr_c_flow" : 0,
     "rhr_c_press" : 0,
 
-    "rpv_level_recorder_1" : 0,
-    "rpv_pressure_recorder_1" : 0,
-
     #Neutron monitoring recorders
 
     "irm_a_recorder" : 0,

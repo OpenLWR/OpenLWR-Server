@@ -95,7 +95,8 @@ def run(rods,buttons):
 
 						#physics stuff
 	  					"neutrons" : 0,#250000000000,
-						"neutrons_last" : 0,#250000000000,
+						"measured_neutrons" : 0,#250000000000,
+						"measured_neutrons_last" : 0,#250000000000,
 				}
 
 				if ((x/4) - 0.5) % 2 != 0: #generate LPRMs

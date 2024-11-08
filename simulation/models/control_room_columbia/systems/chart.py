@@ -92,10 +92,31 @@ def initialize():
     a.add_channel("RPV LEVEL WR","INCHES",0,-150,60)
     a.add_channel("RPV PRESS","PSIG",0,0,5000)
 
+    a = RecorderDX1000("601FZR")
+    a.add_channel("FUEL ZONE LEVEL","INCHES",-110,-300,-110)
+    a.add_channel("FUEL ZONE COMP","INCHES",-110,-300,-110)
+
+    a = RecorderDX1000("601WWP")
+    a.add_channel("WETWELL PRESSURE","PSIG",-10,100,-110) #find proper ranges
+
+    a = RecorderDX1000("601DWP1")
+    a.add_channel("DRYWELL RANGE 1","PSIG",0,-5,3)
+    a.add_channel("DRYWELL RANGE 2","PSIG",0,0,25)
+    a.add_channel("DRYWELL RANGE 3","PSIG",0,0,180)
+
 
 def run():
     model.recorders["601RPV"].channels["RPV LEVEL WR"]["value"] = reactor_inventory.rx_level_wr
     model.recorders["601RPV"].channels["RPV PRESS"]["value"] = pressure.Pressures["Vessel"]/6895
+
+    model.recorders["601FZR"].channels["FUEL ZONE LEVEL"]["value"] = reactor_inventory.rx_level_fzr
+    model.recorders["601FZR"].channels["FUEL ZONE COMP"]["value"] = reactor_inventory.rx_level_fzr #apparently compensated so it works at all pressures?
+
+    model.recorders["601WWP"].channels["WETWELL PRESSURE"]["value"] = -11 #intentionally -Over
+
+    model.recorders["601DWP1"].channels["DRYWELL RANGE 1"]["value"] = round(pressure.Pressures["Drywell"]/6895,2)
+    model.recorders["601DWP1"].channels["DRYWELL RANGE 2"]["value"] = round(pressure.Pressures["Drywell"]/6895,2)
+    model.recorders["601DWP1"].channels["DRYWELL RANGE 3"]["value"] = round(pressure.Pressures["Drywell"]/6895,2)
 
     for recorder in model.recorders:
         model.recorders[recorder].calculate()

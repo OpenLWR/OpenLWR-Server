@@ -14,8 +14,15 @@ kgSteamDrywell = 0
 power_before_sd = 0
 time_since_sd = 0
 
+time_run = 0
+
 def run(delta,rods):
     #TODO: Improve code quality, add comments, etc
+
+
+    global time_run
+
+    time_run+=delta
 
     CoreFlow = ((model.pumps["rrc_p_1a"]["flow"] + model.pumps["rrc_p_1b"]["flow"]) / 100000) * 100
     waterMass = reactor_inventory.waterMass
@@ -33,15 +40,16 @@ def run(delta,rods):
         rod_num+=1
         info = rods[rod]
         NeutronFlux = max(info["neutrons"], 100)
-        info["neutrons_last"] = info["neutrons"]
 
-        mykEffArgs = fuel.get(waterMass, abs((info["insertion"]/48)-1), NeutronFlux, 60 ,CoreFlow,info["neutrons"])
+        mykEffArgs = fuel.get(waterMass, abs((info["insertion"]/48)-1), NeutronFlux, 60 ,CoreFlow)
         mykStep = mykEffArgs["kStep"]
         avg_keff += mykEffArgs["kEff"]
         if rod in rods_to_set:
             rods_to_set[rod] = max((info["neutrons"]+rods_to_set[rod])*mykStep,10)
         else:
             rods_to_set[rod] = max(info["neutrons"]*mykStep,10)
+
+        info["measured_neutrons"] = info["neutrons"]
 
         energy = info["neutrons"]/(2500000000000)
         avg_power += energy
@@ -75,7 +83,7 @@ def run(delta,rods):
             rod_name = "%s-%s" % (str(info["x"]+dirX),str(info["y"]+dirY))
             if not rod_name in rods:
                 nextPosition = {"name": "outside_core","actual_amount":info["neutrons"]*0.94,"count":0}
-                neighbors.append(nextPosition)
+                #neighbors.append(nextPosition)
                 continue
 
             if rod_name in rods_to_set:
@@ -93,6 +101,8 @@ def run(delta,rods):
                 return (info["neutrons"] - neighbor["actual_amount"])/10*mykStep
 
             transported = transport_equation()
+
+
 
             rods_to_set[neighbor["name"]] = neighbor["count"] + transported
 
@@ -114,6 +124,8 @@ def run(delta,rods):
 
     global time_since_sd
     global power_before_sd
+
+    
 
     if avg_keff < 0.85 or avg_power < 0.02:
         #print(avg_keff)
@@ -148,5 +160,8 @@ def run(delta,rods):
     new_temp += TempNow
 
     model.reactor_water_temperature += new_temp-old_temp
+
+    if time_run >= 1:
+        time_run = 0
 
     

@@ -313,18 +313,18 @@ def run(alarms,buttons,indicators,rods,switches,values):
     for srm_name in source_range_monitors:
         srm = source_range_monitors[srm_name]
         
-        srm["counts"] = rods[srm["rod"]]["neutrons"]
+        srm["counts"] = rods[srm["rod"]]["measured_neutrons"]
         srm["counts"] = srm["counts"]/((srm["withdrawal_percent"]**9)+1)
 
         try:
-            srm["counts_log"] = math.log(rods[srm["rod"]]["neutrons"]/rods[srm["rod"]]["neutrons_last"])
+            srm["counts_log"] = math.log(rods[srm["rod"]]["measured_neutrons"]/rods[srm["rod"]]["measured_neutrons_last"])
         except:
             pass
         if srm["counts_log"] != 0:
             srm["period"] = 1/srm["counts_log"]
         else:
             srm["period"] = math.inf
-        #print(srm["period"])
+        print(srm["period"])
 
     for irm_name in intermediate_range_monitors:
         irm = intermediate_range_monitors[irm_name]
