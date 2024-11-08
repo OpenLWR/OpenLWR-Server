@@ -71,7 +71,8 @@ def init_server(websocket):
                 model_rods = copy.deepcopy(model.rods) #sanitize rods sent to the client
                 for rod in model_rods:
                     model_rods[rod].pop("neutrons")
-                    model_rods[rod].pop("neutrons_last")
+                    model_rods[rod].pop("measured_neutrons_last")
+                    model_rods[rod].pop("measured_neutrons")
                     model_rods[rod].pop("driftto")
                     model_rods[rod].pop("driving")
                     model_rods[rod].pop("reed_switch_fail")
