@@ -332,8 +332,6 @@ def run(alarms,buttons,indicators,rods,switches,values):
         
         power = (rods[irm["rod"]]["neutrons"]/1000000)*40
 
-        power = ((100000000)/1000000)*40
-
         irm["power"] = power*abs((irm["withdrawal_percent"]/100)-1)
 
         irm["range"] = model.switches[irm["range_switch"]]["position"]+1
