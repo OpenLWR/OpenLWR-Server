@@ -332,16 +332,15 @@ def run(alarms,buttons,indicators,rods,switches,values):
         
         power = (rods[irm["rod"]]["neutrons"]/1000000)*40
 
+        power = ((100000000)/1000000)*40
+
         irm["power"] = power*abs((irm["withdrawal_percent"]/100)-1)
 
         irm["range"] = model.switches[irm["range_switch"]]["position"]+1
 
-        irm_range = 1
         #this makes it so the odd ranges are the same range as the last even range.
-        if irm["range"] % 2 == 0:
-            irm_range += (irm["range"]/2)
-        else:
-            irm_range += ((irm["range"]-1)/2)
+        irm_range = math.floor(irm["range"]/2)
+        irm_range += 1
 
         range_divider = (10**irm_range)
 
