@@ -327,25 +327,17 @@ def run(alarms,buttons,indicators,rods,switches,values):
 
     for irm_name in intermediate_range_monitors:
         irm = intermediate_range_monitors[irm_name]
-
-        #IRM should indicate around 40% range 1 at 10^5 SRM
         
-        power = (rods[irm["rod"]]["neutrons"]/1000000)*40
-
-        irm["power"] = power*abs((irm["withdrawal_percent"]/100)-1)
-
         irm["range"] = model.switches[irm["range_switch"]]["position"]+1
 
-        #this makes it so the odd ranges are the same range as the last even range.
-        irm_range = math.floor(irm["range"]/2)
-        irm_range += 1
+        IRM_power = (rods[irm["rod"]]["neutrons"]/2500000000000)*100 #reactor power
 
-        range_divider = (10**irm_range)
+        IRM_power = (IRM_power / 40) * math.pow( math.sqrt( 10 ) , 10 - irm["range"] )
 
         if irm["range"] % 2 == 0:
-            irm["power"] = min(irm["power"]/range_divider,125) #0-125 scale
+            irm["power"] = min(IRM_power,125) #0-125 scale
         else:
-            scale = irm["power"]/range_divider
+            scale = IRM_power
             scale = scale/40
             scale = scale*125
             irm["power"] = min(scale,125) #0-40 scale (display shows it as if it was a 0-125 scale.)
