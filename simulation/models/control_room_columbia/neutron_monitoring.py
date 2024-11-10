@@ -349,25 +349,32 @@ def run(alarms,buttons,indicators,rods,switches,values):
         if irm["power"] <= 5 and ms_in_run == False and irm["range"] != 1:
             #downscale
             model.alarms["irm_downscale"]["alarm"] = True
-            reactor_protection_system.add_withdraw_block("irm_%s_upscale" % irm_name)
+            model.switches[irm["range_switch"]]["lights"]["DOWNSCALE"] = True
+            reactor_protection_system.add_withdraw_block("irm_%s_downscale" % irm_name)
         else:
-            reactor_protection_system.remove_withdraw_block("irm_%s_upscale" % irm_name)
+            model.switches[irm["range_switch"]]["lights"]["DOWNSCALE"] = False
+            reactor_protection_system.remove_withdraw_block("irm_%s_downscale" % irm_name)
 
         if irm["power"] >= 108 and ms_in_run == False:
             #upscale
             model.alarms["irm_upscale"]["alarm"] = True
+            model.switches[irm["range_switch"]]["lights"]["UPSCALE"] = True
             reactor_protection_system.add_withdraw_block("irm_%s_upscale" % irm_name)
         else:
+            model.switches[irm["range_switch"]]["lights"]["UPSCALE"] = False
             reactor_protection_system.remove_withdraw_block("irm_%s_upscale" % irm_name)
 
-        if irm["power"] >= 120 and ms_in_run == False:#bypass the 0-40 scale #TODO: theres some special logic here to check if the APRM isnt downscale
+        if irm["power"] >= 120 and ms_in_run == False:#TODO: theres some special logic here to check if the APRM isnt downscale
             #upscale trip/inop
+            model.switches[irm["range_switch"]]["lights"]["UPSCALE_INOP"] = True
             if irm_name in ["A","C","E","G"]:
                 model.alarms["irm_aceg_upscl_trip_or_inop"]["alarm"] = True
                 scram_reactor_a = True
             else:
                 model.alarms["irm_bdfh_upscl_trip_or_inop"]["alarm"] = True
                 scram_reactor_b = True
+        else:
+            model.switches[irm["range_switch"]]["lights"]["UPSCALE_INOP"] = False
 
 
     for lprm_name in local_power_range_monitors:
