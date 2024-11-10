@@ -387,6 +387,7 @@ def initialize():
     Source(name="BPA115",voltage=115000,frequency=60) #Benton 115kv line
     Source(name="DG1",voltage=0,frequency=0)
     Source(name="DG2",voltage=0,frequency=0)
+    Source(name="DG3",voltage=0,frequency=0)
     Source(name="GEN",voltage=0,frequency=0)
 
     Source(name="ASDA",voltage=0,frequency=0)
@@ -520,6 +521,10 @@ def initialize():
 
     breakers["cb_dg2_8"].set_running(breakers["cb_8dg2"])
 
+    #DG3
+
+    Breaker(name="cb_dg3_4",incoming=sources["DG3"],running=busses["4"])
+
     #SM-7 loads
 
     Bus(name="73",voltage=480,frequency=60,rated_voltage=480)
@@ -620,7 +625,13 @@ def run():
         if bus.info["voltage"]/bus.info["rated_voltage"] < 0.69:
             #TODO: load shedding
 
-            #TODO: Backup Transformer
+            if bus.name == "4":
+                diesel_generator.dg3.start(auto = True)
+
+                if diesel_generator.dg3.dg["voltage"] >= 4160: #HPCS immediately transfers, right?
+                    breakers["cb_dg3_4"].close()
+
+                breakers["cb_4_2"].open()
 
             if bus.name == "7":
                 diesel_generator.dg1.start(auto = True)

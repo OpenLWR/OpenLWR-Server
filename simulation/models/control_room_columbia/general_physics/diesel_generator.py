@@ -198,7 +198,7 @@ def initialize():
     global dg3
     dg1 = DieselGenerator("DG1",cs = "diesel_gen_1",output = "cb_dg1_7",inertia=36000,horsepower=6000)
     dg2 = DieselGenerator("DG2",cs = "diesel_gen_2",output = "cb_dg2_8",inertia=36000,horsepower=6000)
-    #dg3 = DieselGenerator("DG3",cs = "",output = "")
+    dg3 = DieselGenerator("DG3",cs = "diesel_gen_3",output = "cb_dg3_4",inertia=36000,horsepower=6000)
 
 def run():
     dg1.check_controls()
@@ -209,4 +209,9 @@ def run():
     dg2.check_controls()
     dg2.calculate()
     dg2.governor()
+    #dg2.volt_reg()
+
+    dg3.check_controls()
+    dg3.calculate()
+    dg3.governor()
     #dg2.volt_reg()

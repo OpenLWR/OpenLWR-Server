@@ -2277,6 +2277,37 @@ switches = {
         "momentary" : False,
     },
 
+    #DG3
+
+    "cb_dg3_4": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {     
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : False,
+    },
+    "diesel_gen_3": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : True,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : False,
+    },
+
     #SM-7 loads
 
     "cb_7_73": {
