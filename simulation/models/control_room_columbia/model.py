@@ -276,6 +276,22 @@ alarms = {
     },
 
     #P602.A6
+    "recirc_a_pump_trip_atws_initiated" : {
+        "alarm" : False,
+        "box": "P602_A6",
+		"window": "1-2",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
+    "recirc_b_pump_trip_atws_initiated" : {
+        "alarm" : False,
+        "box": "P602_A6",
+		"window": "1-6",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
     "recirc_a_or_b_high_flow_delta" : {
         "alarm" : False,
         "box": "P602_A6",

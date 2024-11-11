@@ -1,6 +1,8 @@
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.general_physics import fluid
 from simulation.models.control_room_columbia.general_physics import ac_power
+from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
+from simulation.models.control_room_columbia.systems import ESFAS
 
 asda = {
     "demand" : 15,
@@ -38,6 +40,19 @@ asdb = {
     },
 }
 
+def runback_15hz():
+    """runback all recirc pumps to min speed"""
+    asda["auto"] = False
+    asdb["auto"] = False
+    asda["demand"] = 15
+    asdb["demand"] = 15
+
+def trip_atws():
+    """trip all recirculation pumps (atws)"""
+    ac_power.breakers["cb_rpt_4a"].open()
+    ac_power.breakers["cb_rpt_4b"].open()
+    
+
 def start_permissives_a():
     if not asda["demand"] == 15:
         return False
@@ -69,6 +84,23 @@ def start_permissives_b():
     return True
 
 def run():
+
+    if reactor_inventory.rx_level_wr <= ESFAS.RPV_LEVEL_3_in:
+        #runback to 15hz
+        model.alarms["rpv_level_low_limit"]["alarm"] = True
+        runback_15hz()
+    else:
+        model.alarms["rpv_level_low_limit"]["alarm"] = False
+
+    if reactor_inventory.rx_level_wr <= ESFAS.RPV_LEVEL_1_in:
+        #trip on atws conditions
+        model.alarms["recirc_a_pump_trip_atws_initiated"]["alarm"] = True
+        model.alarms["recirc_b_pump_trip_atws_initiated"]["alarm"] = True
+        trip_atws()
+    else:
+        model.alarms["recirc_a_pump_trip_atws_initiated"]["alarm"] = False
+        model.alarms["recirc_b_pump_trip_atws_initiated"]["alarm"] = False
+
     #Should we actually properly simulate the ASD?
 
     if ac_power.busses["6"].is_voltage_at_bus(4160) and asdb["started"]:
