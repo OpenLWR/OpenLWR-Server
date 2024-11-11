@@ -21,6 +21,15 @@ class RecorderDX1000:
             "MENU" : False,
             "ESCAPE" : False,
         }
+        self.buttons_pressed = {
+            "ENTER" : False, #ENTER/DISP
+            "LEFTARROW" : False,
+            "RIGHTARROW" : False,
+            "UPARROW" : False,
+            "DOWNARROW" : False,
+            "MENU" : False,
+            "ESCAPE" : False,
+        }
         self.elements = { #additional stuff on screen that isnt a page change
             "MODE_SELECT":{
                 "SEL":1,
@@ -58,7 +67,7 @@ class RecorderDX1000:
 
         #buttons
 
-        if self.buttons["ENTER"]:
+        if self.buttons["ENTER"] and not self.buttons_pressed["ENTER"]:
             #if we're on the normal value pages, open the selection box to go to another
             if (self.page == 1 or self.page == 2) and not self.elements["MODE_SELECT"]["SHOW"]:
                 self.elements["MODE_SELECT"]["SHOW"] = True
@@ -66,18 +75,24 @@ class RecorderDX1000:
                 self.elements["MODE_SELECT"]["SHOW"] = False
                 self.page = self.elements["MODE_SELECT"]["SEL"]
 
-        if self.buttons["MENU"]:
+        if self.buttons["MENU"] and not self.buttons_pressed["MENU"]:
 
             #any value display page to settings page
             if self.page == 1 or self.page == 2:
                 self.page = 3
 
-        if self.buttons["ESCAPE"]:
+        if self.buttons["ESCAPE"] and not self.buttons_pressed["ESCAPE"]:
 
             #menu page back to regular
             #TODO: save the view selected
             if self.page == 3:
                 self.page = 1
+
+        for button in self.buttons:
+            if self.buttons[button]:
+                self.buttons_pressed[button] = True
+            else:
+                self.buttons_pressed[button] = False
 
     def change_page(self,page):
         self.page = page
