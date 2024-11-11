@@ -3049,6 +3049,8 @@ indicators = {
     "cr_light_normal_2": True,
     "cr_light_normal_3": True,
     "cr_light_normal_4": True,
+    "cr_light_normal_5": True,
+    "cr_light_normal_6": True,
     "cr_light_emergency": False,
 
     #APRM Status

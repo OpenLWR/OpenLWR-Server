@@ -584,10 +584,13 @@ def run():
 
     #TODO: Move elsewhere
 
-    model.indicators["cr_light_normal_1"] = bool(busses["7"].is_voltage_at_bus(3000))
-    model.indicators["cr_light_normal_2"] = bool(busses["8"].is_voltage_at_bus(3000))
-    model.indicators["cr_light_normal_3"] = busses["7e"].is_voltage_at_bus(240)
+    model.indicators["cr_light_normal_1"] = bool(busses["11"].is_voltage_at_bus(240)) #not DG-Backed
+    model.indicators["cr_light_normal_2"] = bool(busses["31"].is_voltage_at_bus(240))
+    model.indicators["cr_light_normal_3"] = busses["7e"].is_voltage_at_bus(240) #standby or "emergency/normal" lighting (half of the system)
     model.indicators["cr_light_normal_4"] = busses["8e"].is_voltage_at_bus(240)
+
+    model.indicators["cr_light_normal_5"] = busses["7"].is_voltage_at_bus(3000) #standby or "emergency/normal" lighting (half of the system) (not load-shed)
+    model.indicators["cr_light_normal_6"] = busses["8"].is_voltage_at_bus(3000)
     model.indicators["cr_light_emergency"] = not (busses["7"].is_voltage_at_bus(3000) and busses["8"].is_voltage_at_bus(3000)) #Emergency Egress Lighting
     
     #TODO: divisional emergency lights
