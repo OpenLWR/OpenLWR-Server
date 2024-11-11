@@ -2928,28 +2928,6 @@ values = {
     "rhr_c_flow" : 0,
     "rhr_c_press" : 0,
 
-    #Neutron monitoring recorders
-
-    "irm_a_recorder" : 0,
-    "aprm_a_recorder" : 0,
-    "irm_c_recorder" : 0,
-    "aprm_c_recorder" : 0,
-
-    "irm_e_recorder" : 0,
-    "aprm_e_recorder" : 0,
-    "irm_g_recorder" : 0,
-    "rbm_a_recorder" : 0,
-
-    "irm_b_recorder" : 0,
-    "aprm_b_recorder" : 0,
-    "irm_d_recorder" : 0,
-    "aprm_d_recorder" : 0,
-
-    "irm_f_recorder" : 0,
-    "aprm_f_recorder" : 0,
-    "irm_h_recorder" : 0,
-    "rbm_b_recorder" : 0,
-
     "rcic_flow" : 0,
 
     "rcic_rpm" : 0,

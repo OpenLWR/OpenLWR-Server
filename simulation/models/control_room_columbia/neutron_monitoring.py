@@ -246,18 +246,6 @@ average_power_range_monitors = {
         "upscale_setpoint" : 108,
         "upscale_trip_setpoint" : 118,
     },
-    "E" : {
-        "power" : 0,
-        "downscale_setpoint" : 3,
-        "upscale_setpoint" : 108,
-        "upscale_trip_setpoint" : 118,
-    },
-    "F" : {
-        "power" : 0,
-        "downscale_setpoint" : 3,
-        "upscale_setpoint" : 108,
-        "upscale_trip_setpoint" : 118,
-    },
 }
 
 rod_block_monitors = { #TODO
@@ -648,25 +636,3 @@ def run(alarms,buttons,indicators,rods,switches,values):
     model.values["srm_b_period"] = source_range_monitors["B"]["counts_log"]
     model.values["srm_c_period"] = source_range_monitors["C"]["counts_log"]
     model.values["srm_d_period"] = source_range_monitors["D"]["counts_log"]
-
-    #TODO: fix this below this is so fucking messy
-
-    model.values["irm_a_recorder"] = round(intermediate_range_monitors["A"]["power"],1)
-    model.values["aprm_a_recorder"] = round(average_power_range_monitors["A"]["power"],1)
-    model.values["irm_c_recorder"] = round(intermediate_range_monitors["C"]["power"],1)
-    model.values["aprm_c_recorder"] = round(average_power_range_monitors["C"]["power"],1)
-
-    model.values["irm_e_recorder"] = round(intermediate_range_monitors["E"]["power"],1)
-    model.values["aprm_e_recorder"] = round(average_power_range_monitors["E"]["power"],1)
-    model.values["irm_g_recorder"] = round(intermediate_range_monitors["G"]["power"],1)
-    model.values["rbm_a_recorder"] = round(rod_block_monitors["A"]["power"],1)
-
-    model.values["irm_b_recorder"] = round(intermediate_range_monitors["B"]["power"],1)
-    model.values["aprm_b_recorder"] = round(average_power_range_monitors["B"]["power"],1)
-    model.values["irm_d_recorder"] = round(intermediate_range_monitors["D"]["power"],1)
-    model.values["aprm_d_recorder"] = round(average_power_range_monitors["D"]["power"],1)
-
-    model.values["irm_f_recorder"] = round(intermediate_range_monitors["F"]["power"],1)
-    model.values["aprm_f_recorder"] = round(average_power_range_monitors["F"]["power"],1)
-    model.values["irm_h_recorder"] = round(intermediate_range_monitors["H"]["power"],1)
-    model.values["rbm_b_recorder"] = round(rod_block_monitors["B"]["power"],1)

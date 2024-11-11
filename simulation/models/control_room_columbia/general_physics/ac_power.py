@@ -584,11 +584,13 @@ def run():
 
     #TODO: Move elsewhere
 
-    model.indicators["cr_light_normal_1"] = busses["7"].is_voltage_at_bus(3000)
-    model.indicators["cr_light_normal_2"] = busses["8"].is_voltage_at_bus(3000)
+    model.indicators["cr_light_normal_1"] = bool(busses["7"].is_voltage_at_bus(3000))
+    model.indicators["cr_light_normal_2"] = bool(busses["8"].is_voltage_at_bus(3000))
     model.indicators["cr_light_normal_3"] = busses["7e"].is_voltage_at_bus(240)
     model.indicators["cr_light_normal_4"] = busses["8e"].is_voltage_at_bus(240)
-    model.indicators["cr_light_emergency"] = not (busses["7"].is_voltage_at_bus(3000) and busses["8"].is_voltage_at_bus(3000)) #TODO: divisional emergency lights
+    model.indicators["cr_light_emergency"] = not (busses["7"].is_voltage_at_bus(3000) and busses["8"].is_voltage_at_bus(3000)) #Emergency Egress Lighting
+    
+    #TODO: divisional emergency lights
 
     #graph.add("DG1 Voltage",sources["DG1"].info["voltage"])
     #graph.add("DG1 Field Voltage",diesel_generator.dg1.dg["field_voltage"])

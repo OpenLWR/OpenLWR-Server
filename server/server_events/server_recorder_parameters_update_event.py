@@ -11,7 +11,8 @@ def fire(recorders):
         recorder_table[recorder] = {
             "channels":recorders[recorder].channels,
             "page":recorders[recorder].page,
-            "elements":recorders[recorder].elements
+            "elements":recorders[recorder].elements,
+            "display_on":recorders[recorder].display_on,
         }
 
     manager.broadcast_packet(packet_helper.build(packets.ServerPackets.RECORDER, json.dumps(recorder_table)))
