@@ -149,7 +149,8 @@ class RPS_Logic:
         self.Train = TrainChannel
         self.ModeSwTimer = 0
         self.RPS_Trip_In = False
-        pass
+        self.High_Dw_Press = EventHandler() #TOOD: Integrate into the RPS_RUN
+
 
 #units for RPS:
 #LevelNR is in inches
@@ -230,6 +231,20 @@ class RPS_Logic:
         self.Scram_Check()
         pass
 
+
+class EventHandler:
+    def __init__(self):
+        self.__connections = []
+
+    def connect(self,func):
+        self.__connections.append(func)
+
+    def disconnect(self,func):
+        self.__connections.remove(func)
+
+    def fire(self, *args, **keywargs):
+        for connection in self.__connections:
+            connection(*args, **keywargs)
 
 #global classes
 
