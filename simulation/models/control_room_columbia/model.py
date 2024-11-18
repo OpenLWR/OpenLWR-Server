@@ -670,7 +670,7 @@ switches = {
 			2: -45,
             3: -90,
 		},
-        "position": 0,
+        "position": 3,
         "lights" : {},
         "flag" : "green",
         "momentary" : False,
@@ -3983,7 +3983,7 @@ from simulation.models.control_room_columbia.systems import feedwater
 from simulation.models.control_room_columbia.systems import rcic
 from simulation.models.control_room_columbia.systems import hpcs
 from simulation.models.control_room_columbia.systems import lpcs
-from simulation.models.control_room_columbia.systems import deh
+from simulation.models.control_room_columbia.systems import ehc
 from simulation.models.control_room_columbia.systems import pcis
 from simulation.models.control_room_columbia.systems import rod_worth_minimizer
 from simulation.models.control_room_columbia.systems import residual_heat_removal
@@ -3999,7 +3999,7 @@ from simulation.models.control_room_columbia.general_physics import accidents
 control_rod_drive.initialize()
 loop_sequence.initialize()
 sync.initialize()
-deh.initialize()
+ehc.initialize()
 feedwater.initialize()
 fire.initialize()
 
@@ -4042,7 +4042,7 @@ def model_run(delta):
     rcic.run()
     hpcs.run()
     lpcs.run()
-    deh.run()
+    ehc.run()
     pcis.run()
     rod_worth_minimizer.run()
     fire.run(delta)

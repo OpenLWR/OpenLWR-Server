@@ -140,7 +140,7 @@ def run():
     #This is all kind of a mess
 
     #TODO: use the actual RPS bus and whatnot
-    low_pressure = bool(pressure.Pressures["Vessel"]/6895 < 835)
+    low_pressure = False #bool(pressure.Pressures["Vessel"]/6895 < 835)
     model.alarms["main_steam_line_press_low"]["alarm"] = low_pressure
 
     if low_pressure and model.switches["reactor_mode_switch"]["position"] == 3:

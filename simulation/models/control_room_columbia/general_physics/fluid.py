@@ -543,7 +543,7 @@ headers = { #most lines have a common header that they discharge into
         #30"RFW(1)-4
 
         "diameter" : 762, #millimeters
-        "length" : 18000, #TODO : determine a good length
+        "length" : 28000, #TODO : determine a good length
         "pressure" : 0, #pascals
         "volume" : 0,
         "type" : FluidTypes.Liquid,
@@ -1925,6 +1925,10 @@ def inject_to_header(flow:int,press:int,temperature:int,header_name:str,suct_hea
         flow = flow / 60 #l/s
         fluid_flow = min(fluid_flow,flow) #to liters per second
         mass = fluid_flow*0.1 # sim time
+
+        if header["mass"]+mass >= header["volume"]:
+            mass = (header["volume"]-header["mass"])-0.1
+            fluid_flow = mass*10
 
         TFinal = calculate_temperature(header["mass"],mass,header["temperature"],temperature)
 
