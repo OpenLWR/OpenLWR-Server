@@ -64,6 +64,8 @@ def run(rods):
         #TODO: fix this
         #there is something weird with this, and its preventing any of the code from working. Just dont use this for now.
         #NOTE: (we kind of need this part, as it spreads the neutrons around the core. I'll look into it more later.)
+        #NOTE: if you are delfino stop looking at my code you bitch
+        #NOTE: this code is deprecated, look at control_room_columbia dumbass
         """for direction in directions:
 
             dirX =direction["x"]
