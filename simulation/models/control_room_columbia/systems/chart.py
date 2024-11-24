@@ -1,6 +1,8 @@
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.reactor_physics import reactor_inventory
 from simulation.models.control_room_columbia import neutron_monitoring
+from simulation.models.control_room_columbia.general_physics import main_condenser
+from simulation.models.control_room_columbia.general_physics import fluid
 from simulation.models.control_room_columbia.reactor_physics import pressure
 from simulation.models.control_room_columbia.general_physics import ac_power
 import decimal
@@ -181,6 +183,10 @@ def initialize():
     a.add_channel("DRYWELL RANGE 2","PSIG",0,0,25)
     a.add_channel("DRYWELL RANGE 3","PSIG",0,0,180)
 
+    a = RecorderDX1000("CONDTHPRESS")
+    a.add_channel("MS SUPPLY HEADER","PSIG",0,0,1400)
+    a.add_channel("COND BACKPRESSURE","in HgA",0,0,5000)
+
 
 def run():
     model.recorders["NMS1"].channels["IRM A"]["value"] = round(neutron_monitoring.intermediate_range_monitors["A"]["power"],1)
@@ -219,6 +225,9 @@ def run():
     model.recorders["601DWP1"].channels["DRYWELL RANGE 1"]["value"] = round(pressure.Pressures["Drywell"]/6895,2)
     model.recorders["601DWP1"].channels["DRYWELL RANGE 2"]["value"] = round(pressure.Pressures["Drywell"]/6895,2)
     model.recorders["601DWP1"].channels["DRYWELL RANGE 3"]["value"] = round(pressure.Pressures["Drywell"]/6895,2)
+
+    model.recorders["CONDTHPRESS"].channels["MS SUPPLY HEADER"]["value"] = round(fluid.headers["main_steam_line_d_tunnel"]["pressure"]/6895,2)
+    model.recorders["CONDTHPRESS"].channels["COND BACKPRESSURE"]["value"] = round(main_condenser.MainCondenserBackPressureA,2)
 
     for recorder in model.recorders:
         model.recorders[recorder].calculate()

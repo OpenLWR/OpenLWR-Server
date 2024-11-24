@@ -11,6 +11,7 @@ MainCondenserAtmosphere = {
 }
 MainCondenserHotwellMass = 308521 #about half full?
 MainCondenserBackPressure = 15
+MainCondenserBackPressureA = 0
 
 def initalize():
     MainCondenserPressure = pressure.PartialPressure(pressure.GasTypes["Nitrogen"],MainCondenserAtmosphere["Nitrogen"],100,MainCondenserVolume)
@@ -62,8 +63,10 @@ def run():
     #print(abs((MainCondenserPressure/3386)-29.9212)) #In.Hg vacuum
 
     global MainCondenserBackPressure
+    global MainCondenserBackPressureA
 
     MainCondenserBackPressure = abs((MainCondenserPressure/3386)-29.9212)
+    MainCondenserBackPressureA = abs((MainCondenserPressure/3386))
 
     #Pretend theres some amount of in-leakage
     Atmospheres = MainCondenserPressure/101325 

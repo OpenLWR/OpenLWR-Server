@@ -38,10 +38,10 @@ def initialize():
     #initialize our PIDs:
 
     global SpeedController
-    SpeedController = PID(Kp=0.1, Ki=0, Kd=0, minimum=0,maximum=100)
+    SpeedController = PID(Kp=0.01, Ki=0, Kd=0.13, minimum=-10,maximum=100)
 
     global AccelerationController
-    AccelerationController = PID(Kp=0.005, Ki=0.000001, Kd=0.22, minimum=0,maximum=100)
+    AccelerationController = PID(Kp=0.005, Ki=0.000001, Kd=0.22, minimum=0,maximum=10)
 
     global LoadController
     LoadController = PID(Kp=0.2, Ki=0.00000001, Kd=0.13, minimum=0,maximum=100)
@@ -160,6 +160,9 @@ def LoadControlUnit(Load:int):
 
     Demand = LoadController.update(LoadSetpoint,Load,1)
 
+    model.values["mt_load"] = Load
+    model.values["mt_load_set"] = LoadSetpoint
+
     return Demand
     
 def run():
@@ -170,7 +173,7 @@ def run():
     Speed_Control = SpeedControlUnit(main_turbine.Turbine["RPM"])
 
     #Pressure Control Unit
-    Pressure_Control = PressureControlUnit(pressure.Pressures["Vessel"]/6895) #TODO: Use actual turbine throttle pressure
+    Pressure_Control = PressureControlUnit(fluid.headers["main_steam_line_d_tunnel"]["pressure"]/6895)
 
     #Load Control Unit
     Load_Control = LoadControlUnit(main_generator.Generator["Output"]/1e6)

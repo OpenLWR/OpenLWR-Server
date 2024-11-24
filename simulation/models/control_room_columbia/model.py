@@ -2999,6 +2999,8 @@ values = {
 
     #EHC
     "mt_rpm" : 0,
+    "mt_load" : 0,
+    "mt_load_set" : 0,
 
     #Condensate
     "cond_booster_discharge_press" : 0,
