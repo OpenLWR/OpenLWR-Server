@@ -33,6 +33,7 @@ AccelerationReference = {
 LoadSetpoint = 50
 SelectedSpeedReference = -500
 SelectedAccelerationReference = 10
+LoadLimitSetpoint = 100
 
 def initialize():
     #initialize our PIDs:
@@ -145,7 +146,7 @@ def SpeedControlUnit(rpm:int):
     acceleration_control_signal = AccelerationController.update(SelectedAccelerationReference,Acceleration,1)
     last_speed = rpm
 
-    return max(min(speed_control_signal+acceleration_control_signal,100),0)
+    return max(min(speed_control_signal,100),0)
 
 def PressureControlUnit(ThrottlePress:int):
 
@@ -160,6 +161,13 @@ def LoadControlUnit(Load:int):
 
     Demand = LoadController.update(LoadSetpoint,Load,1)
 
+    global LoadLimitSetpoint
+
+    if model.switches["load_limit"]["position"] == 2:
+        LoadLimitSetpoint = min(LoadLimitSetpoint-0.1,100)
+    elif model.switches["load_limit"]["position"] == 0:
+        LoadLimitSetpoint = min(LoadLimitSetpoint+0.1,100)
+
     model.values["mt_load"] = Load
     model.values["mt_load_set"] = LoadSetpoint
 
@@ -173,13 +181,18 @@ def run():
     Speed_Control = SpeedControlUnit(main_turbine.Turbine["RPM"])
 
     #Pressure Control Unit
-    Pressure_Control = PressureControlUnit(fluid.headers["main_steam_line_d_tunnel"]["pressure"]/6895)
+    Pressure_Control = PressureControlUnit(pressure.Pressures["Vessel"]/6895)#fluid.headers["main_steam_line_d_tunnel"]["pressure"]/6895)
 
     #Load Control Unit
     Load_Control = LoadControlUnit(main_generator.Generator["Output"]/1e6)
 
+    #Load Limiter
 
-    Output = min(Speed_Control,Load_Control,Pressure_Control)
+    LoadLimitTest = min(Speed_Control,Load_Control,Pressure_Control)
+
+    model.indicators["load_limit_limiting"] = bool(LoadLimitTest >= LoadLimitSetpoint)
+
+    Output = min(Speed_Control,Load_Control,Pressure_Control,LoadLimitSetpoint)
 
     fluid.valves["ms_v_gv1"]["percent_open"] = Output
     fluid.valves["ms_v_gv2"]["percent_open"] = Output
@@ -192,3 +205,8 @@ def run():
     fluid.valves["ms_v_160b"]["percent_open"] = OutputBypass
     fluid.valves["ms_v_160c"]["percent_open"] = OutputBypass
     fluid.valves["ms_v_160d"]["percent_open"] = OutputBypass
+
+    model.values["bypass_valve1"] = OutputBypass
+    model.values["bypass_valve2"] = OutputBypass
+    model.values["bypass_valve3"] = OutputBypass
+    model.values["bypass_valve4"] = OutputBypass

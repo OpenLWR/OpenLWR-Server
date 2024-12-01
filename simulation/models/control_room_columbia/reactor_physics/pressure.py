@@ -11,7 +11,7 @@ Pressures = {
 Volumes = {
     "Drywell" : (831430.47141),
     "Wetwell" : 831430.47141*3,
-    "Vessel" : 928500.26, #liters
+    "Vessel" : 928500.26/2, #liters
 }
 
 def getPressure(steamMass, steamTemperature, volume):

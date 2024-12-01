@@ -189,6 +189,8 @@ safety_relief = {
 def run():
     model.alarms["srv_open"]["alarm"] = False
 
+    global safety_relief
+
     for valve_name in safety_relief:
         valve = safety_relief[valve_name]
         operator_off = False

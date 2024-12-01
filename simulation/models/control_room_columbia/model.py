@@ -2916,7 +2916,21 @@ switches = {
         "lights" : {},
         "flag" : "green",
         "momentary" : False,
-    },    
+    },   
+
+    #EHC
+
+    "load_limit": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {},
+        "flag" : "green",
+        "momentary" : True,
+    }, 
 }
 
 values = {
@@ -3001,6 +3015,11 @@ values = {
     "mt_rpm" : 0,
     "mt_load" : 0,
     "mt_load_set" : 0,
+
+    "bypass_valve1" : 0,
+    "bypass_valve2" : 0,
+    "bypass_valve3" : 0,
+    "bypass_valve4" : 0,
 
     #Condensate
     "cond_booster_discharge_press" : 0,
@@ -3206,6 +3225,11 @@ indicators = {
     "ehc_line_speed_off": False,
     "ehc_line_speed_selected": False,
     "ehc_line_speed_operating": False,
+
+    "load_decrease": False,
+    "load_increase": False,
+
+    "load_limit_limiting": False,
 
     "mt_tripped": False,
 	"mt_reset": False,
@@ -3540,6 +3564,15 @@ buttons = {
         "armed" : False,
     },
     "ehc_line_speed_selected": {
+        "state" : False,
+        "armed" : False,
+    },
+
+    "load_decrease": {
+        "state" : False,
+        "armed" : False,
+    },
+    "load_increase": {
         "state" : False,
         "armed" : False,
     },
