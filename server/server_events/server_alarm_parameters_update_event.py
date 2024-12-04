@@ -24,6 +24,8 @@ def fire(alarms): #TODO only send ones that need to be updated (were changed)
     for alarm in alarms:
         data[alarm] = {"state" : alarms[alarm]["state"],"silenced" : alarms[alarm]["silenced"]}
         alarm = alarms[alarm]
+        if alarm["group"] == "-1":
+            continue
         if not alarm["silenced"] and (alarm["state"] == AnnunciatorStates.ACTIVE):
             silent[alarm["group"]]["F"] = False
         

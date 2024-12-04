@@ -660,6 +660,57 @@ alarms = {
         "silenced" : False,
     },
 
+    "cia_a_mov_pwr_loss_ol" : {
+        "alarm" : False,
+        "box": "CIAABISI",
+		"window": "3-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "-1",
+        "silenced" : False,
+    },
+    "n2_div_1_supply_press_low" : {
+        "alarm" : False,
+        "box": "CIAABISI",
+		"window": "3-2",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "-1",
+        "silenced" : False,
+    },
+    "cia_a_lamp_test" : {
+        "alarm" : False,
+        "box": "CIAABISI",
+		"window": "4-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "-1",
+        "silenced" : False,
+    },
+    "cia_a_manual_out_of_serv" : {
+        "alarm" : False,
+        "box": "CIAABISI",
+		"window": "4-2",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "-1",
+        "silenced" : False,
+    },
+
+    "ads_n2_hdr_a_isolated" : {
+        "alarm" : False,
+        "box": "P840_A5",
+		"window": "8-3",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "5",
+        "silenced" : False,
+    },
+
+    "cia_div_1_out_of_serv" : {
+        "alarm" : False,
+        "box": "P840_A5",
+		"window": "10-3",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "5",
+        "silenced" : False,
+    },
+
 }
 
 switches = {
@@ -2931,6 +2982,49 @@ switches = {
         "flag" : "green",
         "momentary" : True,
     }, 
+
+    "cia_v_39a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    }, 
+    "cia_v_30a": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    }, 
+    "cia_v_20": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    }, 
 }
 
 values = {
@@ -3055,6 +3149,9 @@ values = {
     "sw_a_press" : 0,
     "sw_a_temp" : 0,
     "sw_p_1a_amps" : 0,
+
+    "cia_main_header_press" : 0,
+    "cia_ads_a_header_press" : 0,
 }
 
 indicators = {
@@ -3629,6 +3726,23 @@ buttons = {
         "state" : False,
         "armed" : False,
     },
+
+    "cia_a_mov_pwr_loss_ol" : {
+        "state" : False,
+        "armed" : False,
+    },
+    "n2_div_1_supply_press_low" : {
+        "state" : False,
+        "armed" : False,
+    },
+    "cia_a_lamp_test" : {
+        "state" : False,
+        "armed" : False,
+    },
+    "cia_a_manual_out_of_serv" : {
+        "state" : False,
+        "armed" : False,
+    },
 }
 
 from simulation.models.control_room_columbia.general_physics import pump
@@ -4024,6 +4138,7 @@ from simulation.models.control_room_columbia.systems import rod_worth_minimizer
 from simulation.models.control_room_columbia.systems import residual_heat_removal
 from simulation.models.control_room_columbia.systems import service_water
 from simulation.models.control_room_columbia.systems import sync
+from simulation.models.control_room_columbia.systems import cia
 from simulation.models.control_room_columbia.systems import loop_sequence
 from simulation.models.control_room_columbia.systems import rrc
 from simulation.models.control_room_columbia.systems import control_rod_drive
@@ -4037,6 +4152,7 @@ sync.initialize()
 ehc.initialize()
 feedwater.initialize()
 fire.initialize()
+cia.init()
 
 def model_run_fast(delta):
     fluid.run(delta) 
@@ -4066,6 +4182,7 @@ def model_run(delta):
     diesels.run()
     ESFAS.run(delta)
 
+    cia.run()
     residual_heat_removal.run()
     service_water.run()
     rrc.run()

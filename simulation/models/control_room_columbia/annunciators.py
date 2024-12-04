@@ -2,11 +2,29 @@ from simulation.constants.annunciator_states import AnnunciatorStates
 from simulation.models.control_room_columbia import model
 import math
 
+def bisi(annunciator,name):
+    if annunciator["alarm"]:
+        assert name in model.buttons, "No pushbutton associated with "+name+" BISI!"
+        if annunciator["state"] == AnnunciatorStates.CLEAR:
+            annunciator["state"] = AnnunciatorStates.ACTIVE
+
+        if model.buttons[name]["state"]:
+            if annunciator["state"] == AnnunciatorStates.ACTIVE:
+                annunciator["state"] = AnnunciatorStates.ACKNOWLEDGED
+        
+    else:
+        annunciator["state"] = AnnunciatorStates.CLEAR
+
 def run():
 
    for alarm in model.alarms:
       annunciator = model.alarms[alarm]
       group = annunciator["group"]
+
+      if group == "-1": #this is a BISI
+         bisi(annunciator,alarm)
+         continue
+
       #reflash + active normally
       if annunciator["alarm"] and (annunciator["state"] == AnnunciatorStates.CLEAR or annunciator["state"] == AnnunciatorStates.ACTIVE_CLEAR):
          annunciator["state"] = AnnunciatorStates.ACTIVE
