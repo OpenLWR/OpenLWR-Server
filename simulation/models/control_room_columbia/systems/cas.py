@@ -11,6 +11,8 @@ CAS_C_1A = None
 CAS_C_1B = None
 CAS_C_1C = None
 
+CAS_AR_1A = None #Air Receiver
+
 CONTROL_AIR_HEADER = None
 SCRAM_AIR_HEADER = None
 
@@ -35,9 +37,11 @@ def init():
     global CAS_C_1B
     global CAS_C_1C
 
+    global CAS_AR_1A
+
     global CONTROL_AIR_HEADER
 
-    CONTROL_AIR_HEADER = air.AirHeader(1,120)
+    CONTROL_AIR_HEADER = air.AirHeader(1,120,2)
 
     CAS_C_1A = air.Compressor(130,air.SupplyElectric(ac_power.busses["7a"],240,None),100)
     CAS_C_1B = air.Compressor(130,air.SupplyElectric(ac_power.busses["8a"],240,None),100) 
@@ -47,9 +51,13 @@ def init():
     CAS_C_1B.add_loading_system(110,120,CONTROL_AIR_HEADER)
     CAS_C_1C.add_loading_system(110,120,CONTROL_AIR_HEADER)
 
-    CONTROL_AIR_HEADER.add_feeder(CAS_C_1A)
-    CONTROL_AIR_HEADER.add_feeder(CAS_C_1B) #TODO: Comps actually run to air receivers (M510-4 H/3)
-    CONTROL_AIR_HEADER.add_feeder(CAS_C_1C)
+    CAS_AR_1A = air.AirHeader(1,120,15) #there is actually multiple but just one is good enough simulation wise
+
+    CAS_AR_1A.add_feeder(CAS_C_1A)
+    CAS_AR_1A.add_feeder(CAS_C_1B)
+    CAS_AR_1A.add_feeder(CAS_C_1C)
+
+    CONTROL_AIR_HEADER.add_feeder(CAS_AR_1A)
 
     global SCRAM_AIR_HEADER
     global CRD_SCRAM_ISOLATE
@@ -58,7 +66,7 @@ def init():
     global CRD_ATWS_VENT
     global VENT
 
-    SCRAM_AIR_HEADER = air.AirHeader(1,120) #what is the actual normal pressure?
+    SCRAM_AIR_HEADER = air.AirHeader(1,120,0.2) #what is the actual normal pressure?
     CRD_SCRAM_ISOLATE = air.Valve(100,None,False,False,500)
     CRD_SCRAM_VENT = air.Valve(0,None,False,False,500)
 
@@ -73,6 +81,7 @@ def run():
     CAS_C_1C_STANDBY = False
 
     CONTROL_AIR_HEADER.calculate()
+    CAS_AR_1A.calculate()
     SCRAM_AIR_HEADER.calculate()
     VENT.calculate()
     CAS_C_1A.calculate()
@@ -144,15 +153,13 @@ def run():
 
         STANDBY_AIR_COMP_TIMER += 1
 
-    CONTROL_AIR_HEADER.fill -= 0.0003 #fixed leak rate
+    CONTROL_AIR_HEADER.fill -= 0.0001 #fixed leak rate
 
     if CONTROL_AIR_HEADER.get_pressure() < 90: #isolate SA and trigger low press alarm
         model.alarms["control_air_hdr_press_low"]["alarm"] = True
     else:
         model.alarms["control_air_hdr_press_low"]["alarm"] = False
 
-    print(SCRAM_AIR_HEADER.get_pressure())
-
-    model.alarms["scram_valve_pilot_air_header_press_low"]["alarm"] = SCRAM_AIR_HEADER.get_pressure() < 90
+    model.alarms["scram_valve_pilot_air_header_press_low"]["alarm"] = SCRAM_AIR_HEADER.get_pressure() < 95
 
     model.values["control_air_press"] = CONTROL_AIR_HEADER.get_pressure()

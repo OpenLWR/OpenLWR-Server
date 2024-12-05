@@ -91,9 +91,10 @@ class Valve:
                     self.stroke_closed()
                   
 class AirHeader:
-    def __init__(self,fill,normal_pressure):
+    def __init__(self,fill,normal_pressure,size=1):
         self.fill = fill
         self.normal_pressure = normal_pressure #PSIG
+        self.size=size #allows making some headers bigger than others, like tanks and whatnot
         self.feeders = []
 
     def add_feeder(self,header,valve=None):
@@ -111,26 +112,27 @@ class AirHeader:
             DeltaP = (feed["header"].fill * feed["header"].normal_pressure) - Press
 
             Flow = DeltaP/self.normal_pressure
-            Flow = Flow*0.001
+            Flow = Flow*0.0035
 
             if feed["valve"] != None:
                 Flow = Flow*feed["valve"].percent_open
 
             Total_Flow += Flow
 
-            feed["header"].fill -= ((Flow*self.normal_pressure)/feed["header"].normal_pressure)#/len(self.feeders)
+            feed["header"].fill -= ((Flow*self.normal_pressure)/feed["header"].normal_pressure)/feed["header"].size#/len(self.feeders)
 
         if len(self.feeders) == 0:
             return
 
         #Total_Flow /= len(self.feeders)
 
-        self.fill += Total_Flow
+        self.fill += Total_Flow/self.size
 
 class Vent:
     def __init__(self):
         self.fill = 1
         self.normal_pressure = 14.7 #PSIG
+        self.size = 1
         self.feeders = []
 
     def add_feeder(self,header,valve=None):
@@ -154,16 +156,10 @@ class Vent:
 
             feed["header"].fill -= ((Flow*self.normal_pressure)/feed["header"].normal_pressure)#/len(self.feeders)
 
-
-
-class AirReceiver():
-    def __init__(self):
-        self.a = "a"
-        #TODO
-
 class Compressor():
     def __init__(self,discharge_pressure,supply,horsepower):
         self.fill = 1
+        self.size = 1
         self.normal_pressure = discharge_pressure #these emulate a header, so there is less code copied around
 
         self.motor_breaker_closed = False
@@ -200,7 +196,7 @@ class Compressor():
         Demand = min(max((self.band_high - Press) / Band,0),1)
         Demand *= 100
 
-        self.unloaded = Demand <= 50 #i dont really know what this is supposed to be at
+        self.unloaded = Demand <= 25 #i dont really know what this is supposed to be at
         return min(max(Demand,0),100)
 
     def calculate(self):
@@ -212,6 +208,8 @@ class Compressor():
                 accel = accel * (self.loading_system()/100)
 
             self.fill += (1-self.fill)*accel
+        else:
+            self.unloaded = False
             
             
 
