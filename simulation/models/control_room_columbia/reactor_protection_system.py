@@ -4,6 +4,7 @@ from simulation.models.control_room_columbia.general_physics import ac_power
 from simulation.models.control_room_columbia import neutron_monitoring 
 from simulation.models.control_room_columbia.reactor_physics import reactor_inventory 
 from simulation.models.control_room_columbia.reactor_physics import pressure 
+from simulation.models.control_room_columbia.systems import cas 
 import math
 
 reactor_protection_systems = {
@@ -147,11 +148,19 @@ def run():
         reactor_protection_systems["A"]["reset_timer"] = -1
         reactor_protection_systems["B"]["reset_timer"] = -1
 
+    if scram_signal:
+        cas.CRD_SCRAM_ISOLATE.stroke_closed()
+        cas.CRD_SCRAM_VENT.stroke_open()
+    else:
+        cas.CRD_SCRAM_ISOLATE.stroke_open()
+        cas.CRD_SCRAM_VENT.stroke_closed()
+
     for rod in model.rods:
         info = model.rods[rod] 
-        #scram the reactor if both RPS trains are tripped
-        if info["scram"] != scram_signal:
-            info["scram"] = scram_signal
+        
+        info["scram"] = cas.SCRAM_AIR_HEADER.get_pressure() < info["scram_pressure"]
+
+
 
     #Scram trips
 

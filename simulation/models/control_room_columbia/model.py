@@ -164,6 +164,14 @@ alarms = {
         "group" : "1",
         "silenced" : False,
     },
+    "scram_valve_pilot_air_header_press_low" : {
+        "alarm" : False,
+        "box": "Box2",
+		"window": "6-4",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "1",
+        "silenced" : False,
+    },
 
     "irm_downscale" : {
         "alarm" : False,

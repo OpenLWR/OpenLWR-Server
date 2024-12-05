@@ -12,8 +12,17 @@ CAS_C_1B = None
 CAS_C_1C = None
 
 CONTROL_AIR_HEADER = None
+SCRAM_AIR_HEADER = None
+
+CRD_SCRAM_ISOLATE = None #simplified version
+CRD_SCRAM_VENT = None #simplified version
+
+CRD_ATWS_ISOLATE = None #Simplified
+CRD_ATWS_VENT = None #Simplified
 
 SA_PCV_2 = None #SA - CAS Crosstie Isolation (auto)
+
+VENT = None
 
 
 def init():
@@ -42,6 +51,21 @@ def init():
     CONTROL_AIR_HEADER.add_feeder(CAS_C_1B) #TODO: Comps actually run to air receivers (M510-4 H/3)
     CONTROL_AIR_HEADER.add_feeder(CAS_C_1C)
 
+    global SCRAM_AIR_HEADER
+    global CRD_SCRAM_ISOLATE
+    global CRD_SCRAM_VENT
+    global CRD_ATWS_ISOLATE
+    global CRD_ATWS_VENT
+    global VENT
+
+    SCRAM_AIR_HEADER = air.AirHeader(1,120) #what is the actual normal pressure?
+    CRD_SCRAM_ISOLATE = air.Valve(100,None,False,False,500)
+    CRD_SCRAM_VENT = air.Valve(0,None,False,False,500)
+
+    SCRAM_AIR_HEADER.add_feeder(CONTROL_AIR_HEADER,CRD_SCRAM_ISOLATE)
+    VENT = air.Vent()
+    VENT.add_feeder(SCRAM_AIR_HEADER,CRD_SCRAM_VENT)
+
 def run():
     global STANDBY_AIR_COMP_TIMER
     CAS_C_1A_STANDBY = False
@@ -49,6 +73,8 @@ def run():
     CAS_C_1C_STANDBY = False
 
     CONTROL_AIR_HEADER.calculate()
+    SCRAM_AIR_HEADER.calculate()
+    VENT.calculate()
     CAS_C_1A.calculate()
     CAS_C_1B.calculate()
     CAS_C_1C.calculate()
@@ -124,5 +150,9 @@ def run():
         model.alarms["control_air_hdr_press_low"]["alarm"] = True
     else:
         model.alarms["control_air_hdr_press_low"]["alarm"] = False
+
+    print(SCRAM_AIR_HEADER.get_pressure())
+
+    model.alarms["scram_valve_pilot_air_header_press_low"]["alarm"] = SCRAM_AIR_HEADER.get_pressure() < 90
 
     model.values["control_air_press"] = CONTROL_AIR_HEADER.get_pressure()

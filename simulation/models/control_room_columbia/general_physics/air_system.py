@@ -127,6 +127,35 @@ class AirHeader:
 
         self.fill += Total_Flow
 
+class Vent:
+    def __init__(self):
+        self.fill = 1
+        self.normal_pressure = 14.7 #PSIG
+        self.feeders = []
+
+    def add_feeder(self,header,valve=None):
+        self.feeders.append({"header":header,"valve":valve})
+
+    def get_pressure(self):
+        return self.fill * self.normal_pressure
+
+    def calculate(self):
+        Press = self.fill * self.normal_pressure
+
+
+        for feed in self.feeders:
+            DeltaP = (feed["header"].fill * feed["header"].normal_pressure) - Press
+
+            Flow = DeltaP/self.normal_pressure
+            Flow = Flow*0.001
+
+            if feed["valve"] != None:
+                Flow = Flow*feed["valve"].percent_open
+
+            feed["header"].fill -= ((Flow*self.normal_pressure)/feed["header"].normal_pressure)#/len(self.feeders)
+
+
+
 class AirReceiver():
     def __init__(self):
         self.a = "a"

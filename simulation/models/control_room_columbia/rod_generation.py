@@ -1,4 +1,5 @@
 import math
+import random
 
 def generate_lprm(lprm):
 	from simulation.models.control_room_columbia.neutron_monitoring import local_power_range_monitors
@@ -81,6 +82,7 @@ def run(rods,buttons):
 
 				rods[rod_number] = {
 						"insertion": 48.00,
+						"scram_pressure": random.randint(70,90),
 						"scram": False,
 						"accum_pressure": 1700.00, #normal pressure is around 1700 psig
 						"accum_trouble": False,
