@@ -468,6 +468,11 @@ def initialize():
     breakers["cb_2_21"].set_running(transformers["tr_2_21"])
     breakers["cb_21_2"].set_incoming(transformers["tr_2_21"])
 
+    Bus(name="2p",voltage=480,frequency=60,rated_voltage=480)
+
+
+    Breaker(name="cb_21_2p",incoming=busses["21"],running=busses["2p"],closed=True,custom=True)
+
     #SL-31
 
     Breaker(name="cb_3_31",incoming=busses["3"],closed=True)
@@ -540,6 +545,11 @@ def initialize():
 
     Breaker(name="cb_73_7e",incoming=busses["73"],running=busses["7e"],closed=True,custom=True)
 
+    Bus(name="7a",voltage=480,frequency=60,rated_voltage=480)
+
+
+    Breaker(name="cb_73_7a",incoming=busses["73"],running=busses["7a"],closed=True,custom=True)
+
     #SM-8 loads
 
     Bus(name="83",voltage=480,frequency=60,rated_voltage=480)
@@ -554,6 +564,11 @@ def initialize():
 
 
     Breaker(name="cb_83_8e",incoming=busses["83"],running=busses["8e"],closed=True,custom=True)
+
+    Bus(name="8a",voltage=480,frequency=60,rated_voltage=480)
+
+
+    Breaker(name="cb_83_8a",incoming=busses["83"],running=busses["8a"],closed=True,custom=True)
 
     #Main Generator
 

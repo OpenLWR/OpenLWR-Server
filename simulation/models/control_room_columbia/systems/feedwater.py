@@ -150,13 +150,13 @@ def run():
         rft_b_reset_timer = -1
 
     #set the state of the tripe!!!!
-    model.alarms["turbine_a_tripped"]["state"] = rft_a_trip
+    model.alarms["turbine_a_tripped"]["alarm"] = rft_a_trip
     if rft_a_trip:
         fluid.valves["ms_v_172a"]["percent_open"] = min(max(fluid.valves["ms_v_172a"]["percent_open"]-25,0),100)
     else:
         fluid.valves["ms_v_172a"]["percent_open"] = min(max(fluid.valves["ms_v_172a"]["percent_open"]+25,0),100)
     
-    model.alarms["turbine_b_tripped"]["state"] = rft_b_trip
+    model.alarms["turbine_b_tripped"]["alarm"] = rft_b_trip
     if rft_b_trip:
         fluid.valves["ms_v_172b"]["percent_open"] = min(max(fluid.valves["ms_v_172b"]["percent_open"]-25,0),100)
     else:

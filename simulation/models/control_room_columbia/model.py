@@ -698,7 +698,7 @@ alarms = {
         "box": "P840_A5",
 		"window": "8-3",
         "state" : AnnunciatorStates.CLEAR,
-        "group" : "5",
+        "group" : "6",
         "silenced" : False,
     },
 
@@ -707,7 +707,24 @@ alarms = {
         "box": "P840_A5",
 		"window": "10-3",
         "state" : AnnunciatorStates.CLEAR,
-        "group" : "5",
+        "group" : "6",
+        "silenced" : False,
+    },
+
+    "control_air_hdr_press_low" : {
+        "alarm" : False,
+        "box": "P840_A5",
+		"window": "7-4",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "6",
+        "silenced" : False,
+    },
+    "standby_air_comp_on" : {
+        "alarm" : False,
+        "box": "P840_A5",
+		"window": "8-6",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "6",
         "silenced" : False,
     },
 
@@ -3025,6 +3042,69 @@ switches = {
         "flag" : "green",
         "momentary" : True,
     }, 
+
+    "cas_c_1a": {
+        "positions": {
+            -1: 90,
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+            "unloaded" : False,
+        },
+        "flag" : "green",
+        "momentary" : False,
+    },
+    "cas_c_1b": {
+        "positions": {
+            -1: 90,
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 2,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+            "unloaded" : False,
+        },
+        "flag" : "green",
+        "momentary" : False,
+    }, 
+    "cas_c_1c": {
+        "positions": {
+            -1: 90,
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+            "unloaded" : False,
+        },
+        "flag" : "green",
+        "momentary" : False,
+    }, 
+    "sa_pcv_2": {
+        "positions": {
+			0: 45,
+			1: 0,
+			2: -45,
+		},
+        "position": 1,
+        "lights" : {
+            "green" : False,
+            "red" : False,
+        },
+        "flag" : "green",
+        "momentary" : True,
+    },  
 }
 
 values = {
@@ -3152,6 +3232,8 @@ values = {
 
     "cia_main_header_press" : 0,
     "cia_ads_a_header_press" : 0,
+
+    "control_air_press" : 0,
 }
 
 indicators = {
@@ -3399,6 +3481,22 @@ buttons = {
         "armed" : False,
     },
     "ALARM_RESET_3": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ALARM_ACK_5": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ALARM_RESET_5": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ALARM_ACK_6": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ALARM_RESET_6": {
         "state" : False,
         "armed" : False,
     },
@@ -4139,6 +4237,7 @@ from simulation.models.control_room_columbia.systems import residual_heat_remova
 from simulation.models.control_room_columbia.systems import service_water
 from simulation.models.control_room_columbia.systems import sync
 from simulation.models.control_room_columbia.systems import cia
+from simulation.models.control_room_columbia.systems import cas
 from simulation.models.control_room_columbia.systems import loop_sequence
 from simulation.models.control_room_columbia.systems import rrc
 from simulation.models.control_room_columbia.systems import control_rod_drive
@@ -4153,6 +4252,7 @@ ehc.initialize()
 feedwater.initialize()
 fire.initialize()
 cia.init()
+cas.init()
 
 def model_run_fast(delta):
     fluid.run(delta) 
@@ -4183,6 +4283,7 @@ def model_run(delta):
     ESFAS.run(delta)
 
     cia.run()
+    cas.run()
     residual_heat_removal.run()
     service_water.run()
     rrc.run()

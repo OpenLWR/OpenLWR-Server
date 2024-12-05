@@ -19,6 +19,7 @@ def fire(alarms): #TODO only send ones that need to be updated (were changed)
         "3" : {"F":True,"S":True},
         "4" : {"F":True,"S":True},
         "5" : {"F":True,"S":True},
+        "6" : {"F":True,"S":True},
     }
 
     for alarm in alarms:
