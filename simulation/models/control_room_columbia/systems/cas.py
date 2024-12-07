@@ -160,6 +160,6 @@ def run():
     else:
         model.alarms["control_air_hdr_press_low"]["alarm"] = False
 
-    model.alarms["scram_valve_pilot_air_header_press_low"]["alarm"] = SCRAM_AIR_HEADER.get_pressure() < 95
+    model.alarms["scram_valve_pilot_air_header_press_low"]["alarm"] = SCRAM_AIR_HEADER.get_pressure() < 60
 
     model.values["control_air_press"] = CONTROL_AIR_HEADER.get_pressure()
