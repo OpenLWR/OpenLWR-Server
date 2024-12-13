@@ -142,7 +142,7 @@ def init_server(websocket):
                     server_meter_parameters_update_event.fire_initial(token_object.token)
 
                 case packets.ClientPackets.CHAT:
-                    client_chat_event.handle(packet_data, token_object.username)
+                    client_chat_event.handle(packet_data, token_object)
 
                 case packets.ClientPackets.VOIP:
                     client_voip_event.handle(packet_data, token_object.username)
