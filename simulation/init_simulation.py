@@ -36,15 +36,15 @@ class Simulation:
             start = time.perf_counter()
             if self.running:
                 model.model_run(self.prev_delta)
-                drop = 0
-                if (self.default_timestep/self.timestep) >= self.minimum_speedup_drop:
-                    drop = self.timesteps % math.floor((self.default_timestep/self.timestep)/self.minimum_speedup_drop)
-                if drop == 0: # prevent flooding clients on high speedups
-                    server_meter_parameters_update_event.fire(model.values)
-                    server_indicator_parameters_update_event.fire(model.indicators)
-                    server_switch_parameters_update_event.fire(model.switches,True)
-                    server_alarm_parameters_update_event.fire(model.alarms)
-                    server_recorder_parameters_update_event.fire(model.recorders)
+            drop = 0
+            if (self.default_timestep/self.timestep) >= self.minimum_speedup_drop:
+                drop = self.timesteps % math.floor((self.default_timestep/self.timestep)/self.minimum_speedup_drop)
+            if drop == 0: # prevent flooding clients on high speedups
+                server_meter_parameters_update_event.fire(model.values)
+                server_indicator_parameters_update_event.fire(model.indicators)
+                server_switch_parameters_update_event.fire(model.switches,True)
+                server_alarm_parameters_update_event.fire(model.alarms)
+                server_recorder_parameters_update_event.fire(model.recorders)
             end = time.perf_counter()
             delta = end - start
             if self.timestep - delta < 0:
