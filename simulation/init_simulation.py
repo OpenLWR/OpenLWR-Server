@@ -15,6 +15,8 @@ model = importlib.import_module(f"simulation.models.{config.config["model"]}.mod
 
 class Simulation:
     def __init__(self):
+        self.running = False
+        
         self.timestep = 0.1 # time between model steps
         self.default_timestep = 0.1 # what is 1x speed
         self.minimum_speedup_drop = 2 # skip sending packets if we exceed this many times 1x speed
@@ -32,7 +34,8 @@ class Simulation:
     def timer(self):
         while True:
             start = time.perf_counter()
-            model.model_run(self.prev_delta)
+            if self.running:
+                model.model_run(self.prev_delta)
             drop = 0
             if (self.default_timestep/self.timestep) >= self.minimum_speedup_drop:
                 drop = self.timesteps % math.floor((self.default_timestep/self.timestep)/self.minimum_speedup_drop)
@@ -54,7 +57,8 @@ class Simulation:
     def timer_fast(self):
         while True:
             start = time.perf_counter()
-            model.model_run_fast(self.fast_prev_delta)
+            if self.running:
+                model.model_run_fast(self.fast_prev_delta)
             end = time.perf_counter()
             delta = end - start
 
