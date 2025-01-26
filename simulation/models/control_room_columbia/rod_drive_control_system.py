@@ -3,9 +3,12 @@ from simulation.models.control_room_columbia import reactor_protection_system
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.general_physics import fluid
 from threading import Thread
+import random
 any_rod_driving = False
 select_block = False
 withdraw_pressed = False
+
+_ATWS = False
 
 def run(rods,buttons):
     any_rod_driving = False
@@ -62,10 +65,19 @@ def run(rods,buttons):
 
         if info["scram"]:
             #TODO: accumulator pressure and its affect on rod drive
-            if info["insertion"] > 0:
+
+            if _ATWS == True:
+                if info["atws"] == False:
+                    #we run some random to determine where the rod will cease inserting (non SDV ATWS)
+                    info["atws_position"] = random.randint(0,48)+(random.randint(0,16)*0)
+                    info["atws"] = True
+
+            rod_is_in_atws = info["atws"] and info["atws_position"] >= info["insertion"]
+
+            if info["insertion"] > 0 and not rod_is_in_atws:
                 info["insertion"] = info["insertion"] - 1.6 #approximately 3 seconds to scram from full out
                 info["accum_pressure"] = info["accum_pressure"] - 30 #approximately 2 seconds until the accumulator alarm activates
-            else:
+            elif not rod_is_in_atws:
                 info["insertion"] = 0
 
         flow = ((fluid.headers["crd_discharge"]["pressure"]/6895)-info["accum_pressure"])*0.05

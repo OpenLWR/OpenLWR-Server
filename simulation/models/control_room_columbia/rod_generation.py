@@ -92,6 +92,8 @@ def run(rods,buttons):
 						"driftto": -15,
 						"driving": False,
 						"select": False,
+						"atws": False,
+						"atws_position": 0,
 						"x" : x,
 						"y" : y,
 
