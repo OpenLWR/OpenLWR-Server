@@ -746,7 +746,7 @@ switches = {
 			2: -45,
             3: -90,
 		},
-        "position": 3,
+        "position": 0,
         "lights" : {},
         "flag" : "green",
         "momentary" : False,
@@ -1766,7 +1766,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 1,
+        "position": 0,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -1780,7 +1780,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 1,
+        "position": 0,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -1794,7 +1794,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 1,
+        "position": 0,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -1808,7 +1808,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 1,
+        "position": 0,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -1824,7 +1824,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 1,
+        "position": 0,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -1838,7 +1838,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 1,
+        "position": 0,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -1852,7 +1852,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-        "position": 1,
+        "position": 0,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -1866,7 +1866,7 @@ switches = {
 			1: 0,
             2: -45,
 		},
-       "position": 1,
+       "position": 0,
         "lights" : {
             "green" : True,
             "red" : False,
@@ -3984,7 +3984,7 @@ pumps = {
 
     #Main Condenser
     "ar_p_1a" : { #TODO: Need accurate numbers here
-        "motor_breaker_closed" : True,
+        "motor_breaker_closed" : False,
         "motor_control_switch" : "ar_p_1a",
         "bus" : "31", #TODO: Put on MC-3C
         "horsepower" : 1000,
@@ -3998,7 +3998,7 @@ pumps = {
         "type" : pump.PumpTypes.Type1,
     },
     "ar_p_1b" : { #TODO: Need accurate numbers here
-        "motor_breaker_closed" : True,
+        "motor_breaker_closed" : False,
         "motor_control_switch" : "ar_p_1b",
         "bus" : "21", #TODO: Put on MC-2D
         "horsepower" : 1000,
@@ -4016,7 +4016,7 @@ pumps = {
     #Condensate
 
     "cond_p_1a" : {
-        "motor_breaker_closed" : True,
+        "motor_breaker_closed" : False,
         "motor_control_switch" : "cond_p_1a",
         "bus" : "1",
         "horsepower" : 1250,
@@ -4029,7 +4029,7 @@ pumps = {
         "type" : pump.PumpTypes.Type1,
     },
     "cond_p_1b" : {
-        "motor_breaker_closed" : True,
+        "motor_breaker_closed" : False,
         "motor_control_switch" : "cond_p_1b",
         "bus" : "2",
         "horsepower" : 1250,
@@ -4042,7 +4042,7 @@ pumps = {
         "type" : pump.PumpTypes.Type1,
     },
     "cond_p_1c" : {
-        "motor_breaker_closed" : True,
+        "motor_breaker_closed" : False,
         "motor_control_switch" : "cond_p_1c",
         "bus" : "3",
         "horsepower" : 1250,
@@ -4056,7 +4056,7 @@ pumps = {
     },
 
     "cond_p_2a" : {
-        "motor_breaker_closed" : True,
+        "motor_breaker_closed" : False,
         "motor_control_switch" : "cond_p_2a",
         "bus" : "1",
         "horsepower" : 3000,
@@ -4069,7 +4069,7 @@ pumps = {
         "type" : pump.PumpTypes.Type1,
     },
     "cond_p_2b" : {
-        "motor_breaker_closed" : True,
+        "motor_breaker_closed" : False,
         "motor_control_switch" : "cond_p_2b",
         "bus" : "2",
         "horsepower" : 3000,
@@ -4082,7 +4082,7 @@ pumps = {
         "type" : pump.PumpTypes.Type1,
     },
     "cond_p_2c" : {
-        "motor_breaker_closed" : True,
+        "motor_breaker_closed" : False,
         "motor_control_switch" : "cond_p_2c",
         "bus" : "3",
         "horsepower" : 3000,
