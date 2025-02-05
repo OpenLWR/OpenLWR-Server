@@ -101,8 +101,6 @@ def run():
     model.values["cia_main_header_press"] = Mainheader.get_pressure()
     model.values["cia_ads_a_header_press"] = ADSAHeader.get_pressure()
 
-    Mainheader.fill -= 0.001
-
     #TODO: Div 2 BISI
 
     
