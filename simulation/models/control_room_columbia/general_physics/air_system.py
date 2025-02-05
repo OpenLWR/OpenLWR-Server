@@ -26,26 +26,39 @@ class SupplyElectric():
         return self.bus.is_voltage_at_bus(self.failure_voltage)
 
 class Valve:
-    def __init__(self,percent_open,switch_name,seal_in,sealed_in,open_speed,supply = None):
+    def __init__(self,percent_open,switch_name,seal_in=False,sealed_in=False,open_speed=0,supply = None,drop_indication_on_motive_lost = False, only_indicate = False,):
         self.percent_open = percent_open
         self.switch_name = switch_name
         self.seal_in = seal_in
         self.sealed_in = sealed_in
         self.open_speed = open_speed*0.1
         self.supply = supply
-        self.drop_indication_on_motive_lost = False
+        self.drop_indication_on_motive_lost = drop_indication_on_motive_lost
+        self.only_indicate = only_indicate
 
-    def stroke_open(self):
-        self.percent_open = min(max(self.percent_open+self.open_speed,0),100)
+    def stroke_open(self,speed=None):
+        if speed == None:
+            speed = self.open_speed
 
-    def stroke_closed(self):
-        self.percent_open = min(max(self.percent_open-self.open_speed,0),100)
+        self.percent_open = min(max(self.percent_open+speed,0),100)
+
+    def stroke_closed(self,speed=None):
+        if speed == None:
+            speed = self.open_speed
+
+        self.percent_open = min(max(self.percent_open-speed,0),100)
 
     def close(self):
         self.sealed_in = False
     
     def open(self):
         self.sealed_in = True
+
+    def get_switch_position(self):
+        if self.switch_name not in model.switches:
+            return False
+        
+        return model.switches[self.switch_name]["position"]
 
     def calculate(self):
         if self.switch_name != None:
@@ -65,7 +78,7 @@ class Valve:
                 switch["lights"]["green"] = self.percent_open < 100
                 switch["lights"]["red"] = self.percent_open > 0
 
-            if available == False:
+            if available == False or self.only_indicate:
                 return
 
             if not self.seal_in:

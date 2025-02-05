@@ -5,6 +5,20 @@ from simulation.models.control_room_columbia.general_physics import fluid
 from simulation.models.control_room_columbia.general_physics import ac_power
 from simulation.models.control_room_columbia.systems import residual_heat_removal
 from simulation.models.control_room_columbia.general_physics import main_condenser
+from simulation.models.control_room_columbia.general_physics import air_system
+from simulation.models.control_room_columbia.systems import cia
+
+msivs = {
+    "ms_v_22a" : None,
+    "ms_v_22b" : None,
+    "ms_v_22c" : None,
+    "ms_v_22d" : None,
+
+    "ms_v_28a" : None,
+    "ms_v_28b" : None,
+    "ms_v_28c" : None,
+    "ms_v_28d" : None,
+}
 
 isolation_groups = {
     "1" : { #Main isolation group. MSIVs, MSL drains
@@ -133,6 +147,21 @@ logic = {
     "D" : False,
 }
 
+def initialize():
+    global msivs
+
+    msivs = {
+    "ms_v_22a" : air_system.Valve(0,"ms_v_22a",open_speed=20,only_indicate=True,supply=air_system.SupplyAir(cia.MainheaderDrywell,75,air_system.FailureModes.CLOSED)),
+    "ms_v_22b" : air_system.Valve(0,"ms_v_22b",open_speed=20,only_indicate=True,supply=air_system.SupplyAir(cia.MainheaderDrywell,75,air_system.FailureModes.CLOSED)),
+    "ms_v_22c" : air_system.Valve(0,"ms_v_22c",open_speed=20,only_indicate=True,supply=air_system.SupplyAir(cia.MainheaderDrywell,75,air_system.FailureModes.CLOSED)),
+    "ms_v_22d" : air_system.Valve(0,"ms_v_22d",open_speed=20,only_indicate=True,supply=air_system.SupplyAir(cia.MainheaderDrywell,75,air_system.FailureModes.CLOSED)),
+
+    "ms_v_28a" : air_system.Valve(0,"ms_v_28a",open_speed=20,only_indicate=True,supply=None),
+    "ms_v_28b" : air_system.Valve(0,"ms_v_28b",open_speed=20,only_indicate=True,supply=None),
+    "ms_v_28c" : air_system.Valve(0,"ms_v_28c",open_speed=20,only_indicate=True,supply=None),
+    "ms_v_28d" : air_system.Valve(0,"ms_v_28d",open_speed=20,only_indicate=True,supply=None),
+    }
+
 def run():
     system_a = False
     system_b = False
@@ -222,8 +251,24 @@ def run():
     if logic["D"]: #Inboard P601 Valve Isolation
         model.alarms["rc_2_half_trip"]["alarm"] = True
 
-    if system_a and system_b:
-        #MSIV Closure occurs
-        for msiv in {"ms_v_22a","ms_v_22b","ms_v_22c","ms_v_22d","ms_v_28a","ms_v_28b","ms_v_28c","ms_v_28d"}:
-            fluid.valves[msiv]["sealed_in"] = False
+    for msiv in msivs:
+        msivs[msiv].calculate()
+
+        fluid.valves[msiv]["percent_open"] = msivs[msiv].percent_open
+
+        sw_pos = msivs[msiv].get_switch_position()
+
+        if system_a and system_b:
+            #MSIV Closure occurs
+            msivs[msiv].stroke_closed()
+            continue #this overrides the switch position statements completely
+
+        match sw_pos:
+            case 0:
+                msivs[msiv].stroke_closed()
+            case 1:
+                msivs[msiv].stroke_open()
+            case 2:
+                #this position alone will not do anything special
+                msivs[msiv].stroke_closed(0.1) #temporarily pretend the test button is always pushed
 

@@ -4261,6 +4261,7 @@ feedwater.initialize()
 fire.initialize()
 cia.init()
 cas.init()
+pcis.initialize()
 
 def model_run_fast(delta):
     fluid.run(delta) 

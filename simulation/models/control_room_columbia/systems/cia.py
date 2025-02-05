@@ -2,6 +2,7 @@ from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.general_physics import air_system as air
 
 Mainheader = None
+MainheaderDrywell = None
 ADSAHeader = None
 ADSBHeader = None
 
@@ -15,6 +16,7 @@ ISOLTIMER = 0
 
 def init():
     global Mainheader
+    global MainheaderDrywell
     global ADSAHeader
     global ADSBHeader
 
@@ -25,6 +27,7 @@ def init():
     global CIA_V_20
 
     Mainheader = air.AirHeader(1,185)
+    MainheaderDrywell = air.AirHeader(1,185)
     ADSAHeader = air.AirHeader(1,180)
     ADSBHeader = air.AirHeader(1,180)
 
@@ -36,6 +39,7 @@ def init():
 
     ADSAHeader.add_feeder(Mainheader,CIA_V_39A)
     ADSBHeader.add_feeder(Mainheader,CIA_V_39B)
+    MainheaderDrywell.add_feeder(Mainheader,CIA_V_20)
 
 DIV1MANOOS = False
 DIV1MANOOSP = False #was pressed, prevents crazy lights
@@ -47,6 +51,7 @@ def run():
     global DIV1MANOOSP
 
     Mainheader.calculate()
+    MainheaderDrywell.calculate()
     ADSAHeader.calculate()
     ADSBHeader.calculate()
 
@@ -95,6 +100,8 @@ def run():
 
     model.values["cia_main_header_press"] = Mainheader.get_pressure()
     model.values["cia_ads_a_header_press"] = ADSAHeader.get_pressure()
+
+    Mainheader.fill -= 0.001
 
     #TODO: Div 2 BISI
 
