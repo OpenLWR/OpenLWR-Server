@@ -1,4 +1,5 @@
 import math
+import iapws
 
 # Modules
 
@@ -58,21 +59,21 @@ def run(delta):
         vapMass = steam_functions.vaporize(waterMass, water_temperature, pressure.Pressures["Vessel"],delta)
         reactor_physics.kgSteam = reactor_physics.kgSteam+max(vapMass["vm"],0)
 
-        NewPress = pressure.getPressure(reactor_physics.kgSteam, water_temperature,pressure.Volumes["Vessel"])
-        pressure.Pressures["Vessel"]= NewPress
         waterMass = waterMass - max(vapMass["vm"],0)
 
-        if limit_press and pressure.Pressures["Vessel"]/6895 >= 900:
-            reactor_physics.kgSteam = 37788.89282438355
 
-        boilingPoint = steam_functions.getBoilingPointForWater(pressure.Pressures["Vessel"])
+        
 
-        if water_temperature > boilingPoint:
+        
+
+
+    NewPress = pressure.getPressure(reactor_physics.kgSteam, water_temperature,pressure.Volumes["Vessel"])
+    pressure.Pressures["Vessel"] = NewPress
+
+    boilingPoint = steam_functions.getBoilingPointForWater(pressure.Pressures["Vessel"])
+
+    if water_temperature > boilingPoint:
             water_temperature = boilingPoint
-
-    else:
-        NewPress = pressure.getPressure(reactor_physics.kgSteam, water_temperature,pressure.Volumes["Vessel"])
-        pressure.Pressures["Vessel"] = NewPress
 
     if waterMass <= 1:
         waterMass = 1
@@ -80,7 +81,21 @@ def run(delta):
 
     model.reactor_water_temperature = water_temperature
 
-    raw_level = mm_to_inches(calculate_level_cylinder(Vessel_Diameter,waterMass))
+
+    #Calculation of water volume for shrink/swell from temperature.
+    
+    WaterTempK = water_temperature + 273.15
+
+    PressureMPA = pressure.Pressures["Vessel"]/1e6
+
+    WaterInfo = iapws.iapws97._Region1(WaterTempK,PressureMPA)
+
+    WaterVolume = waterMass*WaterInfo["v"]
+
+    WaterVolume *= 1000 #M^3 to mm^3
+
+
+    raw_level = mm_to_inches(calculate_level_cylinder(Vessel_Diameter,WaterVolume))
     rx_level_wr = raw_level-528.55
 
     rx_level_fzr = min(-110,rx_level_wr) #find the bottom of this range
