@@ -375,6 +375,9 @@ class Transformer:
                     total_load += self.info["running"].info["loads"][load]
 
                 self.info["current"] = total_load/(self.info["running"].info["voltage"]+0.1)
+                resistance = 0.2
+                dropped_voltage = self.info["current"]*resistance
+                self.info["voltage"] = self.info["voltage"] - dropped_voltage
 
 
 
@@ -584,7 +587,13 @@ def initialize():
     
     global graph
 
-    #graph = transient.Transient("DG1/2 Transient Response - LOOP and LOCA")
+    #graph = transient.Transient("SM-1/2/3 Response - Condensate Pump Starts while on the Startup Transformer")
+
+    #graph.add_graph("SM-1 Voltage")
+    #graph.add_graph("SM-2 Voltage")
+    #graph.add_graph("SM-3 Voltage")
+
+    #graph.add_graph("TR-S Current")
 
     #graph.add_graph("DG1 Voltage")
     #graph.add_graph("DG1 Field Voltage")
@@ -610,15 +619,20 @@ def run():
     
     #TODO: divisional emergency lights
 
+    #graph.add("SM-1 Voltage",round(busses["1"].info["voltage"]))
+    #graph.add("SM-2 Voltage",round(busses["2"].info["voltage"]))
+    #graph.add("SM-3 Voltage",round(busses["3"].info["voltage"]))
+
+    #graph.add("TR-S Current",round(transformers["tr_s"].info["current"]))
+
     #graph.add("DG1 Voltage",sources["DG1"].info["voltage"])
     #graph.add("DG1 Field Voltage",diesel_generator.dg1.dg["field_voltage"])
     #graph.add("DG1 Frequency",sources["DG1"].info["frequency"])
 
     #log.info(str(busses["7"].voltage_at_bus()))
 
-    #if model.runs*0.1 > 8:
+    #if model.runs*0.1 > 30:
         #graph.generate_plot()
-        #exit()
 
     for source in sources:
         source = sources[source]
