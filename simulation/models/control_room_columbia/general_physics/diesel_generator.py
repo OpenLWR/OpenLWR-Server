@@ -1,13 +1,14 @@
 from simulation.constants.electrical_types import ElectricalType
 from simulation.constants.equipment_states import EquipmentStates
 from simulation.models.control_room_columbia.general_physics import ac_power
+from simulation.models.control_room_columbia.general_physics import air_system
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.libraries import pid
 import math
 import log
 
 class DieselGenerator():
-    def __init__(self,name,cs = "",output = "",sa = 500,auto = False,loca = False,trip = False,lockout = False,voltage = 0,frequency = 0,annunciators={},inertia = 0,horsepower = 0,):
+    def __init__(self,name,cs = "",output = "",auto = False,loca = False,trip = False,lockout = False,voltage = 0,frequency = 0,annunciators={},inertia = 0,horsepower = 0,sa_valve=None,sa_header=None):
         self.name = name
         self.dg = {
             "state" : EquipmentStates.STOPPED,
@@ -21,7 +22,6 @@ class DieselGenerator():
             "current" : 0,
             "field_voltage" : 0,
             "angular_velocity" : 0,
-            "start_air_press" : sa,
             "auto_start" : auto,
             "loca_start" : loca,
             "trip" : trip,
@@ -31,6 +31,9 @@ class DieselGenerator():
             "frequency" : frequency, #8 pole generator. 60hz@900rpm
             "annunciators" : annunciators,
             "time" : 0,
+
+            "sa_valve" : sa_valve,
+            "sa_header" : sa_header,
         }
         self.physics_constants = {
             "horsepower" : horsepower,
@@ -85,6 +88,22 @@ class DieselGenerator():
         #huge thanks to @fluff.goose (discord) for help with this
         throttle = self.dg["throttle"]
 
+        if self.dg["state"] == EquipmentStates.STARTING:
+            self.dg["time"] += 0.1 
+
+        if self.dg["rpm"] <= 150 and self.dg["state"] == EquipmentStates.STARTING:
+
+            if self.dg["time"] >= 10: #Incomplete Sequence (K4 Relay)
+                self.dg["trip"] = True
+                self.dg["time"] = 0
+
+            self.dg["sa_valve"].stroke_open()
+
+            self.dg["throttle"] = 0 #the start air motors are increasing speed
+
+        elif self.dg["rpm"] >= 150:
+            self.dg["sa_valve"].stroke_closed()
+
         if self.dg["trip"]:
             self.dg["state"] = EquipmentStates.STOPPING
 
@@ -115,12 +134,9 @@ class DieselGenerator():
 
         self.dg["rpm"] = self.dg["angular_velocity"]*60/(2*math.pi) 
 
-        #self.dg["time"] += 0.1 #aids in testing start times
-
         if self.dg["rpm"] >= 900:
             self.dg["state"] = EquipmentStates.RUNNING
-            #log.info(str(self.dg["time"]))
-            #exit()
+            self.dg["time"] = 0
 
         if self.dg["rpm"] <= 50 and self.dg["state"] == EquipmentStates.STOPPING:
             self.dg["state"] = EquipmentStates.STOPPED
@@ -184,7 +200,7 @@ class DieselGenerator():
         #pid_output = self.exciter_pid.update(4160,self.dg["voltage"],1) #TODO: Voltage Regulator adjust
 
         #self.dg["volt_reg"] = max(min(self.dg["volt_reg"]+pid_output,2),0)
-        a = ""
+        pass
 
 
 
@@ -192,10 +208,77 @@ dg1 = None
 dg2 = None
 dg3 = None
 
+DSA_AR_1A = None #DIESEL STARTING AIR RECEIVER SKID DSA-AR-1A
+DSA_AR_1B = None #DIESEL STARTING AIR RECEIVER SKID DSA-AR-1B
+DSA_AR_1C = None #Simplified. There is two independent air receivers for HPCS.
+
+DSA_V_17A = None #This is the Clinton valve. Simplified. There is two, DSA-V-11A and 17A. Div 1 DG.
+DSA_V_17B = None #This is the Clinton valve. Simplified. There is two, DSA-V-11B and 17B. Div 2 DG.
+DSA_V_4 = None #This is the Clinton valve. Also simplified. there is two. HPCS DG.
+
+DSA_DG1 = None #Local Start Air Pressure
+DSA_DG2 = None
+DSA_DG3 = None 
+
+DSA_V_3A1 = None
+DSA_V_3B1 = None
+DSA_V_3C1 = None #Simplified. There is two valves, one per pair of start motors. Supplies air to the start air motors.
+
+ATMOSPHERE = None
+
 def initialize():
     global dg1
     global dg2
     global dg3
+
+    global DSA_AR_1A
+    global DSA_AR_1B 
+    global DSA_AR_1C
+
+    global DSA_V_17A
+    global DSA_V_17B
+    global DSA_V_4
+
+    global DSA_DG1
+    global DSA_DG2
+    global DSA_DG3
+
+    global DSA_V_3A1
+    global DSA_V_3B1
+    global DSA_V_3C1
+
+    global ATMOSPHERE
+
+    DSA_AR_1A = air_system.AirHeader(1,250,5)
+    DSA_AR_1B = air_system.AirHeader(1,250,5)
+    DSA_AR_1C = air_system.AirHeader(1,250,3)
+
+    #Start Air Isolation Valves
+    DSA_V_17A = air_system.Valve(100,open_speed=50)
+    DSA_V_17B = air_system.Valve(100,open_speed=50)
+    DSA_V_4 = air_system.Valve(100,open_speed=50)
+
+    #Start air lines after isol valves
+
+    DSA_DG1 = air_system.AirHeader(1,250,1)
+    DSA_DG2 = air_system.AirHeader(1,250,1)
+    DSA_DG3 = air_system.AirHeader(1,250,1)
+
+    DSA_V_3A1 = air_system.Valve(0,open_speed=100)
+    DSA_V_3B1 = air_system.Valve(0,open_speed=100)
+    DSA_V_3C1 = air_system.Valve(0,open_speed=100)
+
+    ATMOSPHERE = air_system.Vent()
+
+    DSA_DG1.add_feeder(DSA_AR_1A,DSA_V_17A)
+    DSA_DG2.add_feeder(DSA_AR_1B,DSA_V_17B)
+    DSA_DG3.add_feeder(DSA_AR_1C,DSA_V_4)
+
+    ATMOSPHERE.add_feeder(DSA_DG1,DSA_V_3A1)
+    ATMOSPHERE.add_feeder(DSA_DG2,DSA_V_3B1)
+    ATMOSPHERE.add_feeder(DSA_DG3,DSA_V_3C1)
+
+
     dg1 = DieselGenerator("DG1",cs = "diesel_gen_1",output = "cb_dg1_7",inertia=36000,horsepower=6000)
     dg2 = DieselGenerator("DG2",cs = "diesel_gen_2",output = "cb_dg2_8",inertia=36000,horsepower=6000)
     dg3 = DieselGenerator("DG3",cs = "diesel_gen_3",output = "cb_dg3_4",inertia=36000,horsepower=6000)
