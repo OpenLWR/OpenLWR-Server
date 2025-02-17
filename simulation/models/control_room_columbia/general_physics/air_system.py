@@ -26,7 +26,7 @@ class SupplyElectric():
         return self.bus.is_voltage_at_bus(self.failure_voltage)
 
 class Valve:
-    def __init__(self,percent_open,switch_name,seal_in=False,sealed_in=False,open_speed=0,supply = None,drop_indication_on_motive_lost = False, only_indicate = False,):
+    def __init__(self,percent_open,switch_name=None,seal_in=False,sealed_in=False,open_speed=0,supply = None,drop_indication_on_motive_lost = False, only_indicate = False,):
         self.percent_open = percent_open
         self.switch_name = switch_name
         self.seal_in = seal_in

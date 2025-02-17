@@ -4,8 +4,13 @@ from simulation.models.control_room_columbia.general_physics import ac_power
 from simulation.models.control_room_columbia.general_physics import air_system
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.libraries import pid
+from simulation.models.control_room_columbia.libraries import transient
 import math
 import log
+
+t = transient.Transient("DG Start Analysis")
+t.add_graph("RPM")
+t.add_graph("SA Press")
 
 class DieselGenerator():
     def __init__(self,name,cs = "",output = "",auto = False,loca = False,trip = False,lockout = False,voltage = 0,frequency = 0,annunciators={},inertia = 0,horsepower = 0,sa_valve=None,sa_header=None):
@@ -84,28 +89,52 @@ class DieselGenerator():
                 cont_sw["lights"]["green"] = self.dg["state"] == EquipmentStates.STOPPED
                 cont_sw["lights"]["red"] = self.dg["state"] != EquipmentStates.STOPPED
 
+    def set_annunciator(self,name,alarmed):
+        if name in self.dg["annunciators"]:
+            model.alarms[self.dg["annunciators"][name]]["alarm"] = alarmed
+
     def calculate(self):
         #huge thanks to @fluff.goose (discord) for help with this
         throttle = self.dg["throttle"]
 
+        #Remove after
+        if self.dg["state"] != EquipmentStates.STOPPED:
+            t.add("RPM",self.dg["rpm"])
+            t.add("SA Press",self.dg["sa_header"].get_pressure())
+            
+
+
+
         if self.dg["state"] == EquipmentStates.STARTING:
             self.dg["time"] += 0.1 
+
+        if self.dg["rpm"] > 150 and self.dg["state"] == EquipmentStates.STARTING:
+            self.dg["state"] = EquipmentStates.RUNNING
+            self.dg["time"] = 0
 
         if self.dg["rpm"] <= 150 and self.dg["state"] == EquipmentStates.STARTING:
 
             if self.dg["time"] >= 10: #Incomplete Sequence (K4 Relay)
                 self.dg["trip"] = True
                 self.dg["time"] = 0
+                self.set_annunciator("INCOMPLETESEQUENCE",True)
+                t.generate_plot()
 
             self.dg["sa_valve"].stroke_open()
 
             self.dg["throttle"] = 0 #the start air motors are increasing speed
 
-        elif self.dg["rpm"] >= 150:
+        elif self.dg["rpm"] >= 150 or self.dg["state"] != EquipmentStates.STARTING:
             self.dg["sa_valve"].stroke_closed()
 
         if self.dg["trip"]:
             self.dg["state"] = EquipmentStates.STOPPING
+
+        starter_torque = (200*5252)/900
+
+        start_air = max(min((self.dg["sa_header"].get_pressure()-100)/100,1),0)
+
+        starter_torque = starter_torque*start_air*(self.dg["sa_valve"].percent_open/100)
 
         horsepower = self.physics_constants["horsepower"]
 
@@ -124,7 +153,7 @@ class DieselGenerator():
 
         generator_omega = generator_torque/self.physics_constants["inertia"] #slows down the engine when its loaded
 
-        omega = torque/self.physics_constants["inertia"]
+        omega = (torque+starter_torque)/self.physics_constants["inertia"]
 
         omega -= (self.dg["angular_velocity"]*0.003)
 
@@ -133,10 +162,6 @@ class DieselGenerator():
         self.dg["angular_velocity"] = max(self.dg["angular_velocity"],0)
 
         self.dg["rpm"] = self.dg["angular_velocity"]*60/(2*math.pi) 
-
-        if self.dg["rpm"] >= 900:
-            self.dg["state"] = EquipmentStates.RUNNING
-            self.dg["time"] = 0
 
         if self.dg["rpm"] <= 50 and self.dg["state"] == EquipmentStates.STOPPING:
             self.dg["state"] = EquipmentStates.STOPPED
@@ -279,11 +304,26 @@ def initialize():
     ATMOSPHERE.add_feeder(DSA_DG3,DSA_V_3C1)
 
 
-    dg1 = DieselGenerator("DG1",cs = "diesel_gen_1",output = "cb_dg1_7",inertia=36000,horsepower=6000)
-    dg2 = DieselGenerator("DG2",cs = "diesel_gen_2",output = "cb_dg2_8",inertia=36000,horsepower=6000)
-    dg3 = DieselGenerator("DG3",cs = "diesel_gen_3",output = "cb_dg3_4",inertia=36000,horsepower=6000)
+    dg1 = DieselGenerator("DG1",cs = "diesel_gen_1",output = "cb_dg1_7",inertia=36000,horsepower=6000,sa_valve=DSA_V_3A1,sa_header=DSA_DG1,
+                          annunciators={}
+                          )
+    dg2 = DieselGenerator("DG2",cs = "diesel_gen_2",output = "cb_dg2_8",inertia=36000,horsepower=6000,sa_valve=DSA_V_3B1,sa_header=DSA_DG2,
+                          annunciators={"INCOMPLETESEQUENCE" : "dg_2_fail_to_start"}
+                          )
+    dg3 = DieselGenerator("DG3",cs = "diesel_gen_3",output = "cb_dg3_4",inertia=36000,horsepower=6000,sa_valve=DSA_V_3C1,sa_header=DSA_DG3)
 
 def run():
+    DSA_AR_1A.calculate()
+    DSA_AR_1B.calculate()
+    DSA_AR_1C.calculate()
+
+    DSA_DG1.calculate()
+    DSA_DG2.calculate()
+    DSA_DG3.calculate()
+
+    ATMOSPHERE.calculate()
+
+
     dg1.check_controls()
     dg1.calculate()
     dg1.governor()

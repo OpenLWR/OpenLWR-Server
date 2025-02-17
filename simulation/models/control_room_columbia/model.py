@@ -736,6 +736,26 @@ alarms = {
         "silenced" : False,
     },
 
+    #P800.C5 (Div 2)
+
+    "dg_2_autostart" : {
+        "alarm" : False,
+        "box": "P800_C5",
+		"window": "1-2",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "9",
+        "silenced" : False,
+    },
+
+    "dg_2_fail_to_start" : {
+        "alarm" : False,
+        "box": "P800_C5",
+		"window": "2-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "9",
+        "silenced" : False,
+    },
+
 }
 
 switches = {
