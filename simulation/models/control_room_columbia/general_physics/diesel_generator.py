@@ -4,22 +4,16 @@ from simulation.models.control_room_columbia.general_physics import ac_power
 from simulation.models.control_room_columbia.general_physics import air_system
 from simulation.models.control_room_columbia import model
 from simulation.models.control_room_columbia.libraries import pid
-from simulation.models.control_room_columbia.libraries import transient
 import math
 import log
 
-t = transient.Transient("DG Start Analysis")
-t.add_graph("RPM")
-t.add_graph("SA Press")
-
 class DieselGenerator():
-    def __init__(self,name,cs = "",output = "",auto = False,loca = False,trip = False,lockout = False,voltage = 0,frequency = 0,annunciators={},inertia = 0,horsepower = 0,sa_valve=None,sa_header=None):
+    def __init__(self,name,cs = "",output = "",auto = False,loca = False,lockout = False,voltage = 0,frequency = 0,annunciators={},inertia = 0,horsepower = 0,sa_valve=None,sa_header=None):
         self.name = name
         self.dg = {
             "state" : EquipmentStates.STOPPED,
             "control_switch" : cs,
             "output_breaker" : output,
-            "last_rpm" : 0,
             "rpm" : 0, #normal is 900
             "rpm_set" : 900,
             "throttle" : 0,
@@ -29,7 +23,6 @@ class DieselGenerator():
             "angular_velocity" : 0,
             "auto_start" : auto,
             "loca_start" : loca,
-            "trip" : trip,
             "lockout" : lockout,
             #TODO: voltage regulator/rpm governor
             "voltage" : voltage,
@@ -44,13 +37,12 @@ class DieselGenerator():
             "horsepower" : horsepower,
             "inertia" : inertia,
         }
-        self.governor_pid = pid.PIDExperimental(0.19,0,0.1,-0.05,0.05) #pid.PID(0.25,0.001,0.01,-0.2,0.2)
-        self.accel_pid = pid.PID(0.3,0.0001,0.001,-0.3,0)
+        self.governor_pid = pid.PIDExperimental(0.01,0.001,0,-0.5,0.5) #pid.PID(0.25,0.001,0.01,-0.2,0.2)
         #self.exciter_pid = pid.PID(0.05,0.0002,0.002,-0.5,0.5)
 
     def can_start(self):
-        """Returns true if the DG is not tripped,locked out, or starting already"""
-        return not self.dg["lockout"] and not self.dg["trip"] and self.dg["state"] == EquipmentStates.STOPPED
+        """Returns true if the DG is not locked out, or starting already"""
+        return not self.dg["lockout"] and self.dg["state"] == EquipmentStates.STOPPED
 
     def start(self,auto = False):
         """Starts the diesel generator"""
@@ -76,7 +68,6 @@ class DieselGenerator():
             cont_sw = model.switches[self.dg["control_switch"]]
 
             if cont_sw["position"] == 0:
-                #a loca autostart prevents this?
                 if self.dg["state"] == EquipmentStates.RUNNING:
                     self.dg["state"] = EquipmentStates.STOPPING
 
@@ -86,8 +77,11 @@ class DieselGenerator():
                     self.dg["state"] = EquipmentStates.STARTING
 
             if "green" in cont_sw["lights"]:
-                cont_sw["lights"]["green"] = self.dg["state"] == EquipmentStates.STOPPED
-                cont_sw["lights"]["red"] = self.dg["state"] != EquipmentStates.STOPPED
+                cont_sw["lights"]["green"] = self.dg["rpm"] < 150
+                cont_sw["lights"]["red"] = self.dg["rpm"] >= 150
+
+            if "cranking" in cont_sw["lights"]:
+                cont_sw["lights"]["cranking"] = self.dg["sa_valve"].percent_open > 0
 
     def set_annunciator(self,name,alarmed):
         if name in self.dg["annunciators"]:
@@ -96,14 +90,6 @@ class DieselGenerator():
     def calculate(self):
         #huge thanks to @fluff.goose (discord) for help with this
         throttle = self.dg["throttle"]
-
-        #Remove after
-        if self.dg["state"] != EquipmentStates.STOPPED:
-            t.add("RPM",self.dg["rpm"])
-            t.add("SA Press",self.dg["sa_header"].get_pressure())
-            
-
-
 
         if self.dg["state"] == EquipmentStates.STARTING:
             self.dg["time"] += 0.1 
@@ -115,10 +101,9 @@ class DieselGenerator():
         if self.dg["rpm"] <= 150 and self.dg["state"] == EquipmentStates.STARTING:
 
             if self.dg["time"] >= 10: #Incomplete Sequence (K4 Relay)
-                self.dg["trip"] = True
+                self.dg["lockout"] = True
                 self.dg["time"] = 0
                 self.set_annunciator("INCOMPLETESEQUENCE",True)
-                t.generate_plot()
 
             self.dg["sa_valve"].stroke_open()
 
@@ -127,7 +112,7 @@ class DieselGenerator():
         elif self.dg["rpm"] >= 150 or self.dg["state"] != EquipmentStates.STARTING:
             self.dg["sa_valve"].stroke_closed()
 
-        if self.dg["trip"]:
+        if self.dg["lockout"]:
             self.dg["state"] = EquipmentStates.STOPPING
 
         starter_torque = (200*5252)/900
@@ -202,21 +187,15 @@ class DieselGenerator():
 
 
     def governor(self):
-        pid_output = self.governor_pid.update(self.dg["rpm_set"],self.dg["rpm"],1)
+        pid_output = self.governor_pid.update(self.dg["rpm_set"],self.dg["rpm"],0.1)
 
         self.dg["throttle"] = max(min(self.dg["throttle"]+pid_output,1),0)
 
-        if self.dg["state"] == EquipmentStates.STARTING:
-            acceleration = self.dg["rpm"] - self.dg["last_rpm"]
-
-            pid_output = self.accel_pid.update(15,acceleration,1)
-
-            self.dg["throttle"] = max(min(self.dg["throttle"]+pid_output,1),0)
+        if self.dg["state"] == EquipmentStates.STOPPED:
+            self.governor_pid.reset()
 
         if self.dg["state"] == EquipmentStates.STOPPED or self.dg["state"] == EquipmentStates.STOPPING:
             self.dg["throttle"] = 0
-
-        self.dg["last_rpm"] = self.dg["rpm"]
 
     def volt_reg(self):
         #The voltage regulator controls the Exciter
@@ -236,6 +215,10 @@ dg3 = None
 DSA_AR_1A = None #DIESEL STARTING AIR RECEIVER SKID DSA-AR-1A
 DSA_AR_1B = None #DIESEL STARTING AIR RECEIVER SKID DSA-AR-1B
 DSA_AR_1C = None #Simplified. There is two independent air receivers for HPCS.
+
+DSA_PCV_2A = None #SA Pressure control valves
+DSA_PCV_2B = None
+DSA_PCV_2C = None
 
 DSA_V_17A = None #This is the Clinton valve. Simplified. There is two, DSA-V-11A and 17A. Div 1 DG.
 DSA_V_17B = None #This is the Clinton valve. Simplified. There is two, DSA-V-11B and 17B. Div 2 DG.
@@ -260,6 +243,10 @@ def initialize():
     global DSA_AR_1B 
     global DSA_AR_1C
 
+    global DSA_PCV_2A
+    global DSA_PCV_2B
+    global DSA_PCV_2C
+
     global DSA_V_17A
     global DSA_V_17B
     global DSA_V_4
@@ -274,9 +261,9 @@ def initialize():
 
     global ATMOSPHERE
 
-    DSA_AR_1A = air_system.AirHeader(1,250,5)
-    DSA_AR_1B = air_system.AirHeader(1,250,5)
-    DSA_AR_1C = air_system.AirHeader(1,250,3)
+    DSA_AR_1A = air_system.AirHeader(1,250,25)
+    DSA_AR_1B = air_system.AirHeader(1,250,25)
+    DSA_AR_1C = air_system.AirHeader(1,250,15)
 
     #Start Air Isolation Valves
     DSA_V_17A = air_system.Valve(100,open_speed=50)
@@ -285,9 +272,14 @@ def initialize():
 
     #Start air lines after isol valves
 
-    DSA_DG1 = air_system.AirHeader(1,250,1)
-    DSA_DG2 = air_system.AirHeader(1,250,1)
-    DSA_DG3 = air_system.AirHeader(1,250,1)
+    DSA_DG1 = air_system.AirHeader(1,225,1)
+    DSA_DG2 = air_system.AirHeader(1,225,1)
+    DSA_DG3 = air_system.AirHeader(1,225,1)
+
+    #Start Air pressure control valves
+    DSA_PCV_2A = air_system.PressureControlValve(100,DSA_DG1,225)
+    DSA_PCV_2B = air_system.PressureControlValve(100,DSA_DG2,225)
+    DSA_PCV_2C = air_system.PressureControlValve(100,DSA_DG3,225)
 
     DSA_V_3A1 = air_system.Valve(0,open_speed=100)
     DSA_V_3B1 = air_system.Valve(0,open_speed=100)
@@ -295,9 +287,9 @@ def initialize():
 
     ATMOSPHERE = air_system.Vent()
 
-    DSA_DG1.add_feeder(DSA_AR_1A,DSA_V_17A)
-    DSA_DG2.add_feeder(DSA_AR_1B,DSA_V_17B)
-    DSA_DG3.add_feeder(DSA_AR_1C,DSA_V_4)
+    DSA_DG1.add_feeder(DSA_AR_1A,DSA_PCV_2A,DSA_V_17A)
+    DSA_DG2.add_feeder(DSA_AR_1B,DSA_PCV_2B,DSA_V_17B)
+    DSA_DG3.add_feeder(DSA_AR_1C,DSA_PCV_2C,DSA_V_4)
 
     ATMOSPHERE.add_feeder(DSA_DG1,DSA_V_3A1)
     ATMOSPHERE.add_feeder(DSA_DG2,DSA_V_3B1)

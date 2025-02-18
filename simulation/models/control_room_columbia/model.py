@@ -2334,6 +2334,7 @@ switches = {
         "lights" : {
             "green" : True,
             "red" : False,
+            "cranking" : False,
         },
         "flag" : "green",
         "momentary" : False,
@@ -2424,6 +2425,7 @@ switches = {
         "lights" : {
             "green" : True,
             "red" : False,
+            "cranking" : False,
         },
         "flag" : "green",
         "momentary" : False,

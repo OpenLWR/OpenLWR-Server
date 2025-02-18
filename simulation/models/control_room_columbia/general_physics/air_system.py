@@ -25,6 +25,16 @@ class SupplyElectric():
     def check_available(self):
         return self.bus.is_voltage_at_bus(self.failure_voltage)
 
+class PressureControlValve:
+    def __init__(self,percent_open,header,normal_pressure,band=10):
+        self.percent_open = percent_open
+        self.header = header
+        self.normal_pressure = normal_pressure
+        self.band = band
+
+    def calculate(self):
+        self.percent_open = min(max(((self.normal_pressure-self.header.get_pressure())/self.band)*100,0),100)
+
 class Valve:
     def __init__(self,percent_open,switch_name=None,seal_in=False,sealed_in=False,open_speed=0,supply = None,drop_indication_on_motive_lost = False, only_indicate = False,):
         self.percent_open = percent_open
@@ -110,8 +120,8 @@ class AirHeader:
         self.size=size #allows making some headers bigger than others, like tanks and whatnot
         self.feeders = []
 
-    def add_feeder(self,header,valve=None):
-        self.feeders.append({"header":header,"valve":valve})
+    def add_feeder(self,header,valve=None,isolation_valve=None):
+        self.feeders.append({"header":header,"valve":valve,"isolation":isolation_valve,})
 
     def get_pressure(self):
         return self.fill * self.normal_pressure
@@ -129,6 +139,9 @@ class AirHeader:
 
             if feed["valve"] != None:
                 Flow = Flow*feed["valve"].percent_open
+
+            if feed["isolation"] != None:
+                Flow = Flow*(feed["isolation"].percent_open/100)
 
             Total_Flow += Flow
 
