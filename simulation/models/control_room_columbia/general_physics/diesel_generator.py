@@ -68,13 +68,11 @@ class DieselGenerator():
             cont_sw = model.switches[self.dg["control_switch"]]
 
             if cont_sw["position"] == 0:
-                if self.dg["state"] == EquipmentStates.RUNNING:
-                    self.dg["state"] = EquipmentStates.STOPPING
+                self.stop()
 
             if cont_sw["position"] == 2:
                 #TODO: flag position autostart alarm clear (and running alarm?)
-                if self.dg["state"] == EquipmentStates.STOPPED:
-                    self.dg["state"] = EquipmentStates.STARTING
+                self.start()
 
             if "green" in cont_sw["lights"]:
                 cont_sw["lights"]["green"] = self.dg["rpm"] < 150
@@ -114,6 +112,9 @@ class DieselGenerator():
 
         if self.dg["lockout"]:
             self.dg["state"] = EquipmentStates.STOPPING
+
+        self.set_annunciator("LOCKOUT",self.dg["lockout"])
+        self.set_annunciator("AUTOSTART",self.dg["auto_start"])
 
         starter_torque = (200*5252)/900
 
@@ -300,7 +301,11 @@ def initialize():
                           annunciators={}
                           )
     dg2 = DieselGenerator("DG2",cs = "diesel_gen_2",output = "cb_dg2_8",inertia=36000,horsepower=6000,sa_valve=DSA_V_3B1,sa_header=DSA_DG2,
-                          annunciators={"INCOMPLETESEQUENCE" : "dg_2_fail_to_start"}
+                          annunciators={"INCOMPLETESEQUENCE" : "dg_2_fail_to_start",
+                                        "LOCKOUT" : "dg_2_lockout",
+                                        "AUTOSTART" : "dg_2_autostart",
+                                        "IMPROPERPARALLELING" : "dg_2_improper_parallel",
+                                        }
                           )
     dg3 = DieselGenerator("DG3",cs = "diesel_gen_3",output = "cb_dg3_4",inertia=36000,horsepower=6000,sa_valve=DSA_V_3C1,sa_header=DSA_DG3)
 

@@ -738,6 +738,14 @@ alarms = {
 
     #P800.C5 (Div 2)
 
+    "dg_2_lockout" : {
+        "alarm" : False,
+        "box": "P800_C5",
+		"window": "1-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "9",
+        "silenced" : False,
+    },
     "dg_2_autostart" : {
         "alarm" : False,
         "box": "P800_C5",
@@ -746,11 +754,54 @@ alarms = {
         "group" : "9",
         "silenced" : False,
     },
+    "bus_8_control_power_loss" : {
+        "alarm" : False,
+        "box": "P800_C5",
+		"window": "1-3",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "9",
+        "silenced" : False,
+    },
+
 
     "dg_2_fail_to_start" : {
         "alarm" : False,
         "box": "P800_C5",
 		"window": "2-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "9",
+        "silenced" : False,
+    },
+    "bus_8_loss_of_voltage" : {
+        "alarm" : False,
+        "box": "P800_C5",
+		"window": "2-3",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "9",
+        "silenced" : False,
+    },
+    "dg_2_improper_parallel" : {
+        "alarm" : False,
+        "box": "P800_C5",
+		"window": "2-4",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "9",
+        "silenced" : False,
+    },
+
+
+    "dg_2_local_pnl_alarm" : {
+        "alarm" : False,
+        "box": "P800_C5",
+		"window": "3-1",
+        "state" : AnnunciatorStates.CLEAR,
+        "group" : "9",
+        "silenced" : False,
+    },
+    "bus_8_parallel_oper" : {
+        "alarm" : False,
+        "box": "P800_C5",
+		"window": "3-3",
         "state" : AnnunciatorStates.CLEAR,
         "group" : "9",
         "silenced" : False,
@@ -3527,6 +3578,24 @@ buttons = {
         "armed" : False,
     },
     "ALARM_RESET_6": {
+        "state" : False,
+        "armed" : False,
+    },
+
+    "ALARM_ACK_7": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ALARM_RESET_7": {
+        "state" : False,
+        "armed" : False,
+    },
+
+    "ALARM_ACK_9": {
+        "state" : False,
+        "armed" : False,
+    },
+    "ALARM_RESET_9": {
         "state" : False,
         "armed" : False,
     },

@@ -684,6 +684,8 @@ def run():
             if bus.name == "8":
                 diesel_generator.dg2.start(auto = True)
 
+                model.alarms["bus_8_loss_of_voltage"]["alarm"] = True
+
                 time8 += 0.1
 
                 if time8 > 5.5 and busses["b_bus"].is_voltage_at_bus(2000):
@@ -702,6 +704,11 @@ def run():
 
             if bus.name == "8":
                 time8 = 0
+                model.alarms["bus_8_loss_of_voltage"]["alarm"] = False
+
+        if bus.name == "8":
+            model.alarms["bus_8_parallel_oper"]["alarm"] = len(bus.info["feeders"]) > 1
+
 
     model.switches["cb_b8"]["lights"]["xfer"] = busses["b_bus"].is_voltage_at_bus(2000) #TODO: Move these
     model.switches["cb_b7"]["lights"]["xfer"] = busses["b_bus"].is_voltage_at_bus(2000)
