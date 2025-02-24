@@ -3315,6 +3315,14 @@ values = {
     "cia_ads_a_header_press" : 0,
 
     "control_air_press" : 0,
+
+    "dg1p1volts" : 0, #DG 1 Phase 1 Voltage
+    "dg1p2volts" : 0,
+    "dg1p3volts" : 0,
+    "dg1_freq" : 0,
+    "dg1p1amps" : 0,
+    "dg1p2amps" : 0,
+    "dg1p3amps" : 0,
 }
 
 indicators = {

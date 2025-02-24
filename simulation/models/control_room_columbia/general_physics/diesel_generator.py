@@ -37,8 +37,8 @@ class DieselGenerator():
             "horsepower" : horsepower,
             "inertia" : inertia,
         }
-        self.governor_pid = pid.PIDExperimental(0.01,0.001,0,-0.5,0.5) #pid.PID(0.25,0.001,0.01,-0.2,0.2)
-        #self.exciter_pid = pid.PID(0.05,0.0002,0.002,-0.5,0.5)
+        self.governor_pid = pid.PIDExperimental(0.013,0.002,0.001,0,1) #pid.PID(0.25,0.001,0.01,-0.2,0.2)
+        self.volt_reg_pid = pid.PIDExperimental(0.0001,0.001,0,0,2)
 
     def can_start(self):
         """Returns true if the DG is not locked out, or starting already"""
@@ -153,36 +153,20 @@ class DieselGenerator():
             self.dg["state"] = EquipmentStates.STOPPED
             self.dg["angular_velocity"] = 0
 
-        #TODO: Voltage regulator
-
         self.dg["frequency"] = 60*(self.dg["rpm"]/900)
-        self.dg["voltage"] = 4160*(self.dg["rpm"]/900)
+
+
+        if self.dg["state"] == EquipmentStates.RUNNING:
+            volts = 4160*(self.dg["volt_reg"])
+            volt_drop = 0.2*((generator_load/(volts+0.1)))
+            volts = volts-volt_drop
+            self.dg["voltage"] = volts
+        else:
+            self.dg["voltage"] = 0
 
         self.dg["current"] = generator_load/(self.dg["voltage"]+0.1)
-
-        #log.info(str(self.dg["voltage"]))
-
         ac_power.sources[self.name].info["voltage"] = self.dg["voltage"]
         ac_power.sources[self.name].info["frequency"] = self.dg["frequency"]
-
-        if False:
-
-            field_voltage = 0 #come on you know what this is in
-            field_resistance = 20 #ohms
-
-            field_voltage = self.dg["voltage"]*0.15*self.dg["volt_reg"] #TODO: get a general field voltage later
-
-            #Excitier
-            #Columbia has Static Field Flashing
-            if self.dg["rpm"] > 350 and self.dg["voltage"] < 1000:
-                #Flash the field
-                field_voltage += 12
-
-            field_current = field_voltage/field_resistance
-
-            self.dg["voltage"] = field_current*self.dg["angular_velocity"]
-            self.dg["field_voltage"] = field_voltage
-
 
         
 
@@ -190,7 +174,7 @@ class DieselGenerator():
     def governor(self):
         pid_output = self.governor_pid.update(self.dg["rpm_set"],self.dg["rpm"],0.1)
 
-        self.dg["throttle"] = max(min(self.dg["throttle"]+pid_output,1),0)
+        self.dg["throttle"] = pid_output
 
         if self.dg["state"] == EquipmentStates.STOPPED:
             self.governor_pid.reset()
@@ -202,10 +186,14 @@ class DieselGenerator():
         #The voltage regulator controls the Exciter
         #https://www.nrc.gov/docs/ML1122/ML11229A143.pdf
 
-        #pid_output = self.exciter_pid.update(4160,self.dg["voltage"],1) #TODO: Voltage Regulator adjust
+        if self.dg["state"] != EquipmentStates.RUNNING:
+            self.volt_reg_pid.reset()
+            self.dg["volt_reg"] = 0
 
-        #self.dg["volt_reg"] = max(min(self.dg["volt_reg"]+pid_output,2),0)
-        pass
+        pid_output = self.volt_reg_pid.update(4160,self.dg["voltage"],0.1) #TODO: Voltage Regulator adjust
+
+        self.dg["volt_reg"] = pid_output
+
 
 
 
@@ -324,14 +312,22 @@ def run():
     dg1.check_controls()
     dg1.calculate()
     dg1.governor()
-    #dg1.volt_reg()
+    dg1.volt_reg()
+
+    model.values["dg1p1volts"] = dg1.dg["voltage"]
+    model.values["dg1p2volts"] = dg1.dg["voltage"]
+    model.values["dg1p3volts"] = dg1.dg["voltage"]
+    model.values["dg1_freq"] = dg1.dg["frequency"]
+    model.values["dg1p1amps"] = dg1.dg["current"]
+    model.values["dg1p2amps"] = dg1.dg["current"]
+    model.values["dg1p3amps"] = dg1.dg["current"]
 
     dg2.check_controls()
     dg2.calculate()
     dg2.governor()
-    #dg2.volt_reg()
+    dg2.volt_reg()
 
     dg3.check_controls()
     dg3.calculate()
     dg3.governor()
-    #dg2.volt_reg()
+    dg3.volt_reg()

@@ -23,6 +23,7 @@ class PIDExperimental:
         self.Ki = Ki
         self.Kd = Kd
         self.error = 0
+        self.proportional = 0
         self.derivative = 0
         self.last_error = 0
         self.integral = 0
@@ -38,10 +39,11 @@ class PIDExperimental:
     def update(self, setpoint, current, dt):
         error = setpoint-current
         derivative = (error -self.last_error)/dt
-        self.integral += error  * dt
-        output = (self.Kp * error ) + (self.Ki * self.integral) + (self.Kd * derivative)
+        self.integral += error  * dt * self.Ki
+        output = (self.Kp * error ) + (self.integral) + (self.Kd * derivative)
         self.last_error = self.Kd * derivative
         self.error = error
+        self.proportional = self.Kp * error
         self.derivative = self.Kd * derivative
         output = max(min(output,self.maximum),self.minimum) #TODO
         return output
