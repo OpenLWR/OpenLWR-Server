@@ -327,6 +327,14 @@ def run():
     dg2.governor()
     dg2.volt_reg()
 
+    model.values["dg2p1volts"] = dg2.dg["voltage"]
+    model.values["dg2p2volts"] = dg2.dg["voltage"]
+    model.values["dg2p3volts"] = dg2.dg["voltage"]
+    model.values["dg2_freq"] = dg2.dg["frequency"]
+    model.values["dg2p1amps"] = dg2.dg["current"]
+    model.values["dg2p2amps"] = dg2.dg["current"]
+    model.values["dg2p3amps"] = dg2.dg["current"]
+
     dg3.check_controls()
     dg3.calculate()
     dg3.governor()

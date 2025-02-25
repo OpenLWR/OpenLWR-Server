@@ -655,6 +655,13 @@ def run():
     model.values["73voltage"] = busses["73"].voltage_at_bus()
     model.values["73amps"] = breakers["cb_7_73"].info["current"]
 
+    model.values["sm8voltage"] = busses["8"].voltage_at_bus()
+    model.values["b8amps"] = breakers["cb_b8"].info["current"]
+    model.values["8_3amps"] = breakers["cb_8_3"].info["current"]
+
+    model.values["83voltage"] = busses["83"].voltage_at_bus()
+    model.values["83amps"] = breakers["cb_8_83"].info["current"]
+
     for source in sources:
         source = sources[source]
         source.calculate()

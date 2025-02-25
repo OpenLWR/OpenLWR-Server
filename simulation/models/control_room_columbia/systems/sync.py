@@ -74,6 +74,7 @@ def initialize():
     synchroscopes.append(sync)
 
     sync = SyncSelector("div_2_sync")
+    sync.add_voltage_gauges("sm8incoming","sm8running")
     sync.add_selector("sync_cb_dg2_8","DG2","8","cb_dg2_8")
     sync.add_selector("sync_cb_b8","b_bus","8","cb_b8")
     sync.add_selector("sync_cb_8_3","3","8","cb_3_8")
