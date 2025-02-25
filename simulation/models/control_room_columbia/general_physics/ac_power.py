@@ -251,6 +251,8 @@ class Breaker:
                 break
             elif source.whoami() == Source:
                 break
+            elif source.whoami() == Transformer:
+                break
             else:
                 source = source.info["incoming"]
 
@@ -294,6 +296,8 @@ class Breaker:
                     total_load += self.info["running"].info["loads"][load]
 
                 self.info["current"] = total_load/(self.info["running"].info["voltage"]+0.1)
+            else:
+                self.info["current"] = 0
 
 class Transformer:
     def __init__(self,name="",incoming=None,running=None,lockout=False,factor=1,voltage=0,frequency=0,current_limit=12.5):
@@ -304,6 +308,7 @@ class Transformer:
 		    "running" : running, 
 		    "lockout" : lockout, #Transformer lockout 
 
+            "loads" : {},
             "voltage" : voltage,
             "frequency" : frequency,
             "phase" : 0,
@@ -371,13 +376,37 @@ class Transformer:
                 self.info["running"].register_feeder(self)
                 
                 total_load = 0
-                for load in self.info["running"].info["loads"]:
-                    total_load += self.info["running"].info["loads"][load]
+                for load in self.info["loads"]:
+                    total_load += self.info["loads"][load]
 
                 self.info["current"] = total_load/(self.info["running"].info["voltage"]+0.1)
                 resistance = 0.2
                 dropped_voltage = self.info["current"]*resistance
                 self.info["voltage"] = self.info["voltage"] - dropped_voltage
+
+    def register_load(self,load,name):
+        """Registers a load on this transformer, with the specified load in watts."""
+        if not name in self.info["loads"]:
+            x = self.info["loads"].copy()
+            x[name] = load
+            y = x
+            self.info["loads"] = y
+
+    def modify_load(self,load,name):
+        """Modifies an existing load on this transformer, with the new specified load in watts."""
+        if name in self.info["loads"]:
+            x = self.info["loads"].copy()
+            x[name] = load
+            y = x
+            self.info["loads"] = y
+
+    def remove_load(self,name):
+        """Removes an existing load on this transformer."""
+        if name in self.info["loads"]:
+            x = self.info["loads"].copy()
+            x.pop(name)
+            y = x
+            self.info["loads"] = y
 
 
 
@@ -619,20 +648,12 @@ def run():
     
     #TODO: divisional emergency lights
 
-    #graph.add("SM-1 Voltage",round(busses["1"].info["voltage"]))
-    #graph.add("SM-2 Voltage",round(busses["2"].info["voltage"]))
-    #graph.add("SM-3 Voltage",round(busses["3"].info["voltage"]))
+    model.values["sm7voltage"] = busses["7"].voltage_at_bus()
+    model.values["b7amps"] = breakers["cb_b7"].info["current"]
+    model.values["7_1amps"] = breakers["cb_7_1"].info["current"]
 
-    #graph.add("TR-S Current",round(transformers["tr_s"].info["current"]))
-
-    #graph.add("DG1 Voltage",sources["DG1"].info["voltage"])
-    #graph.add("DG1 Field Voltage",diesel_generator.dg1.dg["field_voltage"])
-    #graph.add("DG1 Frequency",sources["DG1"].info["frequency"])
-
-    #log.info(str(busses["7"].voltage_at_bus()))
-
-    #if model.runs*0.1 > 30:
-        #graph.generate_plot()
+    model.values["73voltage"] = busses["73"].voltage_at_bus()
+    model.values["73amps"] = breakers["cb_7_73"].info["current"]
 
     for source in sources:
         source = sources[source]

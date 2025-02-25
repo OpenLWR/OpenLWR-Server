@@ -3323,6 +3323,35 @@ values = {
     "dg1p1amps" : 0,
     "dg1p2amps" : 0,
     "dg1p3amps" : 0,
+
+    "sm7running" : 0,
+    "sm7incoming" : 0,
+
+    "sm7voltage" : 0,
+    "b7amps" : 0,
+    "7_1amps" : 0,
+
+    "73voltage" : 0,
+    "73amps" : 0,
+
+
+    "dg2p1volts" : 0, #DG 2 Phase 1 Voltage
+    "dg2p2volts" : 0,
+    "dg2p3volts" : 0,
+    "dg2_freq" : 0,
+    "dg2p1amps" : 0,
+    "dg2p2amps" : 0,
+    "dg2p3amps" : 0,
+
+    "sm8running" : 0,
+    "sm8incoming" : 0,
+
+    "sm8voltage" : 0,
+    "b8amps" : 0,
+    "8_3amps" : 0,
+
+    "83voltage" : 0,
+    "83amps" : 0,
 }
 
 indicators = {
