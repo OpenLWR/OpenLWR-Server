@@ -154,9 +154,10 @@ def init_server(websocket):
                 case packets.ClientPackets.SYNCHRONIZE: #allows the client to request some extra stuff
                     server_player_position_parameters_update_event.fire_initial(token_object.token)
                     server_meter_parameters_update_event.fire_initial(token_object.token)
+                    server_chat_event.fire_initial(token_object)
 
                 case packets.ClientPackets.CHAT:
-                    client_chat_event.handle(packet_data, token_object.username)
+                    client_chat_event.handle(packet_data, token_object)
 
                 case packets.ClientPackets.VOIP:
                     client_voip_event.handle(packet_data, token_object.username)
