@@ -4,7 +4,7 @@ from simulation.models.template.custom_components.NSPS import BWR6ScramTrips
 class Model:
     def __init__(self):
         # do what you need to do here to get your model ready
-        self.NSPSState = NSPSState() #i'm not sure how to do to this a good way yet
+        self.NSPSState = NSPSState()
         self.replicated_data = {}
 
     # check __init__.py for setting how often these run
@@ -16,7 +16,7 @@ class Model:
     def step_slow(self, delta):
         print("Hello, World! but slower")
 
-        if BWR6ScramTrips.LEVELLOW in self.NSPSState.Div1.Trips:
+        if BWR6ScramTrips.LEVELLOW in self.NSPSState.Div1.Trips: #Tripping the second division which initiates a reactor scram
             self.NSPSState.Div2.trip(BWR6ScramTrips.LEVELLOW)
 
-        self.NSPSState.Div1.trip(BWR6ScramTrips.LEVELLOW)
+        self.NSPSState.Div1.trip(BWR6ScramTrips.LEVELLOW) #Testing to see if one trip will cause a scram
