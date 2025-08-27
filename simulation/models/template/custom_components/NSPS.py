@@ -1,4 +1,5 @@
 from enum import Enum
+
 class BWR6ScramTrips(Enum):
     MANUAL = 1
     MODESWITCH = 2
@@ -6,10 +7,9 @@ class BWR6ScramTrips(Enum):
     REACPRESSHIGH = 4
 
 class NuclearSystemProtectionSystem:
-    def __init__(self,Divisions=[]):
+    def __init__(self):
         self.scram = False
-        assert len(Divisions) == 4, "NSPS Must have four divisions"
-        self.RPSDivs = Divisions
+        self.RPSDivs = [NSPSDivision(),NSPSDivision(),NSPSDivision(),NSPSDivision()]
 
     def run(self):
         if (self.RPSDivs[0].Tripped and self.RPSDivs[3].Tripped) or (self.RPSDivs[1].Tripped and self.RPSDivs[2].Tripped):
