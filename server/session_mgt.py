@@ -202,10 +202,15 @@ class SessionManager:
 
                 #receive data and process
                 while True:
-                    data = connection.recv(1048)
-                    if not data:
+                    try:
+                        data = connection.recv(1048)
+                        if not data:
+                            break
+                        self.ProcessDataRec(data,address)
+                    except ConnectionResetError:
+                        print("Remote host forcibly closed connection")
                         break
-                    self.ProcessDataRec(data,address)
+
 
         threading.Thread(target=ConnectionManager,args=(conn,addr)).start()     
 

@@ -88,7 +88,7 @@ class RecCommunication:
         server_name = config.config["server_name"]
         motd = config.config["motd"]
         max_player_count = config.config["max_player_count"]
-        current_player_count = 0 #TODO
+        current_player_count = player_count
 
         server_version = f"{major_version}.{minor_version}"
 
