@@ -92,7 +92,9 @@ class SessionManager:
 
             case rec_proto.RECMessageType.REC_SERVER_INFO_REQUEST: #no registration required
                 player_count = 0
-                for ses in self.SessionRegistry.GetAll():
+                sessions = self.SessionRegistry.GetAll()
+                for ses in sessions:
+                    ses = sessions[ses]
                     if ses.RecSession.State != SessionState.Active: 
                         continue
 
