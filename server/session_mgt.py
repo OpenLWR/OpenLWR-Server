@@ -2,6 +2,7 @@ import numpy as np
 from enum import Enum
 import socket
 from google.protobuf import message
+import google.protobuf.any as any
 import server.protocols.common_pb2 as common_proto
 import server.protocols.rec_pb2 as rec_proto
 import server.protocols.ubc_pb2 as ubc_proto
@@ -36,6 +37,8 @@ class SessionManager:
         self.OnInteraction.on_changed += devices.on_interaction
 
         self.counter_sessionid = 1 #start at 1 to prevent giving out session ID 0
+
+        devices.REGISTRY.OnInteractionComplete.on_changed += self.HandleInteractionAck
 
 
 
@@ -95,19 +98,29 @@ class SessionManager:
                 sessions = self.SessionRegistry.GetAll()
                 for ses in sessions:
                     ses = sessions[ses]
-                    if ses.RecSession.State != SessionState.Active: 
+                    if ses.RecSession != None:
+                        if ses.RecSession.State != SessionState.Active: 
+                            continue
+                    else:
                         continue
 
                     if ses.UbcSession != None:
                         if ses.UbcSession.State != SessionState.Active:
                             continue
+                    else:
+                        continue
 
                     #TODO: UEC
                     player_count += 1
 
                 msg = rec_communication.RecServerInfo(player_count)
                 client.Send(msg)
-                
+
+    def HandleInteractionAck(self,client,id,valid,reason):
+        msg = rec_communication.CreateRecInteractionAck(id,valid,reason)
+
+        client.Send(msg)
+
     def ProcessDataUBC(self,data,address):
         Heartbeat = common_proto.Heartbeat()
 
@@ -146,12 +159,19 @@ class SessionManager:
                 self.counter_sessionid += 1
                 self.UnregisteredUbcSessions[new_id] = UnregisteredConnection(address, new_id)
                 Heartbeat.session_id = new_id
+                
+                any_msg = any.Any()
+                any_msg.Pack(Heartbeat)
 
-            self.SocketUbc.sendto(Heartbeat.SerializeToString(),address)
+            self.SocketUbc.sendto(any_msg.SerializeToString(),address)
         else:
             if Heartbeat.session_id in self.UnregisteredUbcSessions:
                 self.UnregisteredUbcSessions[Heartbeat.session_id].LastHeartbeatTime = time.time()
-                self.SocketUbc.sendto(Heartbeat.SerializeToString(),address)
+
+                any_msg = any.Any()
+                any_msg.Pack(Heartbeat)
+
+                self.SocketUbc.sendto(any_msg.SerializeToString(),address)
                 return
 
             Session = self.SessionRegistry.FindByUbcId(Heartbeat.session_id)
@@ -164,7 +184,11 @@ class SessionManager:
                     return
                 
                 Session.UbcSession.LastHeartbeatTime = time.time()
-                Session.UbcSession.Send(Heartbeat)
+
+                any_msg = any.Any()
+                any_msg.Pack(Heartbeat)
+
+                Session.UbcSession.Send(any_msg)
         
 
     def BroadcastUBC(self,tick_context):
@@ -203,15 +227,23 @@ class SessionManager:
 
 
                 #receive data and process
-                while True:
+                while connection._closed == False:
                     try:
-                        data = connection.recv(1048)
+                        try:
+                            data = connection.recv(1048)
+                        except:
+                            connection.close()
+
                         if not data:
-                            break
+                            connection.close()
+
                         self.ProcessDataRec(data,address)
                     except ConnectionResetError:
                         print("Remote host forcibly closed connection")
-                        break
+                        connection.close()
+                
+                self.SessionRegistry.Remove(rec_connection.SessionId)
+                print("hello!")
 
 
         threading.Thread(target=ConnectionManager,args=(conn,addr)).start()     
@@ -231,6 +263,7 @@ class SessionManager:
             if Ses.RecSession.State == SessionState.Connecting:
                 if now-Ses.RecSession.CreationTime >= config.config["pre_verification_time"]:
                     Ses.RecSession.Send(rec_communication.CreateRecSessionClose(rec_proto.RECSessionClose.Reason.TIMEOUT,"Exceeded pre-verifcation timeout threshold."))
+                    Ses.RecSession.Client.shutdown(1)
                     Ses.RecSession.Client.close()
                     self.SessionRegistry.Remove(Ses.RecSession.SessionId)
 
@@ -304,7 +337,8 @@ class RecConnection(Connection):
         return Status == RecStatus.OK
     
     def Send(self,message):
-        self.Client.send(message.SerializeToString())
+        if not self.Client._closed:
+            self.Client.send(message.SerializeToString())
 
 class UnregisteredConnection:
     def __init__(self, address: tuple, session_id: int):

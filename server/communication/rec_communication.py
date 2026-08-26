@@ -82,6 +82,16 @@ class RecCommunication:
         
         return Status,msg
     
+    def CreateRecInteractionAck(self,interaction_id:int, valid:bool, reason:str):
+        msg = rec_proto.RECInteractionAck()
+        msg.interaction_id = interaction_id
+        msg.success = valid
+        msg.result_data = reason.encode()
+
+        def_message = self.CreateDefaultRecMessage(rec_proto.RECMessageType.REC_INTERACTION_ACK)
+        def_message.interaction_ack.CopyFrom(msg)
+        return def_message
+    
     def RecServerInfo(self,player_count:int):
         major_version = config.config["server_major_version"]
         minor_version = config.config["server_minor_version"]

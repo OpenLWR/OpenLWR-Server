@@ -1,5 +1,6 @@
 import server.protocols.ubc_pb2 as ubc_proto
 import server.devices as devices
+import google.protobuf.any as protobuf
 
 class UbcCommunication:
     def __init__(self):
@@ -34,4 +35,8 @@ class UbcCommunication:
         msg.session_id = session_id
         msg.payloads.extend(payloads)
 
-        return msg
+        any = protobuf.Any()
+
+        any.Pack(msg)
+
+        return any

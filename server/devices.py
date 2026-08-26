@@ -3,7 +3,8 @@ from typing import Union, Optional
 from dataclasses import dataclass
 from abc import ABC
 from enum import IntEnum
-import hashlib
+from events import Events
+import xxhash
 import server.protocols.ubc_pb2 as ubc_pb2
 DeviceFieldValue = Union[str, int, float, bool, bytes]
 @dataclass
@@ -26,7 +27,7 @@ class StateChangeResult(IntEnum):
 
 class DeviceBase(ABC):
     def __init__(self, device_type: str, name: str):
-        self._device_id = np.ulonglong(int(hashlib.sha256(name.encode()).hexdigest(), 16) % (2**64))
+        self._device_id = np.ulonglong(xxhash.xxh64(name.encode()).intdigest())
         self._device_type = device_type
         self._is_dirty = False
         self._fields: list[DeviceField] = []
@@ -86,6 +87,7 @@ class DeviceBase(ABC):
 class DeviceRegistry:
     _instance: "DeviceRegistry" = None
     _devices: dict[np.ulonglong, "DeviceBase"]
+    OnInteractionComplete = Events()
     def __new__(cls) -> "DeviceRegistry":
         if cls._instance is None:
             cls._instance = super().__new__(cls)
@@ -155,4 +157,7 @@ def on_interaction(client, message):
     data = ubc_pb2.UBCMessage.Payload.Data()
     data.ParseFromString(interaction.data)
 
-    device.on_interaction(interaction_id, interaction_type, data)
+    valid,reason = device.on_interaction(interaction_id, interaction_type, data)
+
+    REGISTRY.OnInteractionComplete.on_changed(client,interaction_id,valid,reason)
+        

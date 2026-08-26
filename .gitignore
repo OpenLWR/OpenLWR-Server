@@ -162,4 +162,4 @@ cython_debug/
 profiles_settings.xml
 project_default.xml
 
-config.json
+config.toml

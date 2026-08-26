@@ -9,12 +9,17 @@ class SBMBreaker(devices.DeviceBase):
 
     def on_interaction(self, interaction_id, interaction_type, data):
         value = getattr(data,data.WhichOneof("data"))
+
+        if data.field == 0 and value > 2 or value < 0: return (False, "Invalid switch position")
+
         self.set_field_value(data.field,value)
 
         if self.get_field_by_id(0).value == 0: #switch flag
             self.set_field_value(1,0)
         elif self.get_field_by_id(0).value == 2:
             self.set_field_value(1,1)
+
+        return (True, "")
 
 class PositionType(Enum):
     Momentary = 0,
