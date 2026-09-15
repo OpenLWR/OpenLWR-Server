@@ -1,9 +1,10 @@
 import numpy as np
 from enum import Enum
 from events import Events
-from abc import ABC
 import time
 import threading
+import pickle
+from pathlib import Path
 
 class SimulationState(Enum):
     Created = 0,
@@ -18,8 +19,39 @@ class TickContext:
 
 
 
-class SimulationModuleData(ABC):
+class SimulationModuleData:
     pass
+
+class SimulationStateRegistry:
+    _stateRegistry = dict()
+
+    def GetState(self,moduleName: str) -> SimulationModuleData:
+        return self._stateRegistry[moduleName]
+
+    def SetState(self,moduleName: str, data:SimulationModuleData):
+        self._stateRegistry[moduleName] = data
+
+    def Save(self,name:str = None):
+
+        if name == None:
+            name = str(time.time())
+
+        save_path = Path(f"saves/{name}.pkl")
+
+
+        with open(save_path, "wb") as outp:
+
+            pickle.dump(self._stateRegistry,outp)
+
+    def Load(self,name):
+        #maybe include something mentioning to only open saves you trust? Pickle has some vulnerabilities iirc
+
+        load_path = Path(f"saves/{name}.pkl")
+
+        with open(load_path, "rb") as inp:
+            test = pickle.load(inp)
+            print("loaded")
+            self._stateRegistry = test
 
 class SimulationContext:
     def __init__(self):
@@ -30,10 +62,11 @@ class SimulationContext:
         self.Name = ""
         self.TickContext = TickContext()
         self.State = SimulationState.Created
-        self.TickRate = 0.1 #60fps
+        self.TickRate = 1/30 #60fps
 
         self.Modules = []
         self.SimulationThread = None
+        self.SimulationStateRegistry = SimulationStateRegistry()
 
     def Execute(self):
         #execute modules
@@ -96,10 +129,13 @@ class SimulationContext:
         pass
 
 
-class SimulationModule: #base simulation module, i think we can super this guy
+class SimulationModule: 
     def __init__(self):
         self.NextEvalStep = 0
         self.Data = SimulationModuleData()
+
+    def OnModulesLoaded(self, world:SimulationContext): #custom, fired when all modules have loaded
+        pass
 
     def OnRegister(self,world:SimulationContext):
         pass

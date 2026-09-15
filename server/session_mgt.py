@@ -243,7 +243,6 @@ class SessionManager:
                         connection.close()
                 
                 self.SessionRegistry.Remove(rec_connection.SessionId)
-                print("hello!")
 
 
         threading.Thread(target=ConnectionManager,args=(conn,addr)).start()     
