@@ -95,10 +95,10 @@ class Header(FluidNode):
             rho = get_water_density(self.temperature)
             nominal_mass = max(self.volume_m3 * rho, 1e-5)
 
-            bulk_modulus = 1.5e7 
+            bulk_modulus = 1.5e7 # dont ask me what this magic number is
             overfill_ratio = (self.mass - nominal_mass) / nominal_mass
 
-            target_pressure = 101325.0 + (bulk_modulus * overfill_ratio)
+            target_pressure = 101325.0 + (bulk_modulus * overfill_ratio) #101325 is pascal atmospheric (14.7 psi)
 
             # Smooth single-step pressure transients
             if hasattr(self, 'pressure'):
@@ -109,7 +109,7 @@ class Header(FluidNode):
 
         elif self.type == FluidType.GAS:
             r_constant = 8.314
-            temp_k = self.temperature + 273.15
+            temp_k = self.temperature + 273.15 #kelvin
             molar_mass = 0.018
             n_moles = self.mass / molar_mass
 
@@ -180,7 +180,7 @@ class Valve:
         self.percent_open = clamp(percent, 0.0, 100.0)
 
     def get_flow_gpm(self) -> float:
-        return self.flow_rate*15.850372483753
+        return self.flow_rate*15.850372483753 #l/s to GPM
 
 def HPCSPumpCurve(pressure_psi:float,rated_flow:float,rated_press:float) -> float:
 
@@ -196,6 +196,9 @@ def HPCSPumpCurve(pressure_psi:float,rated_flow:float,rated_press:float) -> floa
         flow_gpm = 0
 
     return flow_gpm
+
+# HPCS pump curve desmos: https://www.desmos.com/calculator/zx1iepicix
+# pump curve found in CGS FSAR ML23346A215
 
 def DefaultPumpCurve(pressure_psi:float,rated_flow:float,rated_press:float) -> float:
     #we only use rated_flow and rated_press in the default pump curve (or other curve that is universal)
@@ -253,7 +256,7 @@ class Pump:
         rho = get_water_density(fluid_temp_c)
 
         net_suction_pa = max(0.0, suction_pressure_pa - p_sat)
-        npsha_ft = (net_suction_pa / (rho * 9.81)) * 3.28084
+        npsha_ft = (net_suction_pa / (rho * 9.81)) * 3.28084 #9.81 - gravity m/s^2, 3.28084 meters to ft
 
         flow_ratio = clamp(self.actual_flow / max(self.rated_flow, 1e-5), 0.1, 1.5)
         npshr_ft = self.npshr_rated * (flow_ratio ** 2)
@@ -337,14 +340,16 @@ class FluidTest(SimulationModule):
     def _calculate_flow_capacity(self, p1: float, p2: float, valve_cv:float ) -> float:
 
         specific_gravity = 1
-        gal_m = valve_cv * math.sqrt((p1-p2)/specific_gravity)
+        gal_h = valve_cv * math.sqrt((p1-p2)/specific_gravity)
 
-        return gal_m*0.001262803
+        return gal_h*0.001262803 #gallons/h to l/s
         
     def OnTick(self, world: SimulationContext, ctx: TickContext) -> None:
         delta = ctx.Delta
 
         self._data = world.SimulationStateRegistry.GetState("Fluid")
+
+        # go through all valves and flow as required
 
         for valve in self._data.FLUID_REGISTRY.valves.values():
             if valve.percent_open <= 0.0:
@@ -399,7 +404,7 @@ class FluidTest(SimulationModule):
                 continue
 
             if pump.discharge_pressure*6895 > discharge_node.pressure:
-                transfer_mass = min(pump.flow * delta * 0.0630902, suction_node.mass)
+                transfer_mass = min(pump.flow * delta * 0.0630902, suction_node.mass) # 0.0630902 gallons per minute to l/s
                 max_transfer = pump.pump_curve((discharge_node.pressure/6895),pump.rated_flow,pump.rated_discharge_press)*delta*0.0630902
                 transfer_mass = max(min(max_transfer,transfer_mass),0)
 

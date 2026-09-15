@@ -1,12 +1,10 @@
 import numpy as np
 from enum import Enum
 from events import Events
-from abc import ABC
 import time
 import threading
 import pickle
 from pathlib import Path
-from copy import deepcopy
 
 class SimulationState(Enum):
     Created = 0,

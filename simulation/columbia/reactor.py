@@ -1,8 +1,9 @@
 import math
 import random
 from server.simulation.simulation import SimulationModule, SimulationContext, TickContext, SimulationModuleData
-from server import devices
 
+# this reactor sim was written with AI until we have mak's nuclear sim
+# yes it is modified by me (watchful) to behave correctly and accurately
 
 class FuelNode:
     """Represents a single axial slice/node within a fuel assembly."""
@@ -22,6 +23,9 @@ class FuelNode:
 
     def GetKeff(self, effective_insertion=None):
         ins = self.insertion if effective_insertion is None else effective_insertion
+
+        # a majority of these values are from R304B
+        # some may be modified to make the physics behave correctly
         
         # Physics factors
         fast_fission = 1.04 + (0.00875 * self.steam_quality)
